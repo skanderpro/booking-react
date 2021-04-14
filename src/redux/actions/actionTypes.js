@@ -1,1 +1,0 @@
-export const INIT_SETTINGS = "INIT_SETTINGS";
