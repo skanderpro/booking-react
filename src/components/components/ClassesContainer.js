@@ -1,8 +1,9 @@
 import React,{useEffect} from "react";
 import { Search } from 'akar-icons';
-const feather = require('feather-icons')
+import {connect} from 'react-redux'
+const feather = require('feather-icons');
 
-function ClassesContainer() {
+function ClassesContainer(props) {
     useEffect(() => {
         console.log(feather.icons)
     },[])
@@ -62,159 +63,47 @@ function ClassesContainer() {
                 </span>
             </div>
             <div className={'classes-list row'}>
-                <div className={'classes-item col-lg-4 col-md-6'}>
-                    <div className={'classes-item-container'}>
-                        <div className={'image-container'} style={{backgroundImage:`url(${require('./../../assets/images/class1.jpg').default})`}}>
-
-                        </div>
-                        <div className={'text-container'}>
-                            <span className={'btn btn-pink class-level d-inline-block'}>Beginner</span>
-                            <div className={'meta-block row'}>
-                                <div className={'col-6 date-container'}>
-                                    <span className={'icon'}><i className="far fa-calendar-alt"></i></span>
-                                    <span className={'text'}>23/02/2021</span>
-                                </div>
-                                <div className={'col-6 location-container'}>
-                                    <span className={'icon'}><i className="fas fa-map-marker-alt"></i></span>
-                                    <span className={'text'}>Glasgow, UK</span>
-                                </div>
+                { props.classes.map((classItem, index) =>  {
+                    console.log(classItem)
+                    return <div className={'classes-item col-lg-4 col-md-6'} key={`classesItem_${index}`}>
+                        <div className={'classes-item-container'}>
+                            <div className={'image-container'}
+                                 style={{backgroundImage: `url(${props.settings.mainUrl + `/storage/${classItem.image_url}`})`}}>
 
                             </div>
-                            <div className={'class-title'}>
-                                Relax with some <span>knitting & crochet</span>
+                            <div className={'text-container'}>
+                                <span className={'btn btn-pink class-level d-inline-block'}>{classItem.level}</span>
+                                <div className={'meta-block row'}>
+                                    <div className={'col-6 date-container'}>
+                                        <span className={'icon'}><i className="far fa-calendar-alt"></i></span>
+                                        <span className={'text'}>{classItem.date}</span>
+                                    </div>
+                                    <div className={'col-6 location-container'}>
+                                        <span className={'icon'}><i className="fas fa-map-marker-alt"></i></span>
+                                        <span className={'text'}>Glasgow, UK</span>
+                                    </div>
+
+                                </div>
+                                <div className={'class-title'}>
+                                    {classItem.name}
+                                </div>
                             </div>
                         </div>
+
                     </div>
 
-                </div>
-                <div className={'classes-item col-lg-4 col-md-6'}>
-                    <div className={'classes-item-container'}>
-                        <div className={'image-container'} style={{backgroundImage:`url(${require('./../../assets/images/class2.jpg').default})`}}>
+                })
 
-                        </div>
-                        <div className={'text-container'}>
-                            <span className={'btn btn-pink class-level d-inline-block'}>Beginner</span>
-                            <div className={'meta-block row'}>
-                                <div className={'col-6 date-container'}>
-                                    <span className={'icon'}><i className="far fa-calendar-alt"></i></span>
-                                    <span className={'text'}>23/02/2021</span>
-                                </div>
-                                <div className={'col-6 location-container'}>
-                                    <span className={'icon'}><i className="fas fa-map-marker-alt"></i></span>
-                                    <span className={'text'}>Glasgow, UK</span>
-                                </div>
-
-                            </div>
-                            <div className={'class-title'}>
-                                Relax with some <span>knitting & crochet</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div className={'classes-item col-lg-4 col-md-6'}>
-                    <div className={'classes-item-container'}>
-                        <div className={'image-container'} style={{backgroundImage:`url(${require('./../../assets/images/class3.jpg').default})`}}>
-
-                        </div>
-                        <div className={'text-container'}>
-                            <span className={'btn btn-pink class-level d-inline-block'}>Beginner</span>
-                            <div className={'meta-block row'}>
-                                <div className={'col-6 date-container'}>
-                                    <span className={'icon'}><i className="far fa-calendar-alt"></i></span>
-                                    <span className={'text'}>23/02/2021</span>
-                                </div>
-                                <div className={'col-6 location-container'}>
-                                    <span className={'icon'}><i className="fas fa-map-marker-alt"></i></span>
-                                    <span className={'text'}>Glasgow, UK</span>
-                                </div>
-
-                            </div>
-                            <div className={'class-title'}>
-                                Relax with some <span>knitting & crochet</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div className={'classes-item col-lg-4 col-md-6'}>
-                    <div className={'classes-item-container'}>
-                        <div className={'image-container'} style={{backgroundImage:`url(${require('./../../assets/images/class4.jpg').default})`}}>
-
-                        </div>
-                        <div className={'text-container'}>
-                            <span className={'btn btn-pink class-level d-inline-block'}>Beginner</span>
-                            <div className={'meta-block row'}>
-                                <div className={'col-6 date-container'}>
-                                    <span className={'icon'}><i className="far fa-calendar-alt"></i></span>
-                                    <span className={'text'}>23/02/2021</span>
-                                </div>
-                                <div className={'col-6 location-container'}>
-                                    <span className={'icon'}><i className="fas fa-map-marker-alt"></i></span>
-                                    <span className={'text'}>Glasgow, UK</span>
-                                </div>
-
-                            </div>
-                            <div className={'class-title'}>
-                                Relax with some <span>knitting & crochet</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div className={'classes-item col-lg-4 col-md-6'}>
-                    <div className={'classes-item-container'}>
-                        <div className={'image-container'} style={{backgroundImage:`url(${require('./../../assets/images/class5.jpg').default})`}}>
-
-                        </div>
-                        <div className={'text-container'}>
-                            <span className={'btn btn-pink class-level d-inline-block'}>Beginner</span>
-                            <div className={'meta-block row'}>
-                                <div className={'col-6 date-container'}>
-                                    <span className={'icon'}><i className="far fa-calendar-alt"></i></span>
-                                    <span className={'text'}>23/02/2021</span>
-                                </div>
-                                <div className={'col-6 location-container'}>
-                                    <span className={'icon'}><i className="fas fa-map-marker-alt"></i></span>
-                                    <span className={'text'}>Glasgow, UK</span>
-                                </div>
-
-                            </div>
-                            <div className={'class-title'}>
-                                Relax with some <span>knitting & crochet</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div className={'classes-item col-lg-4 col-md-6'}>
-                    <div className={'classes-item-container'}>
-                        <div className={'image-container'} style={{backgroundImage:`url(${require('./../../assets/images/class6.jpg').default})`}}>
-
-                        </div>
-                        <div className={'text-container'}>
-                            <span className={'btn btn-pink class-level d-inline-block'}>Beginner</span>
-                            <div className={'meta-block row'}>
-                                <div className={'col-6 date-container'}>
-                                    <span className={'icon'}><i className="far fa-calendar-alt"></i></span>
-                                    <span className={'text'}>23/02/2021</span>
-                                </div>
-                                <div className={'col-6 location-container'}>
-                                    <span className={'icon'}><i className="fas fa-map-marker-alt"></i></span>
-                                    <span className={'text'}>Glasgow, UK</span>
-                                </div>
-
-                            </div>
-                            <div className={'class-title'}>
-                                Relax with some <span>knitting & crochet</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                }
             </div>
 
         </div>
     </div>
 }
-export default ClassesContainer;
+function mapStateToProps(state) {
+    return {
+
+        settings: state.settings,
+    };
+}
+export default connect(mapStateToProps)(ClassesContainer);

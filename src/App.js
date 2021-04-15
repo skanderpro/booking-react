@@ -8,7 +8,7 @@ import ClassDetail from "./containers/ClassDetail";
 function App() {
   return (
     <div className="App">
-        <Switch>
+        <Switch >
             <Route path={'/'} exact component={Home} />
             <Route path={'/class-detail'} component={ClassDetail}/>
         </Switch>

@@ -1,7 +1,7 @@
 import { INIT_SETTINGS } from "../actions/actionTypes";
 
 const initializeState = {
-    mainUrl: "https://aws.witit.com",
+    mainUrl: "http://bookingadmin.solver.com.ua",
 
 };
 
