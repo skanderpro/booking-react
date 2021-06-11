@@ -1,5 +1,7 @@
 import React, {Component} from "react";
 import Slider from "react-slick";
+import {fetchAllVenues} from './../../redux/actions/venueActions';
+import {connect} from 'react-redux';
  import 'slick-carousel/slick/slick.css';
  import "slick-carousel/slick/slick-theme.css";
 const feather = require('feather-icons');
@@ -7,11 +9,25 @@ const feather = require('feather-icons');
 
 
 class  ExploreVenues extends Component{
+
+    state = {
+        venues:[]
+    }
+
     constructor(props) {
         super(props);
         this.next = this.next.bind(this);
         this.previous = this.previous.bind(this);
     }
+
+    componentDidMount() {
+        this.props.fetchAllVenues().then( response => {
+            this.setState({
+                venues:[...response.data]
+            })
+        })
+    }
+
     next() {
         this.slider.slickNext();
     }
@@ -19,6 +35,8 @@ class  ExploreVenues extends Component{
         this.slider.slickPrev();
     }
     render() {
+
+
         const settings = {
             dots: false,
             infinite: true,
@@ -58,90 +76,24 @@ class  ExploreVenues extends Component{
                 Explore our class venues
             </h2>
                 <Slider ref={c => (this.slider = c)} {...settings} className={'explore-list row'}>
-                    <div className={'explore-item '}>
-                        <div className={'explore-item-container'}>
-                            <div className={'explore-item-image'} style={{backgroundImage:`url(${require('./../../assets/images/venue1.jpg').default})`}}></div>
-                            <div className={'explore-item-text'}>
-                                <h3>
-                                    Glasgow, UK
-                                </h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In velit elit, auctor vitae ligula quis, eleifend rutrum nulla.
-                                </p>
-                            </div>
-                        </div>
 
-                    </div>
-                    <div className={'explore-item'}>
-                        <div className={'explore-item-container'}>
-                            <div className={'explore-item-image'} style={{backgroundImage:`url(${require('./../../assets/images/venue2.jpg').default})`}}></div>
-                            <div className={'explore-item-text'}>
-                                <h3>
-                                    Glasgow, UK
-                                </h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In velit elit, auctor vitae ligula quis, eleifend rutrum nulla.
-                                </p>
+                    {this.state.venues.map((venue, index) => {
+                        return <div className={'explore-item '} key={`venue-slide-${index}`}>
+                            <div className={'explore-item-container'}>
+                                <div className={'explore-item-image'} style={{backgroundImage:`url(${this.props.settings.mainUrl}/storage/${venue.image_url})`}}></div>
+                                <div className={'explore-item-text'}>
+                                    <h3>
+                                        {venue.name}
+                                    </h3>
+                                    <p>
+                                        {venue.description}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
 
-                    </div>
-                    <div className={'explore-item '}>
-                        <div className={'explore-item-container'}>
-                            <div className={'explore-item-image'} style={{backgroundImage:`url(${require('./../../assets/images/venue3.jpg').default})`}}></div>
-                            <div className={'explore-item-text'}>
-                                <h3>
-                                    Glasgow, UK
-                                </h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In velit elit, auctor vitae ligula quis, eleifend rutrum nulla.
-                                </p>
-                            </div>
                         </div>
+                    })}
 
-                    </div>
-                    <div className={'explore-item '}>
-                        <div className={'explore-item-container'}>
-                            <div className={'explore-item-image'} style={{backgroundImage:`url(${require('./../../assets/images/venue1.jpg').default})`}}></div>
-                            <div className={'explore-item-text'}>
-                                <h3>
-                                    Glasgow, UK
-                                </h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In velit elit, auctor vitae ligula quis, eleifend rutrum nulla.
-                                </p>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div className={'explore-item'}>
-                        <div className={'explore-item-container'}>
-                            <div className={'explore-item-image'} style={{backgroundImage:`url(${require('./../../assets/images/venue2.jpg').default})`}}></div>
-                            <div className={'explore-item-text'}>
-                                <h3>
-                                    Glasgow, UK
-                                </h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In velit elit, auctor vitae ligula quis, eleifend rutrum nulla.
-                                </p>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div className={'explore-item '}>
-                        <div className={'explore-item-container'}>
-                            <div className={'explore-item-image'} style={{backgroundImage:`url(${require('./../../assets/images/venue3.jpg').default})`}}></div>
-                            <div className={'explore-item-text'}>
-                                <h3>
-                                    Glasgow, UK
-                                </h3>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In velit elit, auctor vitae ligula quis, eleifend rutrum nulla.
-                                </p>
-                            </div>
-                        </div>
-
-                    </div>
                 </Slider>
 
 
@@ -154,4 +106,19 @@ class  ExploreVenues extends Component{
          </div>
     }
 }
-export default ExploreVenues;
+function mapStateToProps(state) {
+    return {
+        settings:state.settings
+    };
+
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        fetchAllVenues:() => {
+            return dispatch(fetchAllVenues())
+        }
+    }
+
+}
+export default connect(mapStateToProps,mapDispatchToProps)(ExploreVenues);

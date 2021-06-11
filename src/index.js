@@ -12,6 +12,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import { PersistGate } from "redux-persist/lib/integration/react";
+import { CookiesProvider } from 'react-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/css/style.css'
 
@@ -34,13 +35,16 @@ const store = createStore(pReducer, composeEnhancers(applyMiddleware(thunk)));
 export const persistor = persistStore(store);
 
 const application = (
-    <Provider store={store}>
-        <PersistGate persistor={persistor}>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
-        </PersistGate>
-    </Provider>
+    <CookiesProvider>
+        <Provider store={store}>
+            <PersistGate persistor={persistor}>
+                <BrowserRouter>
+                    <App />
+                </BrowserRouter>
+            </PersistGate>
+        </Provider>
+    </CookiesProvider>
+
 );
 
 ReactDOM.render(

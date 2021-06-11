@@ -29,7 +29,7 @@ ul li{
 }
 
 .container-fluid{
-    max-width: 1920px;
+
     margin: 0 auto;
     padding: 0;
 }
@@ -45,6 +45,18 @@ ul li{
     border: 1px solid #FF7ED1 !important;
     box-shadow: none !important;
 }
+.btn.btn-pink:hover{
+    background-color: white !important;
+    color:#FF7ED1;
+}
+
+
+.btn.btn-pink.btn-lg{
+    font-size: 16px;
+    text-transform: uppercase;
+    padding: 21px 55px;
+    border-radius: 11px;
+}
 .btn.btn-pink-bordered{
     color:#FF7ED1 !important;
     border: 1px solid #FF7ED1 !important;
@@ -53,12 +65,22 @@ ul li{
     font-size: 15px;
     box-shadow: none !important;
 }
+.btn.btn-pink-bordered:hover{
+    background-color: #ff7ed1 !important;
+    color: #fff !important;
+}
+
+
 .btn.btn-white-bordered{
     border:2px solid #fff;
     font-size:16px;
     font-family: 'Archivo';
     font-weight:700;
     color:#fff;
+}
+.btn.btn-white-bordered:hover{
+    background-color: #fff;
+    color:#ff7ed1;
 }
 .btn.btn-light{
     background-color: #F8F9FB;
@@ -79,6 +101,13 @@ ul li{
     border:2px solid #000;
     border-radius: 6px;
     padding: 11px 25px;
+}
+
+.btn.btn-large.btn-dark-bordered:hover,
+.btn.btn-large.btn-dark-bordered:focus
+{
+    background: #000;
+    color: #fff;
 }
 
 
@@ -139,10 +168,20 @@ ul li{
 }
 .navbar .nav-right-block .cart-block{
     margin-left: 50px;
+    position: relative;
 }
 .navbar .nav-right-block .cart-block a{
     color:#FF7ED1;
     font-size: 24px;
+}
+.navbar .nav-right-block .cart-block .counter{
+    position:absolute;
+    width: 15px;
+    height: 15px;
+    background: #ff1d33;
+    border-radius: 50%;
+    right: -10px;
+    top: 0px;
 }
 .navbar .nav-right-block .btn-group{
     margin-left: 28px;
@@ -222,6 +261,10 @@ ul li{
     font-size: 27px;
     width: 100%;
 
+}
+.mail-container .row .form-block .input-group button:hover{
+    background-color: #212529;
+    color: #D9D9FF;
 }
 .mail-container .row .form-block .input-group .input-group-append{
     width: 30%;
@@ -502,6 +545,7 @@ ul li{
 .classes-section .classes-container .portfolio-navs .portfolio-nav.active{
     background-color: #FF7ED1;
     color: #fff;
+    pointer-events: none;
 }
 .classes-section .classes-container .portfolio-navs .portfolio-nav:hover{
     background-color: #FF7ED1;
@@ -510,6 +554,7 @@ ul li{
 .classes-list{}
 .classes-list .classes-item{
     margin-bottom: 50px;
+    text-decoration: none;
 }
 .classes-list .classes-item .classes-item-container{
     border-radius: 12px;
@@ -526,6 +571,9 @@ ul li{
 .classes-list .classes-item .text-container{
     padding: 40px;
     position: relative;
+}
+.classes-list .classes-item .text-container:hover{
+    background-color: #fafafa;
 }
 .classes-list .classes-item .text-container .class-level{
     position:absolute;
@@ -563,6 +611,10 @@ ul li{
     font-weight: 700;
     font-size: 23px;
     line-height: 34px;
+     color: #212529;
+}
+.classes-list .classes-item .text-container .class-title:hover{
+    opacity: 0.8;
 }
  .classes-list .classes-item .text-container .class-title span{
 
@@ -1008,4 +1060,731 @@ ul li{
     font-weight: 600;
     font-family: 'Poppins';
     font-size: 16px;
+}
+/* Cart */
+.cart-section{
+    background-image:url("https://www.sewconfident.co.uk/wp-content/uploads/2020/10/Zig-Zag-Banner-Large-1.png") ;
+    padding: 100px 0px;
+    background-size: cover;
+
+}
+.cart-container{
+    max-width: 1100px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 38px 38px 38px 38px;
+}
+.cart-container .cart-title{
+    color: #FF7DD1;
+    font-family: "Rancho", Sans-serif;
+    font-weight: 600;
+    font-size: 30px;
+    margin-bottom: 70px;
+}
+.cart-container .cart-items-list-table{
+    width: 100%;
+    margin-bottom: 60px;
+}
+.cart-container .cart-items-list-table .remove{
+
+
+    color: #737781;
+
+    display: block;
+    width: 1.618em;
+    height: 1.618em;
+    line-height: 1.618;
+    font-weight: 400;
+    position: relative;
+
+}
+.cart-container .cart-items-list-table th{
+    padding: 25px;
+    background-color: #f8f8f8;
+    text-align: center;
+
+}
+.cart-container .cart-items-list-table td{
+    padding: 25px;
+}
+.cart-container .cart-items-list-table img{
+    width: 60px;
+    height: 60px;
+}
+
+.cart-container .cart-items-list-table td.product-name a{
+    color: #000000;
+    font-family: 'Archivo';
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.cart-container .cart-items-list-table td.product-name a:hover{
+    color: #FF7DD1;;
+    text-decoration: none;
+}
+.cart-container .cart-items-list-table td .quantity input{
+    padding: 5px;
+    background-color: #f2f2f2;
+    color: #43454b;
+    border: 0;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    font-weight: 400;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.13);
+    outline: none;
+    width: 60px;
+    text-align: center;
+}
+.cart-container .cart-items-list-table td.actions{
+    background-color: #fbfbfb;
+    padding: 0;
+
+}
+.cart-container .cart-items-list-table td.actions .coupon-block button{
+    background: #d9d9ff;
+    color: #000;
+    border-top-color: #d9d9ff;
+    padding: 10px 23px;
+    border: 0;
+    font-weight: 600;
+}
+.cart-container .cart-items-list-table td.actions .coupon-block button:hover{
+    background-color: #d5d5d5;
+}
+.cart-container .cart-items-list-table td.actions .coupon-block input{
+    padding: 10px;
+    background-color: #f2f2f2;
+    color: #43454b;
+    border: 0;
+    outline: none;
+}
+.cart-container .cart_totals{
+
+}
+.cart-container .cart_totals h2{
+    font-size: 25px;
+    font-weight: 300;
+}
+.cart-container .cart_totals table{
+    width: 100%;
+}
+.cart-container .cart_totals table th{
+    padding: 25px;
+    background-color: #f8f8f8;;
+}
+.cart-container .cart_totals table td{
+    background-color: #fdfdfd;
+    padding: 25px;
+    display: block;
+}
+.cart-container .cart_totals table td bdl{
+    font-weight: 600;
+    display: block;
+}
+.cart-container .cart_totals table td small{
+    font-size: 60%;
+}
+.cart-container .cart_totals table td a{
+    color: #000000;
+    font-family: 'Archivo';
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: uppercase;
+
+}
+.cart-container .cart_totals table td a:hover{
+    color: #FF7DD1;;
+    text-decoration: none;
+}
+.cart-container .cart_totals table td .giftup-cart-subtotal-td-form{
+    display: grid;
+    grid-template-columns: minmax(110px, 1fr) fit-content(40px);
+}
+.cart-container .cart_totals table td input{
+    padding: .6180469716em;
+    background-color: #f2f2f2;
+    color: #43454b;
+    border: 0;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    font-weight: 400;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0,  0.13);
+}
+.cart-container .cart_totals table td button{
+    background-color: #eeeeee;
+    border: 0;
+
+    padding: .6180469716em 1.41575em;
+    text-decoration: none;
+    font-weight: 600;
+    box-shadow: none;
+}
+.cart-container .cart_totals table td button:focus{
+    border-color: #d5d5d5;
+}
+.cart-container .cart_totals .checkout-button{
+    background-color: #333333;
+    border-color: #333333;
+    color: #ffffff;
+    font-size: 24px;
+    text-transform: uppercase;
+    display: block;
+    text-decoration: none;
+    padding: 14px 32px;
+    text-align: center;
+}
+.cart-container .cart-empty{
+    margin-bottom: 2.617924em;
+
+    margin-left: 0;
+    border-radius: 2px;
+    color: #fff;
+    clear: both;
+    border-left: .6180469716em solid rgba(0,0,0,.15);
+    padding: 1em 2em 1em 3.5em;
+    background-color: #ff7dd1 !important;
+
+    border-top-color: #d9d9ff;
+}
+.cart-container .cart-empty i{
+    margin-right: 15px;
+}
+@media screen and (min-width: 768px){
+    .cart-container .cart-items-list-table{
+
+    }
+    .cart-container .cart-items-list-table td.actions .coupon-block{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+
+}
+@media screen and (max-width: 767px){
+    .cart-section{
+        padding: 40px 10px;
+    }
+    .cart-container .cart-title{
+        text-align: center;
+    }
+    .cart-container .cart-items-list-table td.actions .coupon-block input{
+        width: 100%;
+    }
+    .cart-container .cart-items-list-table td.actions .coupon-block{
+        text-align: right;
+    }
+    .cart-container .cart-items-list-table td[data-title]::before{
+        content: attr(data-title) ": ";
+        font-weight: 600;
+        float: left;
+    }
+    .cart-container .cart-items-list-table thead{
+        display: none;
+    }
+    .cart-container .cart-items-list-table td{
+        display: block;
+        padding: .875em .875em 0;
+        text-align: right;
+    }
+    .cart-container .cart-items-list-table td.product-remove{
+        padding: 0;
+        text-align: right;
+        position: relative;
+    }
+    .cart-container .cart-items-list-table td.product-thumbnail{
+        text-align: center;
+    }
+    .cart-container .cart-items-list-table td.product-remove a{
+        position: absolute;
+        font-size: 1.41575em;
+        top: -.6180469716em;
+        right: -.6180469716em;
+    }
+    .cart-container .cart-items-list-table td.actions{
+        border-top-width: 16px;
+    }
+    .cart-container .cart-items-list-table td.actions input{
+        margin: .5407911001em 0;
+    }
+    .cart-container .cart-items-list-table td.actions .coupon{
+        padding-bottom: 1em;
+        margin-bottom: 1em;
+        border-bottom: 1px solid rgba(0,0,0,.05);
+    }
+    .cart-container .cart_totals table th{
+        display: none;
+    }
+    .cart-container .cart_totals table td[data-title]::before{
+        content: attr(data-title) ": ";
+        font-weight: 600;
+        float: left;
+    }
+    .cart-container .cart_totals table td{
+        text-align: right;
+    }
+    .cart-container .cart_totals table td strong{
+        display: inline-block !important;
+        margin-right: 6px;
+    }
+
+}
+
+.cart-container .cart-items-list-table {
+
+}
+
+/* Checkout */
+.checkout-section{
+    background-image:url("https://www.sewconfident.co.uk/wp-content/uploads/2020/10/Zig-Zag-Banner-Large-1.png") ;
+    padding: 100px 0px;
+    background-size: cover;
+}
+.checkout-section .checkout-container{
+    max-width: 1100px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 38px 38px 38px 38px;
+    background-attachment: fixed;
+}
+.checkout-section .checkout-container .checkout-title{
+    font-size: 32px;
+    font-family: Rancho;
+    font-weight: 600;
+    letter-spacing: 1.7px;
+}
+.checkout-section .checkout-container .checkout-coupon-info{
+    margin-bottom: 2.617924em;
+    margin-left: 0;
+    border-radius: 2px;
+    color: #fff;
+    clear: both;
+    border-left: .6180469716em solid rgba(0,0,0,.15);
+    padding: 1em 2em 1em 3.5em;
+    background-color: #ff7dd1 !important;
+    border-top-color: #d9d9ff;
+}
+.checkout-section .checkout-container .checkout-coupon-info .showcoupon{
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: 600;
+}
+.checkout-section .checkout-container .checkout-coupon-info .showcoupon:hover{
+    opacity: 0.7;
+}
+ .input-text{
+    padding: .6180469716em;
+    background-color: #f2f2f2;
+    color: #43454b;
+    border: 0;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    font-weight: 400;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.13);
+}
+ .input-text{
+    width: 100%;
+}
+.checkout-section .checkout-container button{
+    background-color: #d5d5d5;
+    border-color: #d5d5d5;
+    color: #333333;
+    cursor: pointer;
+    padding: .6180469716em 1.41575em;
+    text-decoration: none;
+    font-weight: 600;
+    border: 0;
+}
+form.checkout abbr{
+    border-bottom: 0!important;
+    color: #e2401c;
+}
+form.checkout input[type=checkbox]+label, form.checkout input[type=radio]+label {
+    margin: 0 0 0 .3819820591em;
+}
+form.checkout h3{
+    font-weight: 300;
+    font-size: 1.618rem;
+    margin-bottom: 14px;
+}
+.form-row label{
+    display: block;
+    margin-bottom: 0;
+    width: 100%;
+}
+.form-row .woocommerce-input-wrapper{
+    width:100%
+}
+#order_review .shop_table {
+    margin-bottom: 2.617924em;
+    width: 100%;
+}
+#order_review .shop_table th{
+    padding: 1.41575em;
+    vertical-align: middle;
+    background-color: #f8f8f8;
+}
+#order_review .shop_table td{
+    padding: 1em 1.41575em;
+}
+#order_review .shop_table tbody td{
+    background-color: #fdfdfd;
+    padding: 1em 1.41575em;
+}
+#order_review .shop_table .product-name{
+    width:50% ;
+}
+#order_review .shop_table .giftup-cart-subtotal-td-apply-gc{
+    color: #000000;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+#order_review .shop_table .giftup-cart-subtotal-td-apply-gc:hover{
+    color: #FF7DD1;
+    text-decoration: none;
+}
+#order_review .shop_table input{
+    padding: .6180469716em;
+    background-color: #f2f2f2;
+    color: #43454b;
+    border: 0;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    font-weight: 400;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0 , 0.13);
+}
+#payment .payment_methods > li .payment_box, #payment .place-order {
+    background-color: #fafafa;
+}
+#payment .place-order {
+    padding: 1.41575em;
+    margin-bottom: 0;
+    float: none;
+    width: 100%;
+    margin-top: 2.617924em;
+}
+
+
+#payment .woocommerce-terms-and-conditions {
+    padding: 1em;
+    box-shadow: inset 0 1px 3px rgba(0 ,0 ,0, 0.2);
+    margin-bottom: 16px;
+    background-color: rgba(0,0,0,.05);
+    max-height: 200px;
+    overflow: auto;
+}
+#payment .woocommerce-terms-and-conditions h2{
+    font-weight: 300;
+}
+#payment .woocommerce-terms-and-conditions img{
+    width: 100%;
+    height: auto;
+}
+#payment #place_order,#stripe_payment{
+    width: 100%;
+    padding: .6180469716em 1.41575em;
+    background-color: #1a1a1a;
+    border-color: #1a1a1a;
+    color: #ffffff;
+    font-size: 1.41575em;
+}
+#payment a{
+    text-transform: uppercase;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+}
+#payment a:hover{
+    color: #FF7DD1;
+    text-decoration: none;
+}
+#payment .payment_methods {
+    margin: 0!important;
+    padding: 0!important;
+    list-style-type: none;
+}
+#payment ul.payment_methods li img.stripe-icon {
+    max-width: 40px;
+    padding-left: 3px;
+    margin: 0;
+}
+#payment .payment_methods>.wc_payment_method>label, #payment .payment_methods>.woocommerce-PaymentMethod>label {
+    display: block;
+    padding: 1.41575em;
+    cursor: pointer;
+    font-size: 15px;
+}
+#payment .payment_methods li img {
+    float: right;
+    border: 0;
+    padding: 0;
+    max-height: 1.618em;
+}
+#payment .payment_methods > li:not(.woocommerce-notice):hover {
+    background-color: #f0f0f0;
+}
+
+#payment .payment_methods > li:not(.woocommerce-notice) {
+    background-color: #f5f5f5;
+}
+#payment .payment_methods li {
+    list-style: none!important;
+    margin-left: 0;
+    position: relative;
+}
+#payment .payment_methods li.wc_payment_method>input[type=radio]:first-child, #payment .payment_methods li.woocommerce-PaymentMethod>input[type=radio]:first-child {
+    border: 0;
+    clip: rect(1px,1px,1px,1px);
+    -webkit-clip-path: inset(50%);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    word-wrap: normal!important;
+}
+#payment .payment_methods > li:not(.woocommerce-notice) {
+    background-color: #f5f5f5;
+}
+#payment .payment_methods li {
+    list-style: none!important;
+    margin-left: 0;
+    position: relative;
+}
+#payment .payment_methods>.wc_payment_method>label:before, #payment .payment_methods>.woocommerce-PaymentMethod>label:before {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    line-height: 1;
+    font-family: Font Awesome\ 5 Free;
+    font-weight: 900;
+    line-height: inherit;
+    vertical-align: baseline;
+    content: "\f111";
+    margin-right: .5407911001em;
+    -webkit-transition: color,ease,.2s;
+    transition: color,ease,.2s;
+}
+#payment .payment_methods > li .payment_box, #payment .place-order {
+    background-color: #fafafa;
+}
+
+#payment .payment_methods li .payment_box {
+    padding: 1.41575em;
+    line-height: 1.618;
+    font-family: Archivo;
+}
+#payment .payment_methods li.wc_payment_method>input[type=radio]:first-child:checked+label:before, #payment .payment_methods li.woocommerce-PaymentMethod>input[type=radio]:first-child:checked+label:before {
+    content: "\f192";
+    color: #96588a;
+}
+.wc-stripe-elements-field, .wc-stripe-iban-element-field {
+    border: 1px solid #ddd;
+    margin: 5px 0;
+    padding: 5px;
+    background-color: #fff;
+    outline: 0;
+}
+.ElementsApp input {
+    background-color: transparent;
+    border: none;
+    display: block;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+
+    line-height: 1.2em;
+    height: 1.2em;
+}
+@media (min-width: 768px){
+    form.checkout .form-row{
+        margin-left:0;
+        margin-right: 0;
+    }
+    form.checkout .woocommerce-input-wrapper{
+        display: block;
+        width: 100%;
+    }
+    .form-row-first {
+        width: 47.0588235294%;
+        float: left;
+        margin-right: 5.8823529412% !important;
+        clear: both;
+
+    }
+    .col2-set {
+        width: 52.9411764706%;
+        float: left;
+        margin-right: 5.8823529412% !important;
+    }
+    #order_review, #order_review_heading {
+        width: 41.1764705882%;
+        float: right;
+        margin-right: 0;
+        clear: right;
+    }
+    form.checkout{
+        overflow: auto;
+    }
+
+    #ship-to-different-address label{
+        position: relative;
+        width: 100%;
+    }
+    #ship-to-different-address .woocommerce-form__input-checkbox {
+        position: absolute;
+        top: 50%;
+        right: 0;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+        margin-right: 0;
+    }
+
+    #payment .payment_methods li .payment_box fieldset {
+        border: 0;
+        margin: 0;
+        padding: 1em 0 0;
+        font-size: .875em;
+    }
+    #payment .payment_methods li .payment_box fieldset .form-row-first {
+        width: 47.0588235294%;
+        float: left;
+        margin-right: 5.8823529412%;
+        clear: both;
+    }
+
+}
+@media (max-width: 767px){
+    .checkout-section{
+        padding: 40px 10px;
+    }
+    .checkout-section .checkout-container{
+        padding: 10px;
+    }
+    .checkout-section .checkout-container .checkout-title{
+        text-align: center;
+    }
+}
+
+/* Checkout Thank You */
+
+.checkout-section .thank-you{
+    font-family: Archivo;
+}
+.checkout-section .thank-you .shop_table{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.checkout-section .thank-you .shop_table td{
+    padding: 1.41575em;
+    vertical-align: middle;
+    background-color: #f8f8f8;
+}
+.checkout-section .thank-you .shop_table td .title {
+    text-transform: uppercase;
+}
+.checkout-section .thank-you .shop_table td .value{
+    font-weight: 700;
+}
+.checkout-section .thank-you .shop_table td.title {
+
+}
+.checkout-section .thank-you .shop_table td.value{
+
+}
+.checkout-section .thank-you .shop_table td.bold{
+    font-weight: bold;
+}
+.checkout-section .thank-you  h3{
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+.checkout-section .thank-you .address-block{
+    margin-bottom: 20px;
+}
+.checkout-section .thank-you .address-block .address-row{
+    font-weight: 700;
+    font-style: italic;
+}
+#g-map iframe{
+    width: 100% !important;
+    margin-bottom: 0;
+    height: 100%;
+}
+
+/* Login */
+
+.login-section{
+    background-image: url(https://www.sewconfident.co.uk/wp-content/uploads/2020/10/Zig-Zag-Banner-Large-1.png);
+    padding: 100px 0px;
+    background-size: cover;
+
+}
+.login-section .login-container{
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 38px 38px 38px 38px;
+}
+.login-section .login-container .login-title{
+    font-size: 32px;
+    font-family: Rancho;
+    font-weight: 600;
+    letter-spacing: 1.7px;
+    color: #FF7DD1;
+}
+.login-section .login-container h3{
+    font-weight: 300;
+    font-size: 1.618rem;
+    margin-bottom: 14px;
+}
+
+.login-section .login-container a{
+    color: #000000;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+.login-section .login-container button{
+    background-color: #eeeeee;
+
+    color: #333333;
+    cursor: pointer;
+    padding: .6180469716em 1.41575em;
+    text-decoration: none;
+    font-weight: 600;
+    text-shadow: none;
+    display: inline-block;
+    border: 0;
+}
+.login-section .login-container button:hover{
+    background-color: #d5d5d5;
+    border-color: #d5d5d5;
+    color: #333333;
+}
+.login-section .login-container a:hover{
+    color: #FF7DD1;
+    text-decoration: none;
+}
+.login-section .login-container .form-row .required{
+    color: #e2401c;
+}
+@media (max-width: 767px) {
+    .login-section {
+        padding: 40px 10px;
+    }
+
+    .login-section .login-container {
+        padding: 10px;
+    }
 }
