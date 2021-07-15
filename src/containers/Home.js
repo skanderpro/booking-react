@@ -10,6 +10,7 @@ import {
 } from "./../redux/actions/classesAction";
 import { fetchAllVenues } from "./../redux/actions/venueActions";
 import VouchersList from "../components/components/VouchersList";
+import Loader from "../components/components/Loader";
 
 class Home extends Component {
   state = {
@@ -28,6 +29,7 @@ class Home extends Component {
     page: 1,
     limit: 6,
     isLoadMore: true,
+    isLoader: true,
   };
 
   componentDidMount() {
@@ -43,6 +45,7 @@ class Home extends Component {
         this.setState({
           classes: [...response.data],
           isLoadMore: response.data.length === this.state.limit,
+          isLoader: false,
         });
       });
     this.props.fetchAllVenues().then((response) => {
@@ -139,6 +142,7 @@ class Home extends Component {
           <VouchersList />
           <ExploreVenues />
         </div>
+        <Loader status={this.state.isLoader} />
       </MainLayout>
     );
   }

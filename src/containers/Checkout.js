@@ -18,6 +18,7 @@ import { userDiscount } from "./../redux/actions/userActions";
 import { Elements, CardElement } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
+import Loader from "../components/components/Loader";
 const stripePromise = loadStripe("pk_test_Du0fzY5XkR7m8qkwrWanhqpC00TMxFfEet");
 
 class Checkout extends Component {
@@ -35,6 +36,7 @@ class Checkout extends Component {
     couponErrors: "",
     is_bonuses: false,
     bonuses: 0,
+    isLoader: true,
     formData: {
       billingFirstName: "",
       billingLastName: "",
@@ -98,6 +100,7 @@ class Checkout extends Component {
     this.props.getRemoteCart().then((response) => {
       this.setState({
         remoteCart: [...response.data.items],
+        isLoader: false,
       });
     });
   }
@@ -286,6 +289,7 @@ class Checkout extends Component {
                       type: "paypal",
                       payment_system_id: data.orderID,
                       successfulness: 1,
+                      amount: this.getTotalPrice(),
                     })
                     .then((response) => {
                       this.props
@@ -347,6 +351,7 @@ class Checkout extends Component {
                       type: "stripe",
                       payment_system_id: result.paymentIntent.id,
                       successfulness: 1,
+                      amount: this.getTotalPrice(),
                     })
                     .then((response) => {
                       this.props
@@ -1962,6 +1967,7 @@ class Checkout extends Component {
           </div>
         </section>
         <ShopBanner />
+        <Loader status={this.state.isLoader} />
       </MainLayout>
     );
   }

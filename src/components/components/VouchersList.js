@@ -25,7 +25,10 @@ function VouchersList(props) {
         <div className={"classes-list row"}>
           {vouchers.map((voucher, index) => {
             return (
-              <div className={"classes-item col-lg-4 col-md-6"}>
+              <div
+                className={"classes-item col-lg-4 col-md-6"}
+                key={`voucher-item-${index}`}
+              >
                 <div className={"classes-item-container"}>
                   <div
                     className={"image-container"}

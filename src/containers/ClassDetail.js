@@ -7,10 +7,12 @@ import ShopBanner from "../components/components/ShopBanner";
 import { fetchClass } from "./../redux/actions/classesAction";
 import { addLocalCart, addRemoteCart } from "./../redux/actions/cartActions";
 import { connect } from "react-redux";
+import Loader from "../components/components/Loader";
 
 class ClassDetail extends Component {
   state = {
     classItem: {},
+    isLoader: true,
   };
 
   componentDidMount() {
@@ -22,6 +24,7 @@ class ClassDetail extends Component {
       this.setState(
         {
           classItem: { ...response.data },
+          isLoader: false,
         },
         () => {
           this.calcClassDetailTopContainer();
@@ -66,6 +69,7 @@ class ClassDetail extends Component {
           ) : null}
         </div>
         <ShopBanner />
+        <Loader status={this.state.isLoader} />
       </MainLayout>
     );
   }

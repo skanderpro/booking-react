@@ -12,7 +12,7 @@ function ClassesContainer(props) {
   return (
     <div className={"classes-section"}>
       <div className={"classes-container"}>
-        <div className={"classes-search"}>
+        <div className={"classes-search"} id={"classes-search"}>
           <div className={"search-title"}>Class search</div>
           <div className={"search-navs row no-gutters"}>
             <div className={"col-lg-3 search-field-container"}>
@@ -147,7 +147,7 @@ function ClassesContainer(props) {
                           <i className="far fa-calendar-alt"></i>
                         </span>
                         <span className={"text"}>
-                          {classItem.product.dates}
+                          {classItem.product.lesson_date}
                         </span>
                       </div>
                       <div className={"col-6 location-container"}>

@@ -26,7 +26,9 @@ function ClassDetailTopBlock(props) {
               <span className={"icon"}>
                 <i className="far fa-calendar-alt"></i>
               </span>
-              <span className={"text"}>{props.classDetail.product.dates}</span>
+              <span className={"text"}>
+                {props.classDetail.product.lesson_date}
+              </span>
             </div>
             <div className={"col-auto location-container"}>
               <span className={"icon"}>
@@ -39,23 +41,28 @@ function ClassDetailTopBlock(props) {
           </div>
           <div className={"class-title"}>{props.classDetail.product.name}</div>
           <div className={"control-block"}>
-            <button
-              className={"btn btn-dark-bordered btn-large"}
-              onClick={() => {
-                let token = cookies.get("token");
-                if (!token) {
-                  props.addToCart(props.classDetail);
-                } else {
-                  props.addRemoteCart(props.classDetail.id, false, "class");
-                }
-              }}
-            >
-              Book class
-            </button>
+            {props.classDetail.product.numbers_of_seats >
+            props.classDetail.product.buyed_numbers_of_seats ? (
+              <button
+                className={"btn btn-dark-bordered btn-large"}
+                onClick={() => {
+                  let token = cookies.get("token");
+                  if (!token) {
+                    props.addToCart(props.classDetail);
+                  } else {
+                    props.addRemoteCart(props.classDetail.id, false, "class");
+                  }
+                }}
+              >
+                Book class
+              </button>
+            ) : null}
+
             <span className={"d-inline-block availability-container"}>
               <div className={"title"}>Availability</div>
               <div className={"numbers"}>
-                18/{props.classDetail.product.number_of_seats}
+                {props.classDetail.product.numbers_of_seats}/
+                {props.classDetail.product.buyed_numbers_of_seats}
               </div>
             </span>
           </div>

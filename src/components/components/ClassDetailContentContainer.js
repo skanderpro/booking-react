@@ -17,6 +17,9 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
+import Cookies from "universal-cookie";
+
+const cookies = new Cookies();
 
 function ClassDetailContentContainer(props) {
   let social_title = props.classDetail.product.name;
@@ -33,7 +36,8 @@ function ClassDetailContentContainer(props) {
       });
   }, []);
 
-  let dates = props.classDetail.product.dates.split(",");
+  let dates = props.classDetail.product.dates;
+  let token = cookies.get("token");
 
   return (
     <React.Fragment>
@@ -68,12 +72,19 @@ function ClassDetailContentContainer(props) {
             <div className={"dates-list"}>
               {dates.map((date, index) => {
                 return (
-                  <div className={"dates-item"} key={`dates-item-${index}`}>
+                  <NavLink
+                    to={makeUrl(
+                      `/class-detail/${date.id}`,
+                      props.match.params.invite
+                    )}
+                    className={"dates-item d-block"}
+                    key={`dates-item-${index}`}
+                  >
                     <span className={"icon"}>
                       <i className="far fa-calendar-alt"></i>
                     </span>
-                    {date}
-                  </div>
+                    {date.date}
+                  </NavLink>
                 );
               })}
             </div>
@@ -112,21 +123,24 @@ function ClassDetailContentContainer(props) {
               </li>
             </ul>
           </div>
-          <div className={"shares-widget"}>
-            <button
-              className={"btn btn-pink"}
-              style={{ width: "100%" }}
-              type={"button"}
-              onClick={() => {
-                let origin =
-                  window.location.origin +
-                  `/class-detail/${props.classDetail.id}/invite/${props.user.invite_code}`;
-                window.navigator.clipboard.writeText(origin);
-              }}
-            >
-              Copy Referal Link
-            </button>
-          </div>
+
+          {!!token ? (
+            <div className={"shares-widget"}>
+              <button
+                className={"btn btn-pink"}
+                style={{ width: "100%" }}
+                type={"button"}
+                onClick={() => {
+                  let origin =
+                    window.location.origin +
+                    `/class-detail/${props.classDetail.id}/invite/${props.user.invite_code}`;
+                  window.navigator.clipboard.writeText(origin);
+                }}
+              >
+                Copy Referal Link
+              </button>
+            </div>
+          ) : null}
         </div>
         <div className={"col-12"}>
           <ClassAccordion classDetail={props.classDetail} />
@@ -184,7 +198,9 @@ function ClassDetailContentContainer(props) {
                           <span className={"icon"}>
                             <i className="far fa-calendar-alt"></i>
                           </span>
-                          <span className={"text"}>{lesson.product.dates}</span>
+                          <span className={"text"}>
+                            {lesson.product.lesson_date}
+                          </span>
                         </div>
                         <div className={"col-6 location-container"}>
                           <span className={"icon"}>

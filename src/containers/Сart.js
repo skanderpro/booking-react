@@ -14,6 +14,7 @@ import { userDiscount } from "./../redux/actions/userActions";
 import { makeUrl } from "./../redux/actions/functions";
 import Cookies from "universal-cookie";
 import { confirmVoucher } from "./../redux/actions/voucherActions";
+import Loader from "../components/components/Loader";
 
 const cookies = new Cookies();
 
@@ -25,13 +26,10 @@ class Cart extends Component {
     discount: 0,
     coupon: "",
     couponErrors: "",
+    isLoader: true,
   };
 
   componentDidMount() {
-    this.setState({
-      localItems: [...this.props.cartItems],
-    });
-
     if (!!this.props.match.params.invite === true) {
       this.props
         .userDiscount(this.props.match.params.invite)
@@ -45,6 +43,11 @@ class Cart extends Component {
     let token = cookies.get("token");
     if (!!token) {
       this.getRemoteCart();
+    } else {
+      this.setState({
+        localItems: [...this.props.cartItems],
+        isLoader: false,
+      });
     }
   }
 
@@ -60,11 +63,13 @@ class Cart extends Component {
           set: item.product.product.set,
           is_set: item.is_set,
           product_id: item.product.id,
+          type: item.type,
         });
       });
 
       this.setState({
         remoteItems: [...items],
+        isLoader: false,
       });
     });
   };
@@ -215,7 +220,7 @@ class Cart extends Component {
                 `/class-detail/${item.product_id}`,
                 this.props.match.params.invite
               )}
-              className={"product-title"}
+              className={"product-title " + item.type}
             >
               {item.name}
             </NavLink>
@@ -497,6 +502,7 @@ class Cart extends Component {
           </div>
         </section>
         <ShopBanner />
+        <Loader status={this.state.isLoader} />
       </MainLayout>
     );
   }

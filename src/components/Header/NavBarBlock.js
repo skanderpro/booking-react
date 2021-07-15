@@ -6,6 +6,7 @@ import { logout } from "./../../redux/actions/userActions";
 import { getRemoteCart } from "./../../redux/actions/cartActions";
 import { connect } from "react-redux";
 import { makeUrl } from "../../redux/actions/functions";
+import { NavHashLink } from "react-router-hash-link";
 
 const cookies = new Cookies();
 
@@ -21,6 +22,7 @@ function NavBarBlock(props) {
     }
   }, []);
 
+  console.log(props.cartItems);
   return (
     <Navbar collapseOnSelect expand="lg">
       <Navbar.Brand href="#home">
@@ -30,12 +32,7 @@ function NavBarBlock(props) {
             props.match.params.invite
           )}
         >
-          <img
-            src={
-              require("./../../assets/images/917bd5698f9b74b38081440b9eff12dc.png")
-                .default
-            }
-          />
+          <img src={require("./../../assets/images/logo.png").default} />
         </NavLink>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -82,9 +79,16 @@ function NavBarBlock(props) {
       </Navbar.Collapse>
       <div className={"nav-right-block"}>
         <div className={"search-block"}>
-          <a href={""}>
+          <NavHashLink
+            to={
+              makeUrl(
+                !!props.match.params.invite === true ? "/home" : "/",
+                props.match.params.invite
+              ) + "#classes-search"
+            }
+          >
             <i className="fas fa-search"></i>
-          </a>
+          </NavHashLink>
         </div>
 
         <ButtonGroup aria-label="Basic example">
@@ -144,14 +148,19 @@ function NavBarBlock(props) {
           <NavLink to={makeUrl("/cart", props.match.params.invite)}>
             <i className="fas fa-shopping-bag"></i>
           </NavLink>
-          {cart.length > 0 ? <span className={"counter"}></span> : null}
+          {(cart.length > 0 && !!token) ||
+          (props.cartItems.length > 0 && !token) ? (
+            <span className={"counter"}></span>
+          ) : null}
         </div>
       </div>
     </Navbar>
   );
 }
 function mapStateToProps(state) {
-  return {};
+  return {
+    cartItems: state.cart.items,
+  };
 }
 function mapDispatchToProps(dispatch) {
   return {

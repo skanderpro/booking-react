@@ -76,3 +76,26 @@ export function setUserProfile(user) {
     },
   };
 }
+
+export function forgotPassword(email) {
+  return async (dispatch, getState) => {
+    let mainUrl = getState().settings.mainUrl;
+    let response = await axios.post(`${mainUrl}/api/password/email`, {
+      email,
+    });
+    return response;
+  };
+}
+
+export function resetPassword(formData) {
+  return async (dispatch, getState) => {
+    let mainUrl = getState().settings.mainUrl;
+    let response = await axios.post(`${mainUrl}/api/password/reset`, {
+      email: formData.email,
+      token: formData.token,
+      password: formData.newPassword,
+      password_confirmation: formData.newPassword_c,
+    });
+    return response;
+  };
+}

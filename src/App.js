@@ -18,26 +18,34 @@ import {
   checkProfile,
   logout,
 } from "./redux/actions/userActions";
+import { fetchSettings } from "./redux/actions/settingActions";
 import { connect } from "react-redux";
 import Cookies from "universal-cookie";
 import TestPaymant from "./containers/TestPaymant";
+import VerifyEmail from "./containers/VerifyEmail";
+import { NotificationContainer } from "react-notifications";
+import ReactGA from "react-ga";
+import ResetPassword from "./containers/ResetPassword";
 
 const cookies = new Cookies();
 
 function App(props) {
-  let token = cookies.get("token");
+  // let token = cookies.get("token");
   useEffect(() => {
-    if (!!token) {
-      props
-        .checkProfile()
-        .then((response) => {
-          props.setUserProfile(response.data);
-        })
-        .catch((error) => {
-          cookies.remove("token");
-          props.logout();
-        });
-    }
+    props.fetchSettings();
+    ReactGA.initialize("UA-000000-01");
+    ReactGA.pageview(window.location.pathname + window.location.search);
+    //   if (!!token) {
+    //     props
+    //       .checkProfile()
+    //       .then((response) => {
+    //         props.setUserProfile(response.data);
+    //       })
+    //       .catch((error) => {
+    //         cookies.remove("token");
+    //         props.logout();
+    //       });
+    //   }
   }, []);
   return (
     <div className="App">
@@ -78,9 +86,15 @@ function App(props) {
           component={ForgotPassword}
         />
         <Route path={"/forgot-password"} component={ForgotPassword} />
+        <Route path={"/verify-email/:url+"} component={VerifyEmail} />
 
+        <GuestRoute
+          path={"/reset-password/token/:token/email/:email"}
+          component={ResetPassword}
+        />
         {/*<Route path={"/test-payment"} component={TestPaymant} />*/}
       </Switch>
+      <NotificationContainer />
     </div>
   );
 }
@@ -98,6 +112,9 @@ function mapDispatchToProps(dispatch) {
     },
     logout: () => {
       return dispatch(logout());
+    },
+    fetchSettings: () => {
+      return dispatch(fetchSettings());
     },
   };
 }

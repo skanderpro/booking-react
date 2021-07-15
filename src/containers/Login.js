@@ -4,10 +4,13 @@ import { Alert } from "react-bootstrap";
 import { login } from "../redux/actions/userActions";
 import { connect } from "react-redux";
 import { loginCart } from "../redux/actions/cartActions";
-import { withRouter } from "react-router-dom";
+import { withRouter, NavLink } from "react-router-dom";
 import { makeUrl } from "./../redux/actions/functions";
-
+import FacebookLogin from "react-facebook-login";
+import { Button } from "react-bootstrap";
 import Cookies from "universal-cookie";
+import { loginWithFacebook } from "./../redux/actions/facebookActions";
+import { NotificationManager } from "react-notifications";
 
 const cookies = new Cookies();
 
@@ -34,6 +37,22 @@ class Login extends Component {
     }
 
     return errors;
+  };
+
+  handleFacebookLogin = (response) => {
+    const { accessToken } = response;
+    this.props.loginWithFacebook(accessToken).then((response) => {
+      cookies.set("token", response.data.token, {
+        sameSite: "strict",
+      });
+
+      this.props.loginCart().then((response) => {
+        window.location.href = makeUrl(
+          !!this.props.match.params.invite === true ? "/home" : "/",
+          this.props.match.params.invite
+        );
+      });
+    });
   };
 
   render() {
@@ -83,7 +102,7 @@ class Login extends Component {
                   <label htmlFor="password">
                     Password&nbsp;<span className="required">*</span>
                   </label>
-                  <span cassName="woocommerce-input-wrapper">
+                  <span className="woocommerce-input-wrapper">
                     <input
                       type="password"
                       className="input-text "
@@ -120,10 +139,11 @@ class Login extends Component {
                             this.props
                               .login(this.state.formData)
                               .then((response) => {
+                                NotificationManager.success("Login success");
                                 cookies.set("token", response.data.token, {
                                   sameSite: "strict",
                                 });
-                                console.log(response.data.token);
+
                                 this.props.loginCart().then((response) => {
                                   window.location.href = makeUrl(
                                     !!this.props.match.params.invite === true
@@ -134,6 +154,7 @@ class Login extends Component {
                                 });
                               })
                               .catch((errors) => {
+                                // NotificationManager.success("good");
                                 let resultErrors = [...this.state.errors];
                                 resultErrors.push(
                                   "Email or password is incorrect!"
@@ -155,8 +176,33 @@ class Login extends Component {
                   </button>
                 </div>
               </p>
+              <p>
+                <FacebookLogin
+                  appId={process.env.REACT_APP_FACEBOOK_APP_ID}
+                  fields="name,email,picture"
+                  callback={this.handleFacebookLogin}
+                  render={(renderProps) => (
+                    <Button
+                      variant="primary"
+                      block
+                      onClick={renderProps.onClick}
+                      // disabled={this.props.loading}
+                      outline
+                    >
+                      Sign in with Facebook
+                    </Button>
+                  )}
+                />
+              </p>
               <p className="woocommerce-LostPassword lost_password">
-                <a href="/">Lost your password?</a>
+                <NavLink
+                  to={makeUrl(
+                    `/forgot-password/`,
+                    this.props.match.params.invite
+                  )}
+                >
+                  Lost your password?
+                </NavLink>
               </p>
             </div>
           </section>
@@ -176,6 +222,9 @@ function mapDispatchToProps(dispatch) {
     },
     loginCart: () => {
       return dispatch(loginCart());
+    },
+    loginWithFacebook: (access_token) => {
+      return dispatch(loginWithFacebook(access_token));
     },
   };
 }
