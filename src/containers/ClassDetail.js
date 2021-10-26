@@ -20,6 +20,18 @@ class ClassDetail extends Component {
       this.calcClassDetailTopContainer();
     };
     let class_id = this.props.match.params.id;
+    this.fetchClass(class_id);
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    let class_id = this.props.match.params.id;
+    let prev_class_id = prevProps.match.params.id;
+    if (class_id !== prev_class_id) {
+      this.fetchClass(class_id);
+    }
+  }
+
+  fetchClass = (class_id) => {
     this.props.fetchClass(class_id).then((response) => {
       this.setState(
         {
@@ -31,7 +43,7 @@ class ClassDetail extends Component {
         }
       );
     });
-  }
+  };
 
   calcClassDetailTopContainer = () => {
     let height = document.getElementById("class-detail-top-block").offsetHeight;

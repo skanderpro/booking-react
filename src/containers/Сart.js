@@ -15,6 +15,7 @@ import { makeUrl } from "./../redux/actions/functions";
 import Cookies from "universal-cookie";
 import { confirmVoucher } from "./../redux/actions/voucherActions";
 import Loader from "../components/components/Loader";
+import { fetchSettings } from "./../redux/actions/settingActions";
 
 const cookies = new Cookies();
 
@@ -27,6 +28,9 @@ class Cart extends Component {
     coupon: "",
     couponErrors: "",
     isLoader: true,
+    settings: {
+      kartra_discount: 0,
+    },
   };
 
   componentDidMount() {
@@ -39,6 +43,13 @@ class Cart extends Component {
           });
         });
     }
+    this.props.fetchSettings().then((response) => {
+      this.setState({
+        settings: {
+          ...response.data,
+        },
+      });
+    });
 
     let token = cookies.get("token");
     if (!!token) {
@@ -262,6 +273,10 @@ class Cart extends Component {
     });
     let token = cookies.get("token");
 
+    let discountKartra = this.props.user.is_kartra
+      ? this.state.settings.kartra_discount / 100
+      : 0;
+
     return (
       <MainLayout>
         <section className="cart-section">
@@ -431,7 +446,9 @@ class Cart extends Component {
                                         <bdi>
                                           {formatter.format(
                                             this.getTotalPrice() *
-                                              (1 - this.state.discount)
+                                              (1 -
+                                                this.state.discount -
+                                                discountKartra)
                                           )}
                                         </bdi>
                                       </span>
@@ -511,6 +528,7 @@ function mapStateToProps(state) {
   return {
     cartItems: state.cart.items,
     settings: state.settings,
+    user: state.user.user,
   };
 }
 function mapDispatchToProps(dispatch) {
@@ -535,6 +553,9 @@ function mapDispatchToProps(dispatch) {
     },
     confirmVoucher: (code) => {
       return dispatch(confirmVoucher(code));
+    },
+    fetchSettings: () => {
+      return dispatch(fetchSettings());
     },
   };
 }

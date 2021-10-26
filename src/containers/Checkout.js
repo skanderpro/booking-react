@@ -19,6 +19,7 @@ import { Elements, CardElement } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import Loader from "../components/components/Loader";
+import { fetchSettings } from "./../redux/actions/settingActions";
 const stripePromise = loadStripe("pk_test_Du0fzY5XkR7m8qkwrWanhqpC00TMxFfEet");
 
 class Checkout extends Component {
@@ -78,12 +79,22 @@ class Checkout extends Component {
       shippingPostCode: [],
     },
     discount: 0,
+    settings: {
+      kartra_discount: 0,
+    },
   };
 
   componentDidMount() {
     if (this.state.paymentMethod === "paypal") {
       this.initPaypal();
     }
+    this.props.fetchSettings().then((response) => {
+      this.setState({
+        settings: {
+          ...response.data,
+        },
+      });
+    });
     if (!!this.props.match.params.invite === true) {
       this.props
         .userDiscount(this.props.match.params.invite)
@@ -133,7 +144,13 @@ class Checkout extends Component {
   };
 
   getSubTotalWithDiscount = () => {
-    let total = this.getSubTotalPrice() * (1 - this.state.discount);
+    //  console.log(this.props.user);
+    let kartraDiscount = 0;
+    if (this.props.user.is_kartra) {
+      kartraDiscount = this.state.settings.kartra_discount / 100;
+    }
+    let total =
+      this.getSubTotalPrice() * (1 - this.state.discount - kartraDiscount);
     return total;
   };
 
@@ -242,7 +259,6 @@ class Checkout extends Component {
   };
 
   initPaypal = () => {
-    console.log(window.paypal);
     if (!!window.paypal) {
       window.paypal
         .Buttons({
@@ -391,7 +407,7 @@ class Checkout extends Component {
       style: "currency",
       currency: "GBP",
     });
-    console.log(this.getBonuses());
+    console.log(this.state.settings);
 
     return (
       <MainLayout>
@@ -2006,6 +2022,9 @@ function mapDispatchToProps(dispatch) {
     },
     confirmVoucher: (code) => {
       return dispatch(confirmVoucher(code));
+    },
+    fetchSettings: () => {
+      return dispatch(fetchSettings());
     },
   };
 }

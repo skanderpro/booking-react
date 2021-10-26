@@ -4,7 +4,7 @@ import { makeUrl } from "./../../redux/actions/functions";
 import ListPhotos from "./ListPhotos";
 import { connect } from "react-redux";
 import { searchClasses } from "../../redux/actions/classesAction";
-import { NavLink, withRouter } from "react-router-dom";
+import { NavLink, withRouter, Link } from "react-router-dom";
 import {
   FacebookShareButton,
   LinkedinShareButton,

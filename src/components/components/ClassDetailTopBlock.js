@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import Cookies from "universal-cookie";
 import { withRouter } from "react-router-dom";
 const cookies = new Cookies();
 
 function ClassDetailTopBlock(props) {
+  useEffect(() => {});
+  // console.log(props.classDetail);
   return (
     <div className={"class-detail-top-block "} id={"class-detail-top-block"}>
       <div className={"row"}>

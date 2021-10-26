@@ -22,7 +22,6 @@ function NavBarBlock(props) {
     }
   }, []);
 
-  console.log(props.cartItems);
   return (
     <Navbar collapseOnSelect expand="lg">
       <Navbar.Brand href="#home">
