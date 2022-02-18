@@ -26,6 +26,7 @@ import VerifyEmail from "./containers/VerifyEmail";
 import { NotificationContainer } from "react-notifications";
 import ReactGA from "react-ga";
 import ResetPassword from "./containers/ResetPassword";
+import TutorSearch from "./containers/TutorSearch";
 
 const cookies = new Cookies();
 
@@ -68,7 +69,7 @@ function App(props) {
         <ProtectRoute path={"/checkout"} component={Checkout} />
 
         <ProtectRoute
-          path={"/checkout-thank-you"}
+          path={"/checkout-thank-you/:payment_method/:order_id"}
           component={CheckoutThankYou}
         />
 
@@ -87,7 +88,7 @@ function App(props) {
         />
         <Route path={"/forgot-password"} component={ForgotPassword} />
         <Route path={"/verify-email/:url+"} component={VerifyEmail} />
-
+        <Route path={"/tutor-search/:id"} component={TutorSearch} />
         <GuestRoute
           path={"/reset-password/token/:token/email/:email"}
           component={ResetPassword}

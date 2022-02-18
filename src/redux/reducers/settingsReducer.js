@@ -1,7 +1,7 @@
 import { INIT_SETTINGS } from "../actions/actionTypes";
 
 const initializeState = {
-  mainUrl: "https://crm.sewconfident.co.uk",
+  mainUrl: "https://bookingadmin.solver.com.ua",
 };
 
 export default function settingsReducer(state = initializeState, action) {

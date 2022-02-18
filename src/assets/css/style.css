@@ -839,12 +839,15 @@ ul li{
     padding: 35px;
     border: 1px solid #F2F2F2;
     margin-bottom: 30px;
+    text-decoration: none;
 }
 .class-detail-container .class-detail-content-container .sidebar-col .tutor-widget .tutor-widget-header{
     font-size: 22px;
     font-weight:600 ;
     font-family: 'Archivo';
     margin-bottom: 30px;
+    text-decoration: none;
+    color: #212529;
 }
 .class-detail-container .class-detail-content-container .sidebar-col .tutor-widget .tutor-image-container{
     text-align: center;
@@ -863,6 +866,7 @@ ul li{
     font-family: 'Poppins';
     font-size: 18px;
     text-align: center;
+    color: #212529;
 
 }
 .class-detail-container .class-detail-content-container .sidebar-col .tutor-widget p{

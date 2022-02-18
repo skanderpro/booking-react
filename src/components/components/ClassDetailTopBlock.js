@@ -6,7 +6,7 @@ const cookies = new Cookies();
 
 function ClassDetailTopBlock(props) {
   useEffect(() => {});
-  // console.log(props.classDetail);
+  console.log(props.classDetail);
   return (
     <div className={"class-detail-top-block "} id={"class-detail-top-block"}>
       <div className={"row"}>
@@ -52,7 +52,11 @@ function ClassDetailTopBlock(props) {
                   if (!token) {
                     props.addToCart(props.classDetail);
                   } else {
-                    props.addRemoteCart(props.classDetail.id, false, "class");
+                    props.addRemoteCart(
+                      props.classDetail.id,
+                      false,
+                      props.classDetail.type
+                    );
                   }
                 }}
               >

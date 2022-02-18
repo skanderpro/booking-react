@@ -50,7 +50,10 @@ function ClassDetailContentContainer(props) {
           />
         </div>
         <div className={"col-lg-4 sidebar-col"}>
-          <div className={"tutor-widget"}>
+          <NavLink
+            to={`/tutor-search/${props.classDetail.product.tutor.id}`}
+            className={"tutor-widget d-block"}
+          >
             <h2 className={"tutor-widget-header"}>Class tutor</h2>
             <div className={"tutor-image-container"}>
               <span
@@ -58,14 +61,14 @@ function ClassDetailContentContainer(props) {
                 style={{
                   backgroundImage: `url(${props.settings.mainUrl}/storage/${props.classDetail.product.tutor.avatar})`,
                 }}
-              ></span>
+              />
             </div>
             <h3 className={"tutor-name"}>
               {props.classDetail.product.tutor.first_name}{" "}
               {props.classDetail.product.tutor.last_name}
             </h3>
             <p>{props.classDetail.product.tutor.bio_description}</p>
-          </div>
+          </NavLink>
 
           <div className={"other-dates-widget"}>
             <h2>Other Dates</h2>

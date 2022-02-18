@@ -7,6 +7,10 @@ export function createOrder(data) {
   return async (dispatch, getState) => {
     let mainUrl = getState().settings.mainUrl;
     let token = cookies.get("token");
+    let promocode = getState().cart.promocode;
+    if (promocode !== "") {
+      data.code = promocode;
+    }
     let response = await axios.post(
       `${mainUrl}/api/orders`,
       {
@@ -18,6 +22,19 @@ export function createOrder(data) {
         },
       }
     );
+    return response;
+  };
+}
+
+export function loadOrder(order_id) {
+  return async (dispatch, getState) => {
+    let mainUrl = getState().settings.mainUrl;
+    let token = cookies.get("token");
+    let response = await axios.get(`${mainUrl}/api/orders/${order_id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response;
   };
 }

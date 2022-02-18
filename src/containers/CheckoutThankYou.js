@@ -1,6 +1,16 @@
 import React, { Component } from "react";
 import MainLayout from "../layouts/MainLayout";
 import ShopBanner from "../components/components/ShopBanner";
+import { connect } from "react-redux";
+import { loadOrder } from "../redux/actions/orderActions";
+import CheckoutThankYouContainer from "../components/components/CheckoutThankYou";
+import {
+  approvalPaypal,
+  createPayment,
+  setPaymentToOrder,
+} from "../redux/actions/paymentActions";
+import { withRouter } from "react-router-dom";
+import { cartClear, getRemoteCart } from "../redux/actions/cartActions";
 
 class CheckoutThankYou extends Component {
   state = {
@@ -9,6 +19,61 @@ class CheckoutThankYou extends Component {
     termsStatus: false,
     paymentMethod: "paypal",
     shippingAddress: true,
+    order: {},
+  };
+
+  componentDidMount() {
+    let id = this.props.match.params.order_id;
+    let payment_method = this.props.match.params.payment_method;
+    if (payment_method === "paypal") {
+      this.initPage(id).then((response) => {});
+    }
+    if (payment_method === "stripe") {
+      this.props.loadOrder(id).then((response) => {
+        this.setState({
+          order: { ...response.data },
+        });
+      });
+    }
+  }
+
+  initPage = async (id) => {
+    try {
+      let order = await this.props.loadOrder(id);
+      let token = this.parseUrl("token");
+      let approval = await this.props.approvalPaypal(order.data.id, token);
+      if (approval.data.result.status === "COMPLETED") {
+        let transaction = await this.props.createPayment({
+          type: "paypal",
+          payment_system_id: order.data.id,
+          successfulness: 1,
+          amount: order.data.total_price,
+        });
+
+        this.props
+          .setPaymentToOrder({
+            transaction_id: transaction.data.id,
+            order_id: order.data.id,
+          })
+          .then((response) => {});
+
+        this.props.cartClear().then(() => {});
+        this.props.getRemoteCart().then(() => {});
+        this.setState({
+          order: { ...order.data },
+        });
+      } else {
+        this.props.history.push("/checkout");
+      }
+    } catch (e) {
+      this.props.history.push("/checkout");
+    }
+  };
+
+  parseUrl = (name) => {
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    return url.searchParams.get(name);
   };
   render() {
     return (
@@ -25,129 +90,9 @@ class CheckoutThankYou extends Component {
                 <div className="elementor-column-wrap elementor-element-populated">
                   <div className="elementor-widget-wrap checkout-container">
                     <h2 className="checkout-title">Checkout</h2>
-
-                    <div className="thank-you">
-                      <div style={{ marginBottom: 20 }}>
-                        Thank you. Your order has been received.{" "}
-                      </div>
-                      <table className={"shop_table"}>
-                        <tr>
-                          <td>
-                            <div className={"title"}>Order number:</div>
-                            <div className={"value"}>7032</div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div className={"title"}>Date:</div>
-                            <div className={"value"}>April 29, 2021</div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div className={"title"}>Email:</div>
-                            <div className={"value"}>admin@admin.com</div>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div className={"title"}>Total:</div>
-                            <div className={"value"}>
-                              <span className="woocommerce-Price-currencySymbol">
-                                £
-                              </span>
-                              5.75
-                            </div>
-                          </td>
-                        </tr>
-                      </table>
-                      <h3>Order Details</h3>
-                      <table className={"shop_table"}>
-                        <tr>
-                          <td className={"title bold"}>Product</td>
-                          <td className={"value bold"}>Total</td>
-                        </tr>
-                        <tr>
-                          <td
-                            className={"title bold light"}
-                            style={{ background: "#fdfdfd" }}
-                          >
-                            TEST PRODUCT &times; 1
-                          </td>
-                          <td
-                            className={"value light"}
-                            style={{ background: "#fdfdfd" }}
-                          >
-                            <span className="woocommerce-Price-currencySymbol">
-                              £
-                            </span>
-                            5.75
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className={"title  bold"}>Subtotal:</td>
-                          <td className={"value"}>
-                            <span className="woocommerce-Price-currencySymbol">
-                              £
-                            </span>
-                            5.75
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className={"title bold"}>Discount:</td>
-                          <td className={"value"}>
-                            <span className="woocommerce-Price-currencySymbol">
-                              £
-                            </span>
-                            5.75
-                          </td>
-                        </tr>
-                        <tr>
-                          <td className={"title bold"}>Shipping:</td>
-                          <td className={"value"}>Free shipping, lucky you!</td>
-                        </tr>
-                        <tr>
-                          <td className={"title bold"}>Total</td>
-                          <td className={"value"}>
-                            <span className="woocommerce-Price-currencySymbol">
-                              £
-                            </span>
-                            5.75
-                          </td>
-                        </tr>
-                      </table>
-                      <div className={"row"}>
-                        <div className={"col-lg-6 address-block"}>
-                          <h3>Billing Address</h3>
-                          <div className={"address-row"}>Renatas Luzaitis</div>
-                          <div className={"address-row"}>
-                            Purple Moon Design
-                          </div>
-                          <div className={"address-row"}>
-                            139 St Vincent Street
-                          </div>
-                          <div className={"address-row"}>Glasgow</div>
-                          <div className={"address-row"}>-</div>
-                          <div className={"address-row"}>G2 5JF</div>
-                          <div className={"address-row"}>+447447901553</div>
-                          <div className={"address-row"}>&nbsp;</div>
-                          <div className={"address-row"}>admin@admin.com</div>
-                        </div>
-                        <div className={"col-lg-6 address-block"}>
-                          <h3>Shipping Address</h3>
-                          <div className={"address-row"}>Renatas Luzaitis</div>
-                          <div className={"address-row"}>
-                            Purple Moon Design
-                          </div>
-                          <div className={"address-row"}>
-                            139 St Vincent Street
-                          </div>
-                          <div className={"address-row"}>Glasgow</div>
-                          <div className={"address-row"}>-</div>
-                          <div className={"address-row"}>G2 4TP</div>
-                        </div>
-                      </div>
-                    </div>
+                    {Object.keys(this.state.order).length > 0 ? (
+                      <CheckoutThankYouContainer order={this.state.order} />
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -159,5 +104,32 @@ class CheckoutThankYou extends Component {
     );
   }
 }
-
-export default CheckoutThankYou;
+function mapStateToProps(state) {
+  return {};
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    loadOrder: (order_id) => {
+      return dispatch(loadOrder(order_id));
+    },
+    approvalPaypal: (order_id, token) => {
+      return dispatch(approvalPaypal(order_id, token));
+    },
+    createPayment: (data) => {
+      return dispatch(createPayment(data));
+    },
+    setPaymentToOrder: (data) => {
+      return dispatch(setPaymentToOrder(data));
+    },
+    cartClear: () => {
+      return dispatch(cartClear());
+    },
+    getRemoteCart: () => {
+      return dispatch(getRemoteCart());
+    },
+  };
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(CheckoutThankYou));

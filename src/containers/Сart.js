@@ -13,7 +13,11 @@ import {
 import { userDiscount } from "./../redux/actions/userActions";
 import { makeUrl } from "./../redux/actions/functions";
 import Cookies from "universal-cookie";
-import { confirmVoucher } from "./../redux/actions/voucherActions";
+import {
+  confirmVoucher,
+  addPromocode,
+  clearPromocodes,
+} from "./../redux/actions/voucherActions";
 import Loader from "../components/components/Loader";
 import { fetchSettings } from "./../redux/actions/settingActions";
 
@@ -31,6 +35,8 @@ class Cart extends Component {
     settings: {
       kartra_discount: 0,
     },
+
+    promocodeDiscount: {},
   };
 
   componentDidMount() {
@@ -42,6 +48,11 @@ class Cart extends Component {
             discount: response.data.discount / 100,
           });
         });
+    }
+    if (this.props.promocode !== "") {
+      this.props.confirmVoucher(this.props.promocode).then((response) => {
+        this.setState({ promocodeDiscount: { ...response.data } });
+      });
     }
     this.props.fetchSettings().then((response) => {
       this.setState({
@@ -146,7 +157,7 @@ class Cart extends Component {
     }
   };
 
-  getTotalPrice = () => {
+  getSubTotalPrice = () => {
     let total = 0;
     let token = cookies.get("token");
 
@@ -163,6 +174,28 @@ class Cart extends Component {
     return total;
   };
 
+  getTotalPrice = () => {
+    let subtotal = this.getSubTotalPrice();
+    let discountKartra = this.props.user.is_kartra
+      ? this.state.settings.kartra_discount / 100
+      : 0;
+    let promocodePercent = 0;
+    let promocodeFixed = 0;
+
+    if (Object.keys(this.state.promocodeDiscount).length > 0) {
+      if (this.state.promocodeDiscount.type === "PERCENT") {
+        promocodePercent = this.state.promocodeDiscount.sum / 100;
+      }
+      if (this.state.promocodeDiscount.type === "FIXED") {
+        promocodePercent = this.state.promocodeDiscount.sum / 100;
+      }
+    }
+    subtotal =
+      subtotal * (1 - this.state.discount - discountKartra - promocodePercent) -
+      promocodeFixed;
+    return subtotal;
+  };
+
   removeLocalCart = (id) => {
     let items = [...this.state.localItems];
     let index = items.findIndex((x) => x.id === id);
@@ -174,6 +207,9 @@ class Cart extends Component {
       },
       () => {
         this.props.removeLocalCart(id);
+        if (this.state.localItems.length === 0) {
+          this.props.clearPromocodes();
+        }
       }
     );
   };
@@ -186,7 +222,6 @@ class Cart extends Component {
       currency: "GBP",
     });
     items.map((item, index) => {
-      console.log(item);
       results.push(
         <tr
           key={`cart-item-${index}`}
@@ -199,10 +234,8 @@ class Cart extends Component {
                 e.preventDefault();
 
                 if (!token) {
-                  console.log("local");
                   this.removeLocalCart(item.id);
                 } else {
-                  console.log("remote");
                   this.props.removeRemoteCart(item.id).then((response) => {
                     this.getRemoteCart();
                   });
@@ -257,6 +290,7 @@ class Cart extends Component {
     });
     return results;
   };
+
   getRemoteCartPrice = (cart) => {
     let price = 0;
     price += parseFloat(cart.price);
@@ -272,10 +306,6 @@ class Cart extends Component {
       currency: "GBP",
     });
     let token = cookies.get("token");
-
-    let discountKartra = this.props.user.is_kartra
-      ? this.state.settings.kartra_discount / 100
-      : 0;
 
     return (
       <MainLayout>
@@ -338,15 +368,25 @@ class Cart extends Component {
                                         onClick={() => {
                                           this.props
                                             .confirmVoucher(this.state.coupon)
-                                            .then((response) => {})
+                                            .then((response) => {
+                                              if (
+                                                response.data.code_type ===
+                                                "promocode"
+                                              ) {
+                                                this.props.addPromocode(
+                                                  this.state.coupon
+                                                );
+                                                this.setState({
+                                                  promocode: response.data,
+                                                });
+                                              }
+                                            })
                                             .catch((errors) => {
+                                              console.log(errors);
                                               this.setState({
                                                 couponErrors:
                                                   errors.response.data.errors,
                                               });
-                                              console.log(
-                                                errors.response.data.errors
-                                              );
                                             });
                                         }}
                                       >
@@ -383,7 +423,9 @@ class Cart extends Component {
                                   <td data-title={"Subtotal"}>
                                     <span className="woocommerce-Price-amount amount">
                                       <bdi>
-                                        {formatter.format(this.getTotalPrice())}
+                                        {formatter.format(
+                                          this.getSubTotalPrice()
+                                        )}
                                       </bdi>
                                     </span>
                                   </td>
@@ -445,10 +487,7 @@ class Cart extends Component {
                                       <span className="woocommerce-Price-amount amount">
                                         <bdi>
                                           {formatter.format(
-                                            this.getTotalPrice() *
-                                              (1 -
-                                                this.state.discount -
-                                                discountKartra)
+                                            this.getTotalPrice()
                                           )}
                                         </bdi>
                                       </span>
@@ -529,6 +568,7 @@ function mapStateToProps(state) {
     cartItems: state.cart.items,
     settings: state.settings,
     user: state.user.user,
+    promocode: state.cart.promocode,
   };
 }
 function mapDispatchToProps(dispatch) {
@@ -556,6 +596,12 @@ function mapDispatchToProps(dispatch) {
     },
     fetchSettings: () => {
       return dispatch(fetchSettings());
+    },
+    addPromocode: (promocode) => {
+      return dispatch(addPromocode(promocode));
+    },
+    clearPromocodes: () => {
+      return dispatch(clearPromocodes());
     },
   };
 }

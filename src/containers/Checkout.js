@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import MainLayout from "../layouts/MainLayout";
 import ShopBanner from "../components/components/ShopBanner";
-import { getRemoteCart, cartClear } from "./../redux/actions/cartActions";
+import {
+  getRemoteCart,
+  cartClear,
+  getStripePublicKey,
+} from "./../redux/actions/cartActions";
 import { connect } from "react-redux";
 import { checkErrors, getMessages } from "../redux/actions/functions";
 import { Alert } from "react-bootstrap";
@@ -12,15 +16,19 @@ import {
   setPaymentToOrder,
   createCustomer,
   createPaymentIntent,
+  createPaypalOrder,
 } from "../redux/actions/paymentActions";
-import { confirmVoucher } from "./../redux/actions/voucherActions";
+import {
+  addPromocode,
+  clearPromocodes,
+  confirmVoucher,
+} from "./../redux/actions/voucherActions";
 import { userDiscount } from "./../redux/actions/userActions";
 import { Elements, CardElement } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import Loader from "../components/components/Loader";
 import { fetchSettings } from "./../redux/actions/settingActions";
-const stripePromise = loadStripe("pk_test_Du0fzY5XkR7m8qkwrWanhqpC00TMxFfEet");
 
 class Checkout extends Component {
   state = {
@@ -82,11 +90,15 @@ class Checkout extends Component {
     settings: {
       kartra_discount: 0,
     },
+    frameUrl: "",
+    paypalModal: false,
+    stripePromise: null,
+    promocodeDiscount: {},
   };
 
   componentDidMount() {
     if (this.state.paymentMethod === "paypal") {
-      this.initPaypal();
+      // this.initPaypal();
     }
     this.props.fetchSettings().then((response) => {
       this.setState({
@@ -104,7 +116,11 @@ class Checkout extends Component {
           });
         });
     }
-
+    if (this.props.promocode !== "") {
+      this.props.confirmVoucher(this.props.promocode).then((response) => {
+        this.setState({ promocodeDiscount: { ...response.data } });
+      });
+    }
     if (this.state.paymentMethod === "stripe") {
       this.initStripe();
     }
@@ -114,13 +130,20 @@ class Checkout extends Component {
         isLoader: false,
       });
     });
+
+    this.getStripePublicKey().then((response) => {
+      const stripePromise = loadStripe(response);
+      this.setState({
+        stripePromise: stripePromise,
+      });
+    });
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (
       this.state.paymentMethod === "paypal" &&
       prevState.paymentMethod !== this.state.paymentMethod
     ) {
-      this.initPaypal();
+      //   this.initPaypal();
     }
 
     if (
@@ -130,6 +153,15 @@ class Checkout extends Component {
       this.initStripe();
     }
   }
+
+  getStripePublicKey = async () => {
+    try {
+      let response = await this.props.getStripePublicKey();
+      return response.data;
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   getTotalPrice = () => {
     let total = this.getSubTotalWithDiscount() - this.getBonuses();
@@ -144,14 +176,26 @@ class Checkout extends Component {
   };
 
   getSubTotalWithDiscount = () => {
-    //  console.log(this.props.user);
+    let subtotal = this.getSubTotalPrice();
     let kartraDiscount = 0;
     if (this.props.user.is_kartra) {
       kartraDiscount = this.state.settings.kartra_discount / 100;
     }
-    let total =
-      this.getSubTotalPrice() * (1 - this.state.discount - kartraDiscount);
-    return total;
+    let promocodePercent = 0;
+    let promocodeFixed = 0;
+
+    if (Object.keys(this.state.promocodeDiscount).length > 0) {
+      if (this.state.promocodeDiscount.type === "PERCENT") {
+        promocodePercent = this.state.promocodeDiscount.sum / 100;
+      }
+      if (this.state.promocodeDiscount.type === "FIXED") {
+        promocodePercent = this.state.promocodeDiscount.sum / 100;
+      }
+    }
+    subtotal =
+      subtotal * (1 - this.state.discount - kartraDiscount - promocodePercent) -
+      promocodeFixed;
+    return subtotal;
   };
 
   getBonuses = () => {
@@ -237,7 +281,7 @@ class Checkout extends Component {
   };
 
   initStripe = () => {
-    stripePromise.then((stripe) => {
+    this.state.stripePromise.then((stripe) => {
       let elements = stripe.elements();
       var style = {
         base: {
@@ -258,82 +302,8 @@ class Checkout extends Component {
     });
   };
 
-  initPaypal = () => {
-    if (!!window.paypal) {
-      window.paypal
-        .Buttons({
-          createOrder: (data, actions) => {
-            // This function sets up the details of the transaction, including the amount and line item details.
-            return actions.order.create({
-              purchase_units: [
-                {
-                  amount: {
-                    // currency_code: "GBP",
-                    value: this.getTotalPrice().toFixed(2),
-                  },
-                },
-              ],
-            });
-          },
-          onInit: (data, actions) => {
-            //  actions.disable();
-          },
-          onClick: (data, actions) => {
-            let errors = this.validForm();
-
-            if (!checkErrors(errors)) {
-              return actions.resolve();
-              //this.createOrder();
-            } else {
-              this.setState({
-                errors: { ...errors },
-              });
-              console.log("valid error");
-              return actions.reject();
-            }
-          },
-          onApprove: (data, actions) => {
-            console.log(data);
-            this.createOrder().then((response) => {
-              this.setState(
-                {
-                  order: { ...response.data },
-                },
-                () => {
-                  this.props
-                    .createPayment({
-                      type: "paypal",
-                      payment_system_id: data.orderID,
-                      successfulness: 1,
-                      amount: this.getTotalPrice(),
-                    })
-                    .then((response) => {
-                      this.props
-                        .setPaymentToOrder({
-                          transaction_id: response.data.id,
-                          order_id: this.state.order.id,
-                        })
-                        .then((response) => {
-                          this.props.cartClear().then(() => {
-                            this.props.getRemoteCart().then(() => {
-                              this.setState({
-                                thankYouStatus: true,
-                              });
-                            });
-                          });
-                        });
-                    });
-                }
-              );
-            });
-          },
-        })
-        .render("#paypal-button-container");
-    }
-  };
-
   onClickStripeHandler = async () => {
-    let stripe = await stripePromise;
+    let stripe = await this.state.stripePromise;
 
     let customer = await this.props.createCustomer();
     this.createOrder().then(async (response) => {
@@ -378,9 +348,7 @@ class Checkout extends Component {
                         .then((response) => {
                           this.props.cartClear().then(() => {
                             this.props.getRemoteCart().then(() => {
-                              this.setState({
-                                thankYouStatus: true,
-                              });
+                              window.location.href = `/checkout-thank-you/stripe/${this.state.order.id}`;
                             });
                           });
                         });
@@ -407,7 +375,6 @@ class Checkout extends Component {
       style: "currency",
       currency: "GBP",
     });
-    console.log(this.state.settings);
 
     return (
       <MainLayout>
@@ -483,15 +450,25 @@ class Checkout extends Component {
                                     onClick={() => {
                                       this.props
                                         .confirmVoucher(this.state.couponData)
-                                        .then((response) => {})
+                                        .then((response) => {
+                                          if (
+                                            response.data.code_type ===
+                                            "promocode"
+                                          ) {
+                                            this.props.addPromocode(
+                                              this.state.coupon
+                                            );
+                                            this.setState({
+                                              promocode: response.data,
+                                            });
+                                          }
+                                        })
                                         .catch((errors) => {
+                                          console.log(errors);
                                           this.setState({
                                             couponErrors:
                                               errors.response.data.errors,
                                           });
-                                          console.log(
-                                            errors.response.data.errors
-                                          );
                                         });
                                     }}
                                   >
@@ -1938,7 +1915,36 @@ class Checkout extends Component {
                                     </div>
 
                                     {this.state.paymentMethod === "paypal" ? (
-                                      <div id={"paypal-button-container"} />
+                                      <>
+                                        <div id={"paypal-button-container"} />
+                                        <button
+                                          type={"button"}
+                                          id="stripe_payment"
+                                          onClick={() => {
+                                            this.createOrder().then(
+                                              (response) => {
+                                                this.setState(
+                                                  {
+                                                    order: { ...response.data },
+                                                  },
+                                                  () => {
+                                                    this.props
+                                                      .createPaypalOrder(
+                                                        this.state.order.id
+                                                      )
+                                                      .then((response) => {
+                                                        window.location.href =
+                                                          response.data.links.approve;
+                                                      });
+                                                  }
+                                                );
+                                              }
+                                            );
+                                          }}
+                                        >
+                                          Place Order
+                                        </button>
+                                      </>
                                     ) : null}
                                     {this.state.paymentMethod === "stripe" ? (
                                       <div>
@@ -1984,6 +1990,7 @@ class Checkout extends Component {
         </section>
         <ShopBanner />
         <Loader status={this.state.isLoader} />
+        {this.state.paypalModal ? <iframe src={this.state.frameUrl} /> : null}
       </MainLayout>
     );
   }
@@ -1991,6 +1998,7 @@ class Checkout extends Component {
 function mapStateToProps(state) {
   return {
     user: state.user.user,
+    promocode: state.cart.promocode,
   };
 }
 
@@ -2014,6 +2022,9 @@ function mapDispatchToProps(dispatch) {
     createCustomer: () => {
       return dispatch(createCustomer());
     },
+    createPaypalOrder: (order_id) => {
+      return dispatch(createPaypalOrder(order_id));
+    },
     createPaymentIntent: (data) => {
       return dispatch(createPaymentIntent(data));
     },
@@ -2025,6 +2036,15 @@ function mapDispatchToProps(dispatch) {
     },
     fetchSettings: () => {
       return dispatch(fetchSettings());
+    },
+    getStripePublicKey: () => {
+      return dispatch(getStripePublicKey());
+    },
+    addPromocode: (promocode) => {
+      return dispatch(addPromocode(promocode));
+    },
+    clearPromocodes: () => {
+      return dispatch(clearPromocodes());
     },
   };
 }

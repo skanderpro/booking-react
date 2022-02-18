@@ -1,6 +1,6 @@
 import React from "react";
 
-function CheckoutThankYou({ order }) {
+function CheckoutThankYou(props) {
   var formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "GBP",
@@ -14,25 +14,27 @@ function CheckoutThankYou({ order }) {
         <tr>
           <td>
             <div className={"title"}>Order number:</div>
-            <div className={"value"}>{order.id}</div>
+            <div className={"value"}>{props.order.id}</div>
           </td>
         </tr>
         <tr>
           <td>
             <div className={"title"}>Date:</div>
-            <div className={"value"}>{order.date}</div>
+            <div className={"value"}>{props.order.date}</div>
           </td>
         </tr>
         <tr>
           <td>
             <div className={"title"}>Email:</div>
-            <div className={"value"}>{order.billing_address.email}</div>
+            <div className={"value"}>{props.order.billing_address.email}</div>
           </td>
         </tr>
         <tr>
           <td>
             <div className={"title"}>Total:</div>
-            <div className={"value"}>{formatter.format(order.total_price)}</div>
+            <div className={"value"}>
+              {formatter.format(props.order.total_price)}
+            </div>
           </td>
         </tr>
       </table>
@@ -42,7 +44,7 @@ function CheckoutThankYou({ order }) {
           <td className={"title bold"}>Product</td>
           <td className={"value bold"}>Total</td>
         </tr>
-        {order.carts.map((cart, index) => {
+        {props.order.carts.map((cart, index) => {
           return (
             <tr key={`cart-item-${index}`}>
               <td
@@ -60,11 +62,11 @@ function CheckoutThankYou({ order }) {
 
         <tr>
           <td className={"title  bold"}>Subtotal:</td>
-          <td className={"value"}>{formatter.format(order.subtotal)}</td>
+          <td className={"value"}>{formatter.format(props.order.subtotal)}</td>
         </tr>
         <tr>
           <td className={"title bold"}>Discount:</td>
-          <td className={"value"}>{formatter.format(order.discount)}</td>
+          <td className={"value"}>{formatter.format(props.order.discount)}</td>
         </tr>
         <tr>
           <td className={"title bold"}>Shipping:</td>
@@ -72,42 +74,67 @@ function CheckoutThankYou({ order }) {
         </tr>
         <tr>
           <td className={"title bold"}>Total</td>
-          <td className={"value"}>{formatter.format(order.total_price)}</td>
+          <td className={"value"}>
+            {formatter.format(props.order.total_price)}
+          </td>
         </tr>
       </table>
       <div className={"row"}>
         <div className={"col-lg-6 address-block"}>
           <h3>Billing Address</h3>
           <div className={"address-row"}>
-            {order.billing_address.first_name} {order.billing_address.last_name}
+            {props.order.billing_address.first_name}{" "}
+            {props.order.billing_address.last_name}
           </div>
-          <div className={"address-row"}>{order.billing_address.company}</div>
-          <div className={"address-row"}>{order.billing_address.street}</div>
-          <div className={"address-row"}>{order.billing_address.city}</div>
-          <div className={"address-row"}>{order.billing_address.state}</div>
-          <div className={"address-row"}>{order.billing_address.apartment}</div>
-          <div className={"address-row"}>{order.billing_address.phone}</div>
-          <div className={"address-row"}>{order.billing_address.postCode}</div>
-          <div className={"address-row"}>{order.billing_address.email}</div>
+          <div className={"address-row"}>
+            {props.order.billing_address.company}
+          </div>
+          <div className={"address-row"}>
+            {props.order.billing_address.street}
+          </div>
+          <div className={"address-row"}>
+            {props.order.billing_address.city}
+          </div>
+          <div className={"address-row"}>
+            {props.order.billing_address.state}
+          </div>
+          <div className={"address-row"}>
+            {props.order.billing_address.apartment}
+          </div>
+          <div className={"address-row"}>
+            {props.order.billing_address.phone}
+          </div>
+          <div className={"address-row"}>
+            {props.order.billing_address.postCode}
+          </div>
+          <div className={"address-row"}>
+            {props.order.billing_address.email}
+          </div>
         </div>
-        {order.shipping_address !== null ? (
+        {props.order.shipping_address !== null ? (
           <div className={"col-lg-6 address-block"}>
             <h3>Shipping Address</h3>
             <div className={"address-row"}>
-              {order.shipping_address.first_name}{" "}
-              {order.shipping_address.last_name}
+              {props.order.shipping_address.first_name}{" "}
+              {props.order.shipping_address.last_name}
             </div>
             <div className={"address-row"}>
-              {order.shipping_address.company}
-            </div>
-            <div className={"address-row"}>{order.shipping_address.street}</div>
-            <div className={"address-row"}>{order.shipping_address.city}</div>
-            <div className={"address-row"}>{order.shipping_address.state}</div>
-            <div className={"address-row"}>
-              {order.shipping_address.apartment}
+              {props.order.shipping_address.company}
             </div>
             <div className={"address-row"}>
-              {order.shipping_address.postCode}
+              {props.order.shipping_address.street}
+            </div>
+            <div className={"address-row"}>
+              {props.order.shipping_address.city}
+            </div>
+            <div className={"address-row"}>
+              {props.order.shipping_address.state}
+            </div>
+            <div className={"address-row"}>
+              {props.order.shipping_address.apartment}
+            </div>
+            <div className={"address-row"}>
+              {props.order.shipping_address.postCode}
             </div>
           </div>
         ) : null}

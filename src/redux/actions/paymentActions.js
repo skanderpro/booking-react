@@ -70,3 +70,39 @@ export function createPaymentIntent(data) {
     return response;
   };
 }
+
+export function createPaypalOrder(order_id) {
+  return async (dispatch, getState) => {
+    let mainUrl = getState().settings.mainUrl;
+    let token = cookies.get("token");
+    let response = await axios.post(
+      `${mainUrl}/api/paypal`,
+      {
+        order_id,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response;
+  };
+}
+
+export function approvalPaypal(order_id, token) {
+  return async (dispatch, getState) => {
+    let mainUrl = getState().settings.mainUrl;
+    let authToken = cookies.get("token");
+    let response = await axios.post(
+      `${mainUrl}/api/paypal/approval`,
+      { order_id, token },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+    return response;
+  };
+}

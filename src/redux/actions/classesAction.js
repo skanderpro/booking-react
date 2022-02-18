@@ -37,3 +37,19 @@ export function searchClasses(
     return response;
   };
 }
+
+export function searchClassesPromoter(id, level, page, limit) {
+  return async (dispatch, getState) => {
+    let mainUrl = getState().settings.mainUrl;
+    let response = await axios.get(`${mainUrl}/api/products/search`, {
+      params: {
+        level: level,
+        page: page,
+        limit: limit,
+        promoter_id: id,
+        type: "class",
+      },
+    });
+    return response;
+  };
+}

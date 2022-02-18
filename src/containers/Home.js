@@ -113,6 +113,7 @@ class Home extends Component {
               require("./../assets/images/3c7f5381e2dd10744597d4ffe67b8f38.jpg")
                 .default
             }
+            title={"Sew Confident Classes"}
           />
           <ClassesContainer
             classes={this.state.classes}

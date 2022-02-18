@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ADD_LOCAL_CART, GET_REMOTE_CART } from "./actionTypes";
 import Cookies from "universal-cookie";
+import { clearPromocodes } from "./voucherActions";
 
 const cookies = new Cookies();
 
@@ -8,7 +9,7 @@ export function addLocalCart(classItem) {
   return (dispatch, getState) => {
     let items = getState().cart.items;
     let status = false;
-    console.log(classItem);
+
     let classItemDetail = {
       id: classItem.id,
       name: classItem.product.name,
@@ -132,6 +133,7 @@ export function cartClear() {
         Authorization: `Bearer ${token}`,
       },
     });
+    dispatch(clearPromocodes());
     return response;
   };
 }
@@ -153,6 +155,19 @@ export function changeCartIsSet(id, value) {
         },
       }
     );
+    return response;
+  };
+}
+
+export function getStripePublicKey() {
+  return async (dispatch, getState) => {
+    let mainUrl = getState().settings.mainUrl;
+    let token = cookies.get("token");
+    let response = await axios.get(`${mainUrl}/api/cart-stripe-public-key`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response;
   };
 }
