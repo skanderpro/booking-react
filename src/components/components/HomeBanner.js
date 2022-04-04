@@ -6,7 +6,7 @@ function HomeBanner(props) {
       className={"home-banner"}
       style={{ backgroundImage: `url(${props.imageUrl})` }}
     >
-      <h2>{props.title}</h2>
+      {props.children}
     </div>
   );
 }

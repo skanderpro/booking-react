@@ -8,6 +8,7 @@ import { fetchClass } from "./../redux/actions/classesAction";
 import { addLocalCart, addRemoteCart } from "./../redux/actions/cartActions";
 import { connect } from "react-redux";
 import Loader from "../components/components/Loader";
+import { NotificationManager } from "react-notifications";
 
 class ClassDetail extends Component {
   state = {
@@ -54,10 +55,19 @@ class ClassDetail extends Component {
 
   addToCart = (classItem) => {
     this.props.addLocalCart(classItem);
+    this.addCartNotification();
   };
 
   addRemoteCart = (lesson_id, is_set, type) => {
-    return this.props.addRemoteCart(lesson_id, is_set, type);
+    return this.props
+      .addRemoteCart(lesson_id, is_set, type)
+      .then((response) => {
+        this.addCartNotification();
+      });
+  };
+
+  addCartNotification = () => {
+    NotificationManager.success("Add to cart success");
   };
 
   render() {

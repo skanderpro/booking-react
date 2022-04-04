@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import MainLayout from "../layouts/MainLayout";
 import HomeBanner from "../components/components/HomeBanner";
 import ClassesList from "../components/components/ClassesList";
-import { getPromoter } from "../redux/actions/promoters";
+import { getPromoter, getPromoters } from "../redux/actions/promoters";
 import { connect } from "react-redux";
 import {
   fetchAllClasses,
   searchClassesPromoter,
 } from "./../redux/actions/classesAction";
 import Loader from "../components/components/Loader";
+import ListTutors from "../components/components/ListTutors";
 
 class TutorSearch extends Component {
   state = {
@@ -29,15 +30,23 @@ class TutorSearch extends Component {
     limit: 6,
     isLoadMore: true,
     isLoader: true,
+    promoters: [],
   };
 
   componentDidMount() {
     let id = this.props.match.params.id;
     this.loadPage(id).then((response) => {});
   }
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      let id = this.props.match.params.id;
+      this.loadPage(id).then((response) => {});
+    }
+  }
 
   loadPage = async (id) => {
     let promoter = await this.props.getPromoter(id);
+    let promoters = await this.props.getPromoters();
     let classes = await this.props.searchClassesPromoter(
       promoter.data.id,
       this.state.level,
@@ -47,6 +56,7 @@ class TutorSearch extends Component {
     this.setState({
       promoter: { ...promoter.data },
       classes: [...classes.data],
+      promoters: [...promoters.data],
       isLoader: false,
     });
   };
@@ -94,7 +104,7 @@ class TutorSearch extends Component {
     );
   };
   render() {
-    console.log(this.state.level);
+    console.log(this.state.promoters);
     return (
       <MainLayout>
         <div className={"home-page"}>
@@ -103,8 +113,21 @@ class TutorSearch extends Component {
               require("./../assets/images/3c7f5381e2dd10744597d4ffe67b8f38.jpg")
                 .default
             }
-            title={`${this.state.promoter.first_name} ${this.state.promoter.last_name}`}
-          />
+          >
+            <div>
+              <h2>{`${this.state.promoter.first_name} ${this.state.promoter.last_name}`}</h2>
+              <h4>{this.state.promoter.venue}</h4>
+              <span
+                style={{
+                  backgroundImage: `url(${
+                    this.props.settings.mainUrl +
+                    "/storage/" +
+                    this.state.promoter.avatar
+                  })`,
+                }}
+              />
+            </div>
+          </HomeBanner>
           <div className={"classes-section"}>
             <div className={"classes-container"}>
               <ClassesList
@@ -120,6 +143,11 @@ class TutorSearch extends Component {
                 }}
                 isLoadMore={this.state.isLoadMore}
               />
+
+              <ListTutors
+                promoters={this.state.promoters}
+                promoter={this.state.promoter}
+              />
             </div>
           </div>
         </div>
@@ -129,7 +157,7 @@ class TutorSearch extends Component {
   }
 }
 function mapStateToProps(state) {
-  return {};
+  return { settings: state.settings };
 }
 function mapDispatchToProps(dispatch) {
   return {
@@ -141,6 +169,9 @@ function mapDispatchToProps(dispatch) {
     },
     searchClassesPromoter: (id, level, page, limit) => {
       return dispatch(searchClassesPromoter(id, level, page, limit));
+    },
+    getPromoters: () => {
+      return dispatch(getPromoters());
     },
   };
 }

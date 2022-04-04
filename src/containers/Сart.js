@@ -32,6 +32,8 @@ class Cart extends Component {
     coupon: "",
     couponErrors: "",
     isLoader: true,
+    giftCard: "",
+    giftErrors: "",
     settings: {
       kartra_discount: 0,
     },
@@ -462,7 +464,12 @@ class Cart extends Component {
                                           className="giftup-cart-subtotal-td-form-input"
                                           type="text"
                                           id="giftcard_code"
-                                          value=""
+                                          value={this.state.giftCard}
+                                          onChange={(event) => {
+                                            this.setState({
+                                              giftCard: event.target.value,
+                                            });
+                                          }}
                                           placeholder="Gift card code"
                                           onKeyPress="return giftup_code_keypress()"
                                         />
@@ -471,11 +478,38 @@ class Cart extends Component {
                                           type="button"
                                           name="giftup_giftcard_button"
                                           value="Apply gift card"
-                                          onClick="giftup_submit_code()"
+                                          onClick={() => {
+                                            this.props
+                                              .confirmVoucher(
+                                                this.state.giftCard
+                                              )
+                                              .then((response) => {
+                                                if (
+                                                  response.data.code_type ===
+                                                  "promocode"
+                                                ) {
+                                                  this.props.addPromocode(
+                                                    this.state.giftCard
+                                                  );
+                                                  this.setState({
+                                                    promocode: response.data,
+                                                  });
+                                                }
+                                              })
+                                              .catch((errors) => {
+                                                this.setState({
+                                                  giftErrors:
+                                                    errors.response.data.errors,
+                                                });
+                                              });
+                                          }}
                                         >
                                           Apply
                                         </button>
                                       </div>
+                                    ) : null}
+                                    {this.state.giftErrors.length > 0 ? (
+                                      <div>{this.state.giftErrors}</div>
                                     ) : null}
                                   </td>
                                 </tr>
