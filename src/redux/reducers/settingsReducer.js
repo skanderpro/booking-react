@@ -1,7 +1,7 @@
 import { INIT_SETTINGS } from "../actions/actionTypes";
 
 const initializeState = {
-  mainUrl: "http://localhost:8000",
+  mainUrl: "https://bookingadmin.solver.com.ua",
 };
 
 export default function settingsReducer(state = initializeState, action) {

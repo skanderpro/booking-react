@@ -78,14 +78,16 @@ class Cart extends Component {
   getRemoteCart = () => {
     this.props.getRemoteCart().then((response) => {
       let items = [];
+      console.log(response.data);
       response.data.items.map((item) => {
         items.push({
           id: item.id,
           name: item.product.product.name,
           image_url: item.product.product.image_url,
           price: item.product.product.price,
-          set: item.product.product.set,
+          set: item.set,
           is_set: item.is_set,
+          sets: item.product.product.sets,
           product_id: item.product.id,
           type: item.type,
         });
@@ -98,61 +100,103 @@ class Cart extends Component {
     });
   };
 
+  changeSet = (index, set) => {
+    console.log(set);
+    let carts = [...this.state.localItems];
+    carts[index].set = set;
+    this.setState(
+      {
+        localItems: [...carts],
+      },
+      () => {
+        this.props.importItemsToCart(carts);
+      }
+    );
+  };
+
+  changeSetRemote = (index, set) => {
+    let carts = [...this.state.remoteItems];
+    carts[index].set = set;
+    this.setState(
+      {
+        remoteItems: [...carts],
+      },
+      () => {
+        this.props.changeCartIsSet(
+          this.state.remoteItems[index].id,
+          this.state.remoteItems[index].set
+        );
+      }
+    );
+  };
+
   renderSetKit = (cart, index) => {
     let token = cookies.get("token");
     if (!token) {
       return (
         <span>
-          {!!cart.set ? (
-            <div>
-              <input
-                type={"checkbox"}
-                checked={cart.is_set}
-                onChange={() => {
-                  let carts = [...this.state.localItems];
-                  carts[index].is_set = !carts[index].is_set;
-                  this.setState(
-                    {
-                      localItems: [...carts],
-                    },
-                    () => {
-                      this.props.importItemsToCart(carts);
-                    }
-                  );
-                }}
-                style={{ marginRight: 10 }}
-              />{" "}
-              {cart.name}
-            </div>
+          {cart.sets.length > 0 ? (
+            <>
+              <div>
+                <input
+                  type={"radio"}
+                  checked={cart.set === 0}
+                  onChange={() => {
+                    this.changeSet(index, 0);
+                  }}
+                  style={{ marginRight: 10 }}
+                />{" "}
+                {"none"}
+              </div>
+              {cart.sets.map((set, indexSet) => {
+                return (
+                  <div key={`set_id_${indexSet}`}>
+                    <input
+                      type={"radio"}
+                      checked={cart.set === set.id}
+                      onChange={() => {
+                        this.changeSet(index, set.id);
+                      }}
+                      style={{ marginRight: 10 }}
+                    />{" "}
+                    {set.name}
+                  </div>
+                );
+              })}
+            </>
           ) : null}
         </span>
       );
     } else {
       return (
         <span>
-          {!!cart.set ? (
-            <div>
-              <input
-                type={"checkbox"}
-                checked={cart.is_set}
-                onChange={() => {
-                  let carts = [...this.state.remoteItems];
-                  carts[index].is_set = !carts[index].is_set;
-                  this.setState(
-                    {
-                      remoteItems: [...carts],
-                    },
-                    () => {
-                      this.props.changeCartIsSet(
-                        this.state.remoteItems[index].id,
-                        this.state.remoteItems[index].is_set
-                      );
-                    }
-                  );
-                }}
-              />{" "}
-              {cart.set.name}
-            </div>
+          {cart.sets.length > 0 ? (
+            <>
+              <div>
+                <input
+                  type={"radio"}
+                  checked={cart.set === 0}
+                  onChange={() => {
+                    this.changeSetRemote(index, 0);
+                  }}
+                />{" "}
+                {"none"}
+              </div>
+              {cart.sets.map((set, indexSet) => {
+                return (
+                  <div key={`set_id_${indexSet}`}>
+                    <input
+                      type={"radio"}
+                      checked={cart.set === set.id}
+                      onChange={() => {
+                        this.changeSetRemote(index, set.id);
+                      }}
+                    />{" "}
+                    {set.name}
+                  </div>
+                );
+              })}
+            </>
           ) : null}
         </span>
       );
@@ -294,10 +338,14 @@ class Cart extends Component {
   };
 
   getRemoteCartPrice = (cart) => {
+    console.log(cart);
     let price = 0;
     price += parseFloat(cart.price);
-    if (cart.is_set) {
-      price += parseFloat(cart.set.price);
+    if (cart.set !== 0) {
+      let indexSet = cart.sets.findIndex((set) => set.id === cart.set);
+      if (indexSet !== -1) {
+        price += parseFloat(cart.sets[indexSet].price);
+      }
     }
     if (cart) return price;
   };

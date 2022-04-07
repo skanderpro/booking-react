@@ -15,10 +15,11 @@ export function addLocalCart(classItem) {
       name: classItem.product.name,
       image_url: classItem.product.image_url,
       price: classItem.product.price,
-      set: classItem.product.set,
+      set: 0,
       is_set: false,
       product_id: classItem.id,
       type: classItem.type,
+      sets: classItem.product.sets,
     };
     for (var i = 0; i < items.length; i++) {
       if (items[i].id === classItem.id) {
@@ -64,8 +65,7 @@ export function getRemoteCart() {
   };
 }
 
-export function addRemoteCart(product_id, is_set, type) {
-  console.log(type);
+export function addRemoteCart(product_id, set, type) {
   return async (dispatch, getState) => {
     let mainUrl = getState().settings.mainUrl;
     let token = cookies.get("token");
@@ -73,7 +73,7 @@ export function addRemoteCart(product_id, is_set, type) {
       `${mainUrl}/api/cart`,
       {
         product_id,
-        is_set,
+        set,
         type,
       },
       {
@@ -105,18 +105,13 @@ export function loginCart() {
 
     let localCarts = getState().cart.items;
     let remoteCarts = await dispatch(getRemoteCart());
-    console.log(localCarts);
+
     if (localCarts.length > 0) {
       await dispatch(cartClear());
 
       for (var i = 0; i < localCarts.length; i++) {
-        console.log(localCarts[i]);
         await dispatch(
-          addRemoteCart(
-            localCarts[i].id,
-            localCarts[i].is_set,
-            localCarts[i].type
-          )
+          addRemoteCart(localCarts[i].id, localCarts[i].set, localCarts[i].type)
         );
       }
     } else {
@@ -146,7 +141,7 @@ export function changeCartIsSet(id, value) {
       `${mainUrl}/api/cart/change-attribute`,
       {
         cart_id: id,
-        attribute: "is_set",
+        attribute: "set",
         value: value,
       },
       {

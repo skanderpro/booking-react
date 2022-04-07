@@ -171,6 +171,7 @@ class Checkout extends Component {
   };
   getSubTotalPrice = () => {
     let total = 0;
+
     this.state.remoteCart.map((item, index) => {
       total = total + parseFloat(item.price_set);
     });
@@ -366,9 +367,9 @@ class Checkout extends Component {
   getRemoteCartPrice = (cart) => {
     let price = 0;
     price += parseFloat(cart.price);
-    if (cart.is_set) {
-      price += parseFloat(cart.set.price);
-    }
+
+    price += parseFloat(cart.set.price);
+
     if (cart) return price;
   };
 

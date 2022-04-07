@@ -4,7 +4,6 @@ import Cookies from "universal-cookie";
 import { withRouter } from "react-router-dom";
 const cookies = new Cookies();
 
-
 function ClassDetailTopBlock(props) {
   useEffect(() => {});
 
@@ -55,7 +54,7 @@ function ClassDetailTopBlock(props) {
                   } else {
                     props.addRemoteCart(
                       props.classDetail.id,
-                      false,
+                      0,
                       props.classDetail.type
                     );
                   }
