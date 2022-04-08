@@ -87,6 +87,7 @@ class Checkout extends Component {
       shippingStreet: [],
       shippingCity: [],
       shippingPostCode: [],
+      termsStatus: [],
     },
     discount: 0,
     settings: {
@@ -229,6 +230,7 @@ class Checkout extends Component {
       shippingStreet: [],
       shippingCity: [],
       shippingPostCode: [],
+      termsStatus: [],
     };
 
     if (this.state.formData.billingFirstName === "") {
@@ -252,6 +254,11 @@ class Checkout extends Component {
     if (this.state.formData.billingEmail === "") {
       errors.billingEmail.push("Billing email is required!");
     }
+
+    if (!this.state.termsStatus) {
+      errors.termsStatus.push("Terms status is required!");
+    }
+
     if (this.state.formData.shippingAddressStatus) {
       if (this.state.formData.shippingFirstName === "") {
         errors.shippingFirstName.push("Shipping first name is required!");
@@ -1961,25 +1968,39 @@ class Checkout extends Component {
                                           type={"button"}
                                           id="stripe_payment"
                                           onClick={() => {
-                                            this.createOrder().then(
-                                              (response) => {
-                                                this.setState(
-                                                  {
-                                                    order: { ...response.data },
-                                                  },
-                                                  () => {
-                                                    this.props
-                                                      .createPaypalOrder(
-                                                        this.state.order.id
-                                                      )
-                                                      .then((response) => {
-                                                        window.location.href =
-                                                          response.data.links.approve;
-                                                      });
-                                                  }
-                                                );
-                                              }
-                                            );
+                                            let errors = this.validForm();
+
+                                            if (!checkErrors(errors)) {
+                                              this.createOrder().then(
+                                                (response) => {
+                                                  this.setState(
+                                                    {
+                                                      order: {
+                                                        ...response.data,
+                                                      },
+                                                    },
+                                                    () => {
+                                                      this.props
+                                                        .createPaypalOrder(
+                                                          this.state.order.id
+                                                        )
+                                                        .then((response) => {
+                                                          window.location.href =
+                                                            response.data.links.approve;
+                                                        });
+                                                    }
+                                                  );
+                                                }
+                                              );
+                                              this.setState({
+                                                errors: { ...errors },
+                                              });
+                                              //this.createOrder();
+                                            } else {
+                                              this.setState({
+                                                errors: { ...errors },
+                                              });
+                                            }
                                           }}
                                         >
                                           Place Order
@@ -1993,7 +2014,7 @@ class Checkout extends Component {
                                           id="stripe_payment"
                                           onClick={() => {
                                             let errors = this.validForm();
-
+                                            console.log(errors);
                                             if (!checkErrors(errors)) {
                                               this.onClickStripeHandler();
                                               this.setState({
