@@ -194,6 +194,16 @@ ul li{
 }
 .explore-item {
 	cursor: pointer;
+	transition: all .3s;
+}
+.explore-item:hover{
+	text-decoration: none ;
+}
+.explore-item-container{
+	transition: all .3s;
+}
+.explore-item:hover .explore-item-container{
+	background-color: #ffffffe0 !important; 
 }
 @media (max-width:1404px){
     .navbar .nav-right-block{
