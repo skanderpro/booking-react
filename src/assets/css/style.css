@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Poppins:wght@500;600;700&family=Rancho&display=swap');
 
+
+
 h2{
     font-size:31px ;
     font-weight: 600;
@@ -189,6 +191,9 @@ ul li{
 .navbar .nav-right-block .btn-group .btn{
     font-size: 14px;
     padding: 8px 23px;
+}
+.explore-item {
+	cursor: pointer;
 }
 @media (max-width:1404px){
     .navbar .nav-right-block{
