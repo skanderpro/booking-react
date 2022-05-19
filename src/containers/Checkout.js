@@ -23,12 +23,13 @@ import {
   clearPromocodes,
   confirmVoucher,
 } from "./../redux/actions/voucherActions";
-import { userDiscount } from "./../redux/actions/userActions";
+import {updateUserProfile, userDiscount} from "./../redux/actions/userActions";
 import { Elements, CardElement } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import Loader from "../components/components/Loader";
 import { fetchSettings } from "./../redux/actions/settingActions";
+import {NotificationManager} from "react-notifications";
 
 class Checkout extends Component {
   state = {
@@ -471,6 +472,8 @@ class Checkout extends Component {
                                             this.setState({
                                               promocode: response.data,
                                             });
+                                          } else if (response.data.code_type === 'voucher') {
+                                            this.props.addVoucher(response.data);
                                           }
                                         })
                                         .catch((errors) => {
@@ -1430,6 +1433,8 @@ class Checkout extends Component {
                                                         promocode:
                                                           response.data,
                                                       });
+                                                    } else if (response.data.code_type === 'voucher') {
+                                                      this.props.addVoucher(response.data);
                                                     }
                                                   })
                                                   .catch((errors) => {
@@ -2107,6 +2112,12 @@ function mapDispatchToProps(dispatch) {
     clearPromocodes: () => {
       return dispatch(clearPromocodes());
     },
+    addVoucher(voucher) {
+      NotificationManager.success("Voucher applied");
+      dispatch(updateUserProfile({
+        bonuses: voucher.bonuses,
+      }))
+    }
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

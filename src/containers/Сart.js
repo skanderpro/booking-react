@@ -20,6 +20,7 @@ import {
 } from "./../redux/actions/voucherActions";
 import Loader from "../components/components/Loader";
 import { fetchSettings } from "./../redux/actions/settingActions";
+import {NotificationManager} from "react-notifications";
 
 const cookies = new Cookies();
 
@@ -429,6 +430,8 @@ class Cart extends Component {
                                                 this.setState({
                                                   promocode: response.data,
                                                 });
+                                              } else if (response.data.code_type === 'voucher') {
+                                                this.props.addVoucher(response.data)
                                               }
                                             })
                                             .catch((errors) => {
@@ -542,6 +545,8 @@ class Cart extends Component {
                                                   this.setState({
                                                     promocode: response.data,
                                                   });
+                                                } else if (response.data.code_type === 'voucher') {
+                                                  this.props.addVoucher(response.data)
                                                 }
                                               })
                                               .catch((errors) => {
@@ -685,6 +690,9 @@ function mapDispatchToProps(dispatch) {
     clearPromocodes: () => {
       return dispatch(clearPromocodes());
     },
+    addVoucher(voucher) {
+      NotificationManager.success("Voucher applied");
+    }
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Cart);
