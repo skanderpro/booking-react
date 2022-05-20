@@ -1,5 +1,9 @@
 import axios from "axios";
-import { LOGIN_SUCCESS, SET_USER_PROFILE } from "./actionTypes";
+import {
+  LOGIN_SUCCESS,
+  SET_USER_PROFILE,
+  UPDATE_USER_PROFILE
+} from "./actionTypes";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
@@ -73,6 +77,15 @@ export function setUserProfile(user) {
     type: SET_USER_PROFILE,
     data: {
       user: user,
+    },
+  };
+}
+
+export function updateUserProfile(user) {
+  return {
+    type: UPDATE_USER_PROFILE,
+    data: {
+      user,
     },
   };
 }
