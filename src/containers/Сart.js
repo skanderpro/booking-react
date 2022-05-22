@@ -234,7 +234,7 @@ class Cart extends Component {
         promocodePercent = this.state.promocodeDiscount.sum / 100;
       }
       if (this.state.promocodeDiscount.type === "FIXED") {
-        promocodePercent = this.state.promocodeDiscount.sum / 100;
+        promocodeFixed = this.state.promocodeDiscount.sum > subtotal ? subtotal : this.state.promocodeDiscount.sum;
       }
     }
     subtotal =
@@ -429,6 +429,7 @@ class Cart extends Component {
                                                 );
                                                 this.setState({
                                                   promocode: response.data,
+                                                  promocodeDiscount: { ...response.data }
                                                 });
                                               } else if (response.data.code_type === 'voucher') {
                                                 this.props.addVoucher(response.data)
@@ -544,6 +545,7 @@ class Cart extends Component {
                                                   );
                                                   this.setState({
                                                     promocode: response.data,
+                                                    promocodeDiscount: { ...response.data }
                                                   });
                                                 } else if (response.data.code_type === 'voucher') {
                                                   this.props.addVoucher(response.data)
@@ -685,6 +687,7 @@ function mapDispatchToProps(dispatch) {
       return dispatch(fetchSettings());
     },
     addPromocode: (promocode) => {
+      NotificationManager.success("Promocode applied");
       return dispatch(addPromocode(promocode));
     },
     clearPromocodes: () => {
