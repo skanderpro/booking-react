@@ -73,6 +73,8 @@ class Checkout extends Component {
       shippingCity: "",
       shippingPostCode: "",
       shippingAddressStatus: false,
+        password: "",
+        password_confirmation: "",
     },
     remoteCart: [],
     errors: {
@@ -125,7 +127,7 @@ class Checkout extends Component {
         this.setState({ promocodeDiscount: { ...response.data } });
       });
     }
-    if (this.state.paymentMethod === "stripe") {
+    if (this.state.paymentMethod === "stripe" && this.currentUser) {
       this.initStripe();
     }
     this.props.getRemoteCart().then((response) => {
@@ -135,7 +137,7 @@ class Checkout extends Component {
       });
     });
 
-    this.getStripePublicKey().then((response) => {
+      this.currentUser && this.getStripePublicKey().then((response) => {
       const stripePromise = loadStripe(response);
       this.setState({
         stripePromise: stripePromise,
@@ -152,7 +154,8 @@ class Checkout extends Component {
 
     if (
       this.state.paymentMethod === "stripe" &&
-      prevState.paymentMethod !== this.state.paymentMethod
+      prevState.paymentMethod !== this.state.paymentMethod &&
+      this.currentUser
     ) {
       this.initStripe();
     }
@@ -183,7 +186,8 @@ class Checkout extends Component {
   getSubTotalWithDiscount = () => {
     let subtotal = this.getSubTotalPrice();
     let kartraDiscount = 0;
-    if (this.props.user.is_kartra) {
+    const currentUser = this.currentUser;
+    if (currentUser && currentUser.is_kartra) {
       kartraDiscount = this.state.settings.kartra_discount / 100;
     }
     let promocodePercent = 0;
@@ -206,7 +210,7 @@ class Checkout extends Component {
   getBonuses = () => {
     let bonuses = 0;
     if (this.state.is_bonuses) {
-      let user_bonuses = this.props.user.bonuses;
+      let user_bonuses = this.currentUser.bonuses;
       let subtotal = this.getSubTotalWithDiscount();
       if (user_bonuses > subtotal - 0.5) {
         bonuses = subtotal - 0.5;
@@ -232,6 +236,7 @@ class Checkout extends Component {
       shippingCity: [],
       shippingPostCode: [],
       termsStatus: [],
+      password: [],
     };
 
     if (this.state.formData.billingFirstName === "") {
@@ -254,6 +259,9 @@ class Checkout extends Component {
     }
     if (this.state.formData.billingEmail === "") {
       errors.billingEmail.push("Billing email is required!");
+    }
+    if (this.state.formData.password !== this.state.formData.password_confirmation) {
+        errors.password.push('Passwords not match');
     }
 
     if (!this.state.termsStatus) {
@@ -291,7 +299,16 @@ class Checkout extends Component {
     return response;
   };
 
+  get currentUser() {
+      return Object.keys(this.props.user).length
+            ? this.props.user
+            : null;
+  }
+
   initStripe = () => {
+      if (!this.currentUser) {
+          return;
+      }
     this.state.stripePromise.then((stripe) => {
       let elements = stripe.elements();
       var style = {
@@ -386,7 +403,7 @@ class Checkout extends Component {
       style: "currency",
       currency: "GBP",
     });
-
+      console.log('user', this.currentUser);
     return (
       <MainLayout>
         <section className="checkout-section">
@@ -898,6 +915,61 @@ class Checkout extends Component {
                                           />
                                         </span>
                                       </p>
+
+                                        {!this.currentUser ? (
+                                            <div>
+                                              <p className="form-row form-row-first validate-required">
+                                                <label htmlFor="password">
+                                                  Password&nbsp;<span className="required">*</span>
+                                                </label>
+                                                <span className="woocommerce-input-wrapper">
+                                                    <input
+                                                        type="password"
+                                                        className="input-text "
+                                                        onChange={(e) => {
+                                                          this.setState({
+                                                            formData: {
+                                                              ...this.state.formData,
+                                                              password: e.target.value,
+                                                            },
+                                                          });
+                                                        }}
+                                                        name="password"
+                                                        placeholder=""
+                                                        value={this.state.formData.password}
+                                                    />
+                                              </span>
+                                              </p>
+                                              <p
+                                                  className="form-row form-row-last validate-required"
+                                                  id="billing_last_name_field"
+                                                  data-priority="20"
+                                              >
+                                                <label htmlFor="password">
+                                                  Repeat Password&nbsp;<span className="required">*</span>
+                                                </label>
+                                                <span className="woocommerce-input-wrapper">
+                                                    <input
+                                                        type="password"
+                                                        className="input-text "
+                                                        onChange={(e) => {
+                                                          this.setState({
+                                                            formData: {
+                                                              ...this.state.formData,
+                                                              password_confirmation: e.target.value,
+                                                            },
+                                                          });
+                                                        }}
+                                                        name="repeat_password"
+                                                        placeholder=""
+                                                        value={this.state.formData.password_confirmation}
+                                                    />
+                                                  </span>
+                                              </p>
+                                            </div>
+                                            ) : null}
+
+
                                     </div>
                                   </div>
 
@@ -1583,32 +1655,35 @@ class Checkout extends Component {
                                       ) : null}
                                     </li>
                                   </ul>
-                                  <h3 className={"mt-5"}>Bonuses</h3>
-                                  <div className={"place-order bonuses mt-0"}>
-                                    <h4>
-                                      {formatter.format(
-                                        this.props.user.bonuses
-                                      )}
-                                    </h4>
-                                    <div>
-                                      <label htmlFor={"is_bonuses"}>
-                                        <input
-                                          id={"is_bonuses"}
-                                          type={"checkbox"}
-                                          className={"mr-2"}
-                                          onChange={() => {
-                                            this.setState({
-                                              is_bonuses:
-                                                !this.state.is_bonuses,
-                                            });
-                                          }}
-                                          checked={this.state.is_bonuses}
-                                        />
-                                        <span>Use bonuses</span>
-                                      </label>
-                                    </div>
-                                  </div>
-                                  <div className=" place-order mt-5">
+                                    {!!this.currentUser && <>
+                                        <h3 className={"mt-5"}>Bonuses</h3>
+                                        <div className={"place-order bonuses mt-0"}>
+                                            <h4>
+                                                {formatter.format(
+                                                    this.currentUser.bonuses
+                                                )}
+                                            </h4>
+                                            <div>
+                                                <label htmlFor={"is_bonuses"}>
+                                                    <input
+                                                        id={"is_bonuses"}
+                                                        type={"checkbox"}
+                                                        className={"mr-2"}
+                                                        onChange={() => {
+                                                            this.setState({
+                                                                is_bonuses:
+                                                                    !this.state.is_bonuses,
+                                                            });
+                                                        }}
+                                                        checked={this.state.is_bonuses}
+                                                    />
+                                                    <span>Use bonuses</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </>}
+
+                                    <div className=" place-order mt-5">
                                     <div className="woocommerce-terms-and-conditions-wrapper">
                                       <div className="woocommerce-privacy-policy-text">
                                         <p>

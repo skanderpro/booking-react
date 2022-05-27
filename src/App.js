@@ -66,7 +66,7 @@ function App(props) {
         <Route path={"/cart"} component={Cart} />
 
         <ProtectRoute path={"/checkout/invite/:invite"} component={Checkout} />
-        <ProtectRoute path={"/checkout"} component={Checkout} />
+        <Route path={"/checkout"} component={Checkout} />
 
         <ProtectRoute
           path={"/checkout-thank-you/:payment_method/:order_id"}
