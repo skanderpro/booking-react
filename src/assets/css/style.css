@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Poppins:wght@500;600;700&family=Rancho&display=swap');
 
+
+
 h2{
     font-size:31px ;
     font-weight: 600;
@@ -190,21 +192,41 @@ ul li{
     font-size: 14px;
     padding: 8px 23px;
 }
-@media (max-width:1404px){
-    .navbar .nav-right-block{
-        margin: 0;
-        justify-content: space-between;
-        width: 100%;
-        margin-bottom: 15px;
-    }
-    .navbar{
+.explore-item {
+	cursor: pointer;
+	transition: all .3s;
+}
+.explore-item:hover{
+	text-decoration: none ;
+}
+.explore-item-container{
+	transition: all .3s;
+}
+.explore-item:hover .explore-item-container{
+	background-color: #ffffffe0 !important; 
+}
+@media (max-width:1510px){
+	.navbar{
       flex-wrap: wrap;
 
     }
-    .navbar .navbar-brand img{
-        width: 200px;
-    }
+	 .navbar .nav-right-block{
+		margin: 0;
+		justify-content: space-between;
+		width: 100%;
+		margin-bottom: 15px;
+  }
+  
+  .navbar .navbar-brand img{
+		width: 100%;
+
+  }
+  .navbar-light .navbar-brand{
+	  max-width: 200px;
+	  width: 100%;
+  }
 }
+
 @media (max-width:992px){
     .navbar{
         padding: 6px 30px;
@@ -334,7 +356,7 @@ ul li{
     padding: 0 50px;
     display: flex;
     justify-content: space-between;
-    height: 51px;
+    min-height: 51px;
     align-items: center;
 }
 .footer-bottom .footer-bottom-list{}
@@ -1866,6 +1888,51 @@ form.checkout h3{
         padding: 10px;
     }
 }
+@media (max-width:500px){
+	.mail-container .row .form-block .input-group .input-group-append {
+		width: 100%;
+  }
+	.classes-section {
+		margin-bottom: 50px;
+	}
+	.explore-list .slick-next{
+		right: 0;
+		bottom: 0;
+		z-index: 3;
+		color: #011955;
+		border: 2px solid #011955;
+	}
+	.explore-list .slick-prev{
+		left: 0;
+		bottom: 0;
+		z-index: 3;
+		color: #011955;
+		border: 2px solid #011955;
+	}
+	.explore-venues-section{
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+	.navbar-light .navbar-brand {
+		max-width: 175px;
+  }
+	.footer-bottom{
+		padding: 15px 30px;
+	}
+	.navbar .nav-right-block .btn-group{
+		margin-left: 0px;
+	}
+	.navbar .nav-right-block .cart-block{
+		margin-left: 0px;
+	}
+	.footer-nav .footer-images .logo-1{
+		width: 100%;
+	}
+	.footer-nav .footer-images .logo-2{
+		width: 100%;
+	}
+}
+
 
 .verify-container {
     margin-bottom: 200px;
