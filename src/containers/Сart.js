@@ -136,7 +136,7 @@ class Cart extends Component {
     if (!token) {
       return (
         <span>
-          {cart.sets.length > 0 ? (
+          {cart.sets && cart.sets.length > 0 ? (
             <>
               <div>
                 <input
@@ -171,7 +171,7 @@ class Cart extends Component {
     } else {
       return (
         <span>
-          {cart.sets.length > 0 ? (
+          {cart.sets && cart.sets.length > 0 ? (
             <>
               <div>
                 <input
