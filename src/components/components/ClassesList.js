@@ -38,10 +38,12 @@ function ClassesList(props) {
       </div>
       <div className={"classes-list row"}>
         {props.classes.map((classItem, index) => {
+            const linkParam = classItem.product.slug || classItem.id;
+
           return (
             <NavLink
               to={makeUrl(
-                `/class-detail/${classItem.id}`,
+                `/class-detail/${linkParam}`,
                 props.match.params.invite
               )}
               className={"classes-item col-lg-4 col-md-6"}
