@@ -77,7 +77,7 @@ function ClassDetailContentContainer(props) {
                 return (
                   <NavLink
                     to={makeUrl(
-                      `/class-detail/${date.id}`,
+                      `/class-detail/${date.slug || date.id}`,
                       props.match.params.invite
                     )}
                     className={"dates-item d-block"}
@@ -171,10 +171,11 @@ function ClassDetailContentContainer(props) {
           </p>
           <div className={"classes-list row"}>
             {lessons.map((lesson, index) => {
+              console.log('lesson', lesson);
               return (
                 <NavLink
                   to={makeUrl(
-                    `/class-detail/${lesson.id}`,
+                    `/class-detail/${lesson.product.slug || lesson.id}`,
                     props.match.params.invite
                   )}
                   className={"classes-item col-lg-4"}
