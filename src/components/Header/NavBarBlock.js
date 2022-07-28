@@ -33,7 +33,7 @@ function NavBarBlock(props) {
 						props.match.params.invite
 					)}
 				>
-					<img src={require("./../../assets/images/logo.png").default} />
+					<img src={require("./../../assets/images/Sew-Confident-Primary-Logo-RGB-1024x323.png").default} />
 				</NavLink>
 			</Navbar.Brand>
 			<Navbar.Toggle aria-controls="responsive-navbar-nav" />

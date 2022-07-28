@@ -97,15 +97,9 @@ function FooterNav() {
           <div className={"footer-images"}>
             <img
               className={"d-inline-block logo-1"}
-              src={require("./../../assets/images/logo.png").default}
+              src={require("./../../assets/images/Sew-Confident-Sewing-Machine-4-1.png").default}
             />
-            <img
-              className={"d-inline-block logo-2"}
-              src={
-                require("./../../assets/images/7c77a5a22ea47f2a489591985fa8736a.jpg")
-                  .default
-              }
-            />
+            
           </div>
         </div>
       </div>

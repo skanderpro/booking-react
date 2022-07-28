@@ -16,7 +16,7 @@ function Loader({ props, status }) {
         <SquareLoader color={color} loading={loading} size={30} />
       </div>
       <div className={"text-center"}>
-        <img src={`${require("./../../assets/images/logo.png").default}`} />
+        <img src={`${require("./../../assets/images/Sew-Confident-Primary-Logo-RGB-1024x323.png").default}`} />
       </div>
     </div>
   );
