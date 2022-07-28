@@ -4,14 +4,17 @@ function FooterBottom() {
     return <React.Fragment>
         <div className={'footer-bottom'}>
             <div className={'footer-bottom-list'}>
-                <a href={''} className={'footer-bottom-list-item'}>
+                <a href={'https://sewconfident.co.uk/tscs/'} className={'footer-bottom-list-item'}>
                     Terms & Conditions
                 </a>
-                <a href={''} className={'footer-bottom-list-item'}>
+                <a href={'https://sewconfident.co.uk/privacy-policy/'} className={'footer-bottom-list-item'}>
                     Privacy Policy
                 </a>
-                <a href={''} className={'footer-bottom-list-item'}>
+                <a href={'https://sewconfident.co.uk/copyright-notice/'} className={'footer-bottom-list-item'}>
                     Copyright Notice
+                </a>
+					 <a href={'https://sewconfident.co.uk/cookie-policy/'} className={'footer-bottom-list-item'}>
+					 	  Cookie Policy
                 </a>
             </div>
             <div className={'social-links'}>

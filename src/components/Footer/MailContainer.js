@@ -11,7 +11,7 @@ function MailContainer(props) {
   return (
     <div className={"mail-container"}>
       <div className={"row no-gutters"}>
-        <div className={"col-lg-6 text-block"}>
+        <div className={" text-block"}>
           <h2>Join Our Mailing List</h2>
           <p>
             Be the first to know about exclusive shop discounts, product
@@ -19,7 +19,7 @@ function MailContainer(props) {
             list!
           </p>
         </div>
-        <div className={"col-lg-6 form-block"}>
+        <div className={" form-block"}>
           <InputGroup>
             <FormControl
               placeholder="Your email"

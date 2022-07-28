@@ -1,6 +1,115 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Poppins:wght@500;600;700&family=Rancho&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+@font-face {
+	font-family: 'Museo Sans ';
+	src: url('../fonst/MuseoSans/MuseoSansCyrl-500.eot');
+	src: local('../fonst/MuseoSans/MuseoSansCyrl-500'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-500.eot?#iefix') format('embedded-opentype'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-500.woff') format('woff'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-500.ttf') format('truetype');
+	font-weight: 500;
+	font-style: normal;
+}
 
+@font-face {
+	font-family: 'Museo Sans ';
+	src: url('../fonst/MuseoSans/MuseoSansCyrl-300Italic.eot');
+	src: local('../fonst/MuseoSans/MuseoSansCyrl-300Italic'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-300Italic.eot?#iefix') format('embedded-opentype'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-300Italic.woff') format('woff'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-300Italic.ttf') format('truetype');
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Museo Sans ';
+	src: url('../fonst/MuseoSans/MuseoSansCyrl-500Italic.eot');
+	src: local('../fonst/MuseoSans/MuseoSansCyrl-500Italic'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-500Italic.eot?#iefix') format('embedded-opentype'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-500Italic.woff') format('woff'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-500Italic.ttf') format('truetype');
+	font-weight: 500;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Museo Sans ';
+	src: url('../fonst/MuseoSans/MuseoSansCyrl-900.eot');
+	src: local('../fonst/MuseoSans/MuseoSansCyrl-900'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-900.eot?#iefix') format('embedded-opentype'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-900.woff') format('woff'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-900.ttf') format('truetype');
+	font-weight: 900;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Museo Sans';
+	src: url('../fonst/MuseoSans/MuseoSansCyrl-700.eot');
+	src: local('../fonst/MuseoSans/MuseoSansCyrl-700'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-700.eot?#iefix') format('embedded-opentype'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-700.woff') format('woff'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-700.ttf') format('truetype');
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Museo Sans';
+	src: url('../fonst/MuseoSans/MuseoSansCyrl-700Italic.eot');
+	src: local('../fonst/MuseoSans/MuseoSansCyrl-700Italic'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-700Italic.eot?#iefix') format('embedded-opentype'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-700Italic.woff') format('woff'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-700Italic.ttf') format('truetype');
+	font-weight: 700;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Museo Sans';
+	src: url('../fonst/MuseoSans/MuseoSansCyrl-300.eot');
+	src: local('../fonst/MuseoSans/MuseoSansCyrl-300'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-300.eot?#iefix') format('embedded-opentype'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-300.woff') format('woff'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-300.ttf') format('truetype');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Museo Sans ';
+	src: url('../fonst/MuseoSans/MuseoSansCyrl-100.eot');
+	src: local('../fonst/MuseoSans/MuseoSansCyrl-100'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-100.eot?#iefix') format('embedded-opentype'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-100.woff') format('woff'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-100.ttf') format('truetype');
+	font-weight: 100;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Museo Sans ';
+	src: url('../fonst/MuseoSans/MuseoSansCyrl-100Italic.eot');
+	src: local('../fonst/MuseoSans/MuseoSansCyrl-100Italic'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-100Italic.eot?#iefix') format('embedded-opentype'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-100Italic.woff') format('woff'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-100Italic.ttf') format('truetype');
+	font-weight: 100;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Museo Sans';
+	src: url('../fonst/MuseoSans/MuseoSansCyrl-900Italic.eot');
+	src: local('Museo Sans Cyrl 900 Italic'), local('../fonst/MuseoSans/MuseoSansCyrl-900Italic'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-900Italic.eot?#iefix') format('embedded-opentype'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-900Italic.woff') format('woff'),
+		url('../fonst/MuseoSans/MuseoSansCyrl-900Italic.ttf') format('truetype');
+	font-weight: 900;
+	font-style: italic;
+}
 
 h2{
     font-size:31px ;
@@ -128,7 +237,7 @@ ul li{
 }
 .social-links-header-links{
     background-color: #D9D9FF;
-    padding: 2px 50px;
+    padding: 0px 50px;
     display: flex;
     justify-content: flex-end;
 }
@@ -143,7 +252,30 @@ ul li{
 }
 
 /* Navbar */
-
+.dropdown-menu{
+	border-radius: 0px;
+	border: none;
+	padding: 0px;
+}
+.navbar .dropdown-item{
+	padding: 13px 20px;
+	transition: all .3s;
+}
+.dropdown-item:focus, .dropdown-item:hover{
+	background-color: #D9D9FF;
+}
+.dropdown-submenu-container .dropdown-menu{
+	margin-left: 0px;
+	margin-top: 0px;
+}
+.dropdown-toggle::after{
+	margin-left: 10px;
+}
+.dropdown-submenu-container a.dropdown-submenu::after{
+	top: 50%;
+	transform: translateY(-50%) rotate(-90deg);
+	margin-left: 0px;
+}
 .navbar{
     padding: 6px 50px;
 }
@@ -153,12 +285,14 @@ ul li{
 .navbar-light .navbar-nav .nav-link{
     margin-left: 20px;
     color: #000;
-    font-family: 'Rancho';
-    font-size: 20px;
+    font-family: "Poppins", sans-serif;
+	 font-size: 15px;
+    font-weight: 300;
 }
 .navbar .dropdown-item{
-    font-family: 'Rancho';
-    font-size: 20px;
+	font-family: "Poppins", sans-serif;
+	font-size: 15px;
+	font-weight: 300;
 }
 .navbar .nav-right-block{
     display: flex;
@@ -236,30 +370,37 @@ ul li{
 }
 /* Footer*/
 .mail-container{
-    background-color: #FEE483;
+    background-color: #ffc3e6;
     min-height: 236px;
     padding: 50px;
     display: flex;
     align-items: center;
 }
 .mail-container h2{
-    font-size: 34px;
-    font-family: 'Rancho';
-    margin-bottom: 0px;
+	font-size: 30px;
+	font-weight: 700;
+   font-family: "Museo Sans", sans-serif;
+    margin-bottom: 20px;
+	 text-transform: uppercase;
+	 color: #ff7800;
+	 font-style: italic;
 }
 .mail-container p{
-    font-size: 15px;
-    font-family: 'Archivo';
+	color: #000000;
+	font-family: "Poppins", Sans;
+	font-size: 18px;
+	font-weight: 400;
     margin-bottom: 0px;
 }
 .mail-container .row{
     width: 100%;
+	 flex-wrap: nowrap;
 }
 .mail-container .row > div{
-
+	width: 100%;
 }
 .mail-container .row .text-block{
-
+	margin-right: 40px;
 }
 .mail-container .row .form-block{
     display: flex;
@@ -278,16 +419,20 @@ ul li{
 
 }
 .mail-container .row .form-block .input-group button{
-    font-family: 'Rancho';
-    background-color: #D9D9FF;
+	font-family: "Museo Sans", sans-serif;
+    background-color: #ff7800;
+    font-size: 20px;
+	 text-transform: uppercase;
+    font-weight: 700;
+	 color: #fff;
     border-radius: 0;
-    font-size: 27px;
     width: 100%;
+	 transition: all .3s;
 
 }
 .mail-container .row .form-block .input-group button:hover{
-    background-color: #212529;
-    color: #D9D9FF;
+    background-color: #fffaf5;
+    color: #ff7800;
 }
 .mail-container .row .form-block .input-group .input-group-append{
     width: 30%;
@@ -330,8 +475,9 @@ ul li{
     margin-top: 40px;
 }
 .footer-column .title{
-    font-size: 28px;
-    font-family: 'Rancho';
+    font-size: 18px;
+    font-family: "Museo Sans", sans-serif;
+	 font-weight: 700;
     margin-bottom: 10px;
 }
 .footer-column .column-list{
@@ -341,11 +487,12 @@ ul li{
 
 }
 .footer-column .column-list .column-item a{
-    font-family: 'Archivo';
-    font-size: 15px;
+	font-family: "Poppins", sans-serif;
+    font-size: 12px;
+	 font-weight: 400;
     padding: 3px 0;
     display: block;
-    color:#000;
+    color: rgba(0,0,0,0.79);
 }
 @media (max-width: 992px){
     .footer-column .column-list{
@@ -353,7 +500,7 @@ ul li{
     }
 }
 .footer-bottom{
-    background-color: #D9D9FF;
+    background-color: #ffffb4;
     padding: 0 50px;
     display: flex;
     justify-content: space-between;
@@ -364,7 +511,7 @@ ul li{
 .footer-bottom .footer-bottom-list .footer-bottom-list-item{
     color:#000;
     font-family: 'Poppins';
-    font-weight: 500;
+    font-weight: 300;
     font-size: 12px;
     display: inline-block;
     padding-right: 14px;
@@ -386,7 +533,9 @@ ul li{
 .footer-bottom .social-links {}
 .footer-bottom .social-links  .social-link{
     display: inline-block;
-    padding: 0 6px;
+}
+.footer-bottom .social-links  .social-link+.social-link{
+	margin-left: 20px;
 }
 .footer-bottom .social-links  .social-link a{
     color: #000;
@@ -1021,6 +1170,11 @@ ul li{
         padding-right: 30px;
     }
 }
+@media (max-width:1024px){
+	.mail-container .row .form-block .input-group .input-group-append{
+		width: auto;
+	}
+}
 /* Accordion */
 .accordion{
     margin-bottom: 40px;
@@ -1346,6 +1500,18 @@ ul li{
 
 }
 @media screen and (max-width: 767px){
+	.mail-container .row{
+		flex-wrap: wrap;
+	}
+	.footer-bottom{
+		flex-direction: column;
+	}
+	.footer-bottom .footer-bottom-list{
+		margin-top: 15px;
+	}
+	.footer-bottom .social-links{
+		margin: 15px 0px;
+	}
     .cart-section{
         padding: 40px 10px;
     }
@@ -1758,6 +1924,9 @@ form.checkout h3{
     .checkout-section .checkout-container .checkout-title{
         text-align: center;
     }
+	 .header-links{
+		flex-direction: column;
+	 }
 }
 
 /* Checkout Thank You */
@@ -2011,4 +2180,27 @@ form.checkout h3{
 }
 .tutor-list-container .tutor-list .tutor-list-item h4{
     color: #212529;
+}
+
+
+.header-links{
+	display: flex;
+	align-items: center;
+}
+.header-links a{
+	width: 100%;
+	padding: 10px;
+	font-family: "Museo Sans", sans-serif;
+	font-size: 18px;
+	line-height: 20px;
+	font-weight: 700;
+	font-style: italic;
+	color: #91a0ff;
+	background-color: #d9d9ff;
+	transition: all .3s;
+	text-align: center;
+}
+.header-links a:hover{
+	background-color: #fffaf5;
+	text-decoration: none;
 }

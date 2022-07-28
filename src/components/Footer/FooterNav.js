@@ -52,20 +52,19 @@ function FooterNav() {
               <div className={"footer-column"}>
                 <div className={"title"}>Our Services</div>
                 <div className={"column-list"}>
-                  <div className={"column-item"}>
-                    <a href={"#"}>Sewing Classes</a>
-                  </div>
+                 
                   <div className={"column-item"}>
                     <a href={"https://sewconfident.co.uk/studios"}>Studios</a>
+                  </div>
+						<div className={"column-item"}>
+                    <a href={"https://sewconfident.co.uk/shop"}>Online Shop</a>
                   </div>
                   <div className={"column-item"}>
                     <a href={"https://sewconfident.co.uk/121-2"}>Private Tuition</a>
                   </div>
+                  
                   <div className={"column-item"}>
-                    <a href={"https://sewconfident.co.uk/shop"}>Online Shop</a>
-                  </div>
-                  <div className={"column-item"}>
-                    <a href={"https://sewconfident.co.uk/sew-macho"}>Sew Macho</a>
+                    <a href={"https://sewconfident.co.uk/parties/"}>Crafty Parties</a>
                   </div>
                 </div>
               </div>
@@ -81,13 +80,13 @@ function FooterNav() {
                     <a href={"https://sewconfident.co.uk/reviews"}>Reviews</a>
                   </div>
                   <div className={"column-item"}>
-                    <a href={"https://sewconfident.co.uk/press"}> PR & Press</a>
-                  </div>
-                  <div className={"column-item"}>
-                    <a href={"https://sewconfident.co.uk/blog"}>Latest News</a>
+                    <a href={"https://sewconfident.co.uk/blog"}> Sew Confident Blog</a>
                   </div>
                   <div className={"column-item"}>
                     <a href={"https://sewconfident.co.uk/own-your-own-studio"}>Franchising Opportunities</a>
+                  </div>
+                  <div className={"column-item"}>
+                    <a href={"https://sewconfident.co.uk/contact-us/"}>Contact us</a>
                   </div>
                 </div>
               </div>
