@@ -142,10 +142,10 @@ class Home extends Component {
 						nextPage={this.nextPage}
 					/>
 					<VouchersList />
-					<ExploreVenues
+					{this.state.venues.length > 1 && <ExploreVenues
 
 						searchClasses={(venue) => {
-							this.setState({ page: 1, isLoadMore: true }, () => {
+							this.setState({page: 1, isLoadMore: true}, () => {
 								this.searchClasses(
 									this.state.level,
 									this.state.search,
@@ -155,7 +155,7 @@ class Home extends Component {
 								);
 							});
 						}}
-					/>
+					/>}
 				</div>
 				<Loader status={this.state.isLoader} />
 			</MainLayout>

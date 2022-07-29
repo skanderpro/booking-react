@@ -101,7 +101,6 @@ class ExploreVenues extends Component {
 		};
 
 
-
 		return (
 			<div className={"explore-venues-section"}>
 				<div className={"explore-venues-container"}>

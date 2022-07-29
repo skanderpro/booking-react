@@ -5,7 +5,9 @@ import { withRouter } from "react-router-dom";
 const cookies = new Cookies();
 
 function ClassDetailTopBlock(props) {
-  useEffect(() => {});
+  // useEffect(() => {});
+
+  // console.log('props.classDetail', props.classDetail);
 
   return (
     <div className={"class-detail-top-block "} id={"class-detail-top-block"}>
