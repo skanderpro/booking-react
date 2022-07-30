@@ -20,7 +20,8 @@ export function searchClasses(
   search = "",
   location = "",
   page = 1,
-  limit = 3
+  limit = 3,
+  exclude = []
 ) {
   return async (dispatch, getState) => {
     let mainUrl = getState().settings.mainUrl;
@@ -32,6 +33,7 @@ export function searchClasses(
         page: page,
         limit: limit,
         type: "class",
+        exclude,
       },
     });
     return response;
