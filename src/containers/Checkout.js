@@ -1549,7 +1549,7 @@ class Checkout extends Component {
                                             <span className="woocommerce-Price-currencySymbol">
                                               £
                                             </span>
-                                            0.96
+                                            {this.getTotalPrice()/100*20}
                                           </span>{" "}
                                           VAT)
                                         </small>
@@ -2014,6 +2014,7 @@ class Checkout extends Component {
                                             className="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox"
                                             name="terms"
                                             id="terms"
+                                            onChange={(e) => this.setState({termsStatus: e.target.checked})}
                                           />
                                           <span
                                             className="woocommerce-terms-and-conditions-checkbox-text"
@@ -2026,13 +2027,7 @@ class Checkout extends Component {
                                               href="https://www.sewconfident.co.uk/tscs/"
                                               className="woocommerce-terms-and-conditions-link"
                                               target="_blank"
-                                              onClick={(e) => {
-                                                e.preventDefault();
-                                                this.setState({
-                                                  termsStatus:
-                                                    !this.state.termsStatus,
-                                                });
-                                              }}
+
                                             >
                                               terms and conditions
                                             </a>

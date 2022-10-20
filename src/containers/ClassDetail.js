@@ -47,7 +47,11 @@ class ClassDetail extends Component {
   };
 
   calcClassDetailTopContainer = () => {
-    let height = document.getElementById("class-detail-top-block").offsetHeight;
+    const item =  document.getElementById("class-detail-top-block");
+    if (!item) {
+      return;
+    }
+    let height = item.offsetHeight;
     document.getElementById("class-detail-container").style.paddingTop = `${
       170 + 90 + (height - 410)
     }px`;
