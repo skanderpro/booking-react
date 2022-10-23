@@ -547,7 +547,7 @@ class Checkout extends Component {
                                         <label
                                           htmlFor="billing_first_name"
                                           className=""
-                                        >
+                                        > 
                                           First name&nbsp;
                                           <abbr
                                             className="required"
