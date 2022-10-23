@@ -30,7 +30,7 @@ function ClassDetailContentContainer(props) {
   let [lessons, setLessons] = useState([]);
   useEffect(() => {
     props
-      .searchClasses("", "", props.classDetail.product.venue.name, 1, 3)
+      .searchClasses("", "", props.classDetail.product.venue.name, 1, 3, [props.classDetail.id])
       .then((response) => {
         setLessons([...response.data]);
       });
@@ -235,8 +235,8 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    searchClasses: (level, search, location, page, limit) => {
-      return dispatch(searchClasses(level, search, location, page, limit));
+    searchClasses: (level, search, location, page, limit, exclude) => {
+      return dispatch(searchClasses(level, search, location, page, limit, exclude));
     },
   };
 }
