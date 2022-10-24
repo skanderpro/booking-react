@@ -588,7 +588,7 @@ class Cart extends Component {
                                         <span className="woocommerce-Price-currencySymbol">
                                           £
                                         </span>
-                                        { this.getTotalPrice()/100*20 }
+                                        {this.getTotalPrice()/100*20}
                                       </span>{" "}
                                       VAT)
                                     </small>
