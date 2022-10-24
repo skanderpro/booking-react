@@ -552,9 +552,10 @@ class Cart extends Component {
                                                 }
                                               })
                                               .catch((errors) => {
+                                                console.log(errors);
                                                 this.setState({
                                                   giftErrors:
-                                                    errors.response.data.errors,
+                                                    errors.response.data.errors || "",
                                                 });
                                               });
                                           }}
@@ -587,7 +588,7 @@ class Cart extends Component {
                                         <span className="woocommerce-Price-currencySymbol">
                                           £
                                         </span>
-                                        0.96
+                                        { this.getTotalPrice()/100*20 }
                                       </span>{" "}
                                       VAT)
                                     </small>
