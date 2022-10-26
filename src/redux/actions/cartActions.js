@@ -54,6 +54,7 @@ export function removeLocalCart(id) {
 
 export function getRemoteCart() {
     return async (dispatch, getState) => {
+        console.log('TETS');
         const mainUrl = getState().settings.mainUrl;
         const user = getState().user.user;
         if (!user || !Object.keys(user).length) {
@@ -76,10 +77,9 @@ export function getRemoteCart() {
                     }),
                 }
             })
-
-
         }
         let token = cookies.get("token");
+        console.log('COOKIE', token);
         let response = await axios.get(`${mainUrl}/api/cart`, {
             headers: {
                 Authorization: `Bearer ${token}`,
