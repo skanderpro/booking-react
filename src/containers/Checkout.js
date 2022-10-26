@@ -131,8 +131,9 @@ class Checkout extends Component {
       this.initStripe();
     }
     this.props.getRemoteCart().then((response) => {
+      console.log('SET', [...new Set([...this.props.cartItems, ...response.data.items])])
       this.setState({
-        remoteCart: [...response.data.items],
+        remoteCart: [...new Set([...this.props.cartItems, ...response.data.items])],
         isLoader: false,
       });
     });
@@ -547,7 +548,7 @@ class Checkout extends Component {
                                         <label
                                           htmlFor="billing_first_name"
                                           className=""
-                                        > 
+                                        >
                                           First name&nbsp;
                                           <abbr
                                             className="required"
@@ -1406,7 +1407,7 @@ class Checkout extends Component {
                                             key={`cart_item_${index}`}
                                           >
                                             <td className="product-name">
-                                              {cart.product.product.name}
+                                              {cart.product ? cart.product.product.name : cart.name}
                                             </td>
                                             <td className="product-total">
                                               <span className="woocommerce-Price-amount amount">
@@ -2137,6 +2138,19 @@ function mapStateToProps(state) {
   return {
     user: state.user.user,
     promocode: state.cart.promocode,
+    cartItems: (state.cart.items || []).map(item => {
+      const setPrice = item.set ? parseFloat(item.sets.find(s => s.id === item.set).price) : 0;
+
+      return {
+        ...item,
+        product: {
+          product: {
+            name: item.name
+          }
+        },
+        price_set: parseFloat(item.price) + setPrice,
+      }
+    }),
   };
 }
 
