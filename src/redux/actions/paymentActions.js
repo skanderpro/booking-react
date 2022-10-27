@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "universal-cookie";
 
-const cookies = new Cookies();
+let cookies = new Cookies();
 
 export function createPayment(data) {
   return async (dispatch, getState) => {
@@ -39,6 +39,8 @@ export function createCustomer() {
   return async (dispatch, getState) => {
     let mainUrl = getState().settings.mainUrl;
     let token = cookies.get("token");
+    cookies = new Cookies();
+    console.log('token 1', cookies.get("token"))
     let response = await axios.post(
       `${mainUrl}/api/stripe/customer`,
       {},
@@ -53,6 +55,7 @@ export function createCustomer() {
 }
 
 export function createPaymentIntent(data) {
+  console.log('token 1', cookies.get("token"))
   return async (dispatch, getState) => {
     let mainUrl = getState().settings.mainUrl;
     let token = cookies.get("token");
@@ -67,6 +70,7 @@ export function createPaymentIntent(data) {
         },
       }
     );
+    console.log('token 2', cookies.get("token"))
     return response;
   };
 }
