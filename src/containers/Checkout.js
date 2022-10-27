@@ -91,6 +91,7 @@ class Checkout extends Component {
       shippingCity: [],
       shippingPostCode: [],
       termsStatus: [],
+      password: [],
     },
     discount: 0,
     settings: {
@@ -101,6 +102,7 @@ class Checkout extends Component {
     stripePromise: null,
     promocodeDiscount: {},
   };
+  cardRef = React.createRef(null);
 
   componentDidMount() {
     if (this.state.paymentMethod === "paypal") {
@@ -131,14 +133,15 @@ class Checkout extends Component {
       this.initStripe();
     }
     this.props.getRemoteCart().then((response) => {
-      console.log('SET', [...new Set([...this.props.cartItems, ...response.data.items])])
       this.setState({
-        remoteCart: [...new Set([...this.props.cartItems, ...response.data.items])],
+        // remoteCart: [...new Set([...this.props.cartItems, ...response.data.items])],
+        remoteCart: Object.keys(this.props.user).length ? response.data.items : response.data.items,
         isLoader: false,
       });
     });
 
-      this.currentUser && this.getStripePublicKey().then((response) => {
+      // this.currentUser && this.getStripePublicKey().then((response) => {
+      this.getStripePublicKey().then((response) => {
       const stripePromise = loadStripe(response);
       this.setState({
         stripePromise: stripePromise,
@@ -261,7 +264,10 @@ class Checkout extends Component {
     if (this.state.formData.billingEmail === "") {
       errors.billingEmail.push("Billing email is required!");
     }
-    if (this.state.formData.password !== this.state.formData.password_confirmation) {
+    if (!this.state.formData.password.trim().length && !Object.keys(this.props.user).length) {
+      errors.password.push('Password is required!');
+    }
+    if (this.state.formData.password !== this.state.formData.password_confirmation && !Object.keys(this.props.user).length) {
         errors.password.push('Passwords not match');
     }
 
@@ -290,14 +296,22 @@ class Checkout extends Component {
   };
 
   createOrder = async () => {
-    let response = await this.props.createOrder({
-      ...this.state.formData,
-      cart: [...this.state.remoteCart],
-      invite: this.props.match.params.invite,
-      is_bonuses: this.state.is_bonuses,
-    });
+    try {
+      let response = await this.props.createOrder({
+        ...this.state.formData,
+        cart: [...this.state.remoteCart],
+        invite: this.props.match.params.invite,
+        is_bonuses: this.state.is_bonuses,
+      });
 
-    return response;
+      return response;
+    } catch (e) {
+      if (e.response.status === 409) {
+        window.location.href = '/login';
+      }
+
+      return e.response;
+    }
   };
 
   get currentUser() {
@@ -345,6 +359,7 @@ class Checkout extends Component {
           order: { ...response.data },
         },
         () => {
+            console.log('card', this.state.card);
           stripe
             .confirmCardPayment(paymentIntent.data.client_secret, {
               payment_method: {
@@ -1646,7 +1661,7 @@ class Checkout extends Component {
                                               Pay with your credit card via
                                               Stripe.
                                             </p>
-                                            <div id="card-element"></div>
+                                            <div id="card-element" ref={this.cardRef}></div>
                                             <div
                                               id="card-errors"
                                               role="alert"
