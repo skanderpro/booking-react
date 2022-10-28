@@ -92,6 +92,15 @@ export function updateUserProfile(user) {
   };
 }
 
+export function setToken(token) {
+  return {
+    type: LOGIN_SUCCESS,
+    data: {
+      token,
+    },
+  };
+}
+
 export function logoutUser() {
   return {
     type: LOGOUT_USER,

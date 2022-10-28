@@ -7,6 +7,9 @@ export function createPayment(data) {
   return async (dispatch, getState) => {
     let mainUrl = getState().settings.mainUrl;
     let token = cookies.get("token");
+    if (!token){
+      token = getState().user.token;
+    }
     let response = await axios.post(
       `${mainUrl}/api/transactions`,
       {
@@ -22,6 +25,9 @@ export function setPaymentToOrder(data) {
   return async (dispatch, getState) => {
     let mainUrl = getState().settings.mainUrl;
     let token = cookies.get("token");
+    if (!token){
+      token = getState().user.token;
+    }
     let response = await axios.post(
       `${mainUrl}/api/orders/set-payment`,
       {

@@ -158,8 +158,7 @@ class Checkout extends Component {
 
     if (
       this.state.paymentMethod === "stripe" &&
-      prevState.paymentMethod !== this.state.paymentMethod &&
-      this.currentUser
+      prevState.paymentMethod !== this.state.paymentMethod
     ) {
       this.initStripe();
     }
@@ -214,7 +213,7 @@ class Checkout extends Component {
   getBonuses = () => {
     let bonuses = 0;
     if (this.state.is_bonuses) {
-      let user_bonuses = this.currentUser.bonuses;
+      let user_bonuses = Object.keys(this.currentUser).length ? this.currentUser.bonuses : 0;
       let subtotal = this.getSubTotalWithDiscount();
       if (user_bonuses > subtotal - 0.5) {
         bonuses = subtotal - 0.5;
@@ -306,6 +305,8 @@ class Checkout extends Component {
 
       return response;
     } catch (e) {
+      console.log('TEST u23');
+
       if (e.response.status === 409) {
         window.location.href = '/login';
       }
@@ -321,9 +322,9 @@ class Checkout extends Component {
   }
 
   initStripe = () => {
-      if (!this.currentUser) {
-          return;
-      }
+      // if (!this.currentUser) {
+      //     return;
+      // }
     this.state.stripePromise.then((stripe) => {
       let elements = stripe.elements();
       var style = {
