@@ -6,7 +6,7 @@ import { makeUrl } from "./../../redux/actions/functions";
 const cookies = new Cookies();
 
 const ProtectRoute = ({ component: Component, ...props }) => {
-  let token = cookies.get("token");
+  let token = cookies.get("token") || props.authToken;
   console.log(props);
   return (
     <Route

@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "universal-cookie";
+import {setToken} from "./userActions";
 
 const cookies = new Cookies();
 
@@ -22,6 +23,9 @@ export function createOrder(data) {
         },
       }
     );
+    if (response.data.token) {
+      dispatch(setToken(response.data.token))
+    }
     return response;
   };
 }

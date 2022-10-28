@@ -147,6 +147,9 @@ export function cartClear() {
     return async (dispatch, getState) => {
         let mainUrl = getState().settings.mainUrl;
         let token = cookies.get("token");
+        if (!token){
+            token = getState().user.token;
+        }
         let response = await axios.delete(`${mainUrl}/api/cart/clear`, {
             headers: {
                 Authorization: `Bearer ${token}`,
