@@ -2204,3 +2204,8 @@ form.checkout h3{
 	background-color: #fffaf5;
 	text-decoration: none;
 }
+
+#woo-ml-subscribe {
+    display: flex;
+    width: 100%;
+}

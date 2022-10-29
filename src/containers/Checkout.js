@@ -73,8 +73,9 @@ class Checkout extends Component {
       shippingCity: "",
       shippingPostCode: "",
       shippingAddressStatus: false,
-        password: "",
-        password_confirmation: "",
+      password: "",
+      password_confirmation: "",
+      registerUser: false,
     },
     remoteCart: [],
     errors: {
@@ -266,7 +267,7 @@ class Checkout extends Component {
     if (!this.state.formData.password.trim().length && !Object.keys(this.props.user).length) {
       errors.password.push('Password is required!');
     }
-    if (this.state.formData.password !== this.state.formData.password_confirmation && !Object.keys(this.props.user).length) {
+    if (this.state.formData.password !== this.state.formData.password_confirmation && !Object.keys(this.props.user).length && this.state.formData.registerUser) {
         errors.password.push('Passwords not match');
     }
 
@@ -301,14 +302,14 @@ class Checkout extends Component {
         cart: [...this.state.remoteCart],
         invite: this.props.match.params.invite,
         is_bonuses: this.state.is_bonuses,
+        register_user: this.state.registerUser,
       });
 
       return response;
     } catch (e) {
-      console.log('TEST u23');
 
       if (e.response.status === 409) {
-        window.location.href = '/login';
+        NotificationManager.error(e.response.data.error);
       }
 
       return e.response;
@@ -957,15 +958,35 @@ class Checkout extends Component {
                                                     />
                                               </span>
                                               </p>
-                                              <p
+                                              <p className="form-row form-row-first ">
+                                                <label htmlFor="password">
+                                                  <input
+                                                      type="checkbox"
+                                                      onChange={(e) => {
+                                                        this.setState({
+                                                          formData: {
+                                                            ...this.state.formData,
+                                                            registerUser: e.target.checked,
+                                                          },
+                                                        });
+                                                      }}
+                                                      name="registerNewUser"
+                                                      checked={this.state.formData.registerUser}
+                                                  /> &nbsp;
+                                                  Register new user
+                                                </label>
+                                              </p>
+                                              {!!this.state.formData.registerUser && <p
                                                   className="form-row form-row-last validate-required"
                                                   id="billing_last_name_field"
                                                   data-priority="20"
                                               >
                                                 <label htmlFor="password">
-                                                  Repeat Password&nbsp;<span className="required">*</span>
+                                                  Repeat Password&nbsp;<span
+                                                    className="required">*</span>
                                                 </label>
-                                                <span className="woocommerce-input-wrapper">
+                                                <span
+                                                    className="woocommerce-input-wrapper">
                                                     <input
                                                         type="password"
                                                         className="input-text "
@@ -982,7 +1003,7 @@ class Checkout extends Component {
                                                         value={this.state.formData.password_confirmation}
                                                     />
                                                   </span>
-                                              </p>
+                                              </p>}
                                             </div>
                                             ) : null}
 
@@ -990,25 +1011,26 @@ class Checkout extends Component {
                                     </div>
                                   </div>
 
-                                  <p id="woo-ml-subscribe">
-                                    <input
-                                      name="woo_ml_subscribe"
-                                      type="checkbox"
-                                      checked={
-                                        this.state.formData.deals_and_offers
-                                      }
-                                      onChange={(event) => {
-                                        this.setState({
-                                          formData: {
-                                            ...this.state.formData,
-                                            deals_and_offers:
-                                              !this.state.formData
-                                                .deals_and_offers,
-                                          },
-                                        });
-                                      }}
-                                    />
+                                  <p id="woo-ml-subscribe" >
+
                                     <label htmlFor="woo_ml_subscribe">
+                                      <input
+                                          name="woo_ml_subscribe"
+                                          type="checkbox"
+                                          checked={
+                                            this.state.formData.deals_and_offers
+                                          }
+                                          onChange={(event) => {
+                                            this.setState({
+                                              formData: {
+                                                ...this.state.formData,
+                                                deals_and_offers:
+                                                    !this.state.formData
+                                                        .deals_and_offers,
+                                              },
+                                            });
+                                          }}
+                                      /> &nbsp;
                                       Yes, I want to hear about deals and
                                       offers!
                                     </label>
