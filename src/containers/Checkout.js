@@ -502,7 +502,7 @@ class Checkout extends Component {
                                             "promocode"
                                           ) {
                                             this.props.addPromocode(
-                                              this.state.coupon
+                                                this.state.couponData
                                             );
                                             this.setState({
                                               promocode: response.data,
@@ -1588,7 +1588,7 @@ class Checkout extends Component {
                                             <span className="woocommerce-Price-currencySymbol">
                                               £
                                             </span>
-                                            {this.getTotalPrice()/100*20}
+                                            {Math.round((this.getTotalPrice()/100*20)*100)/100}
                                           </span>{" "}
                                           VAT)
                                         </small>
