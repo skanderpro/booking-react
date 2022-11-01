@@ -41,7 +41,7 @@ export function setPaymentToOrder(data) {
   };
 }
 
-export function createCustomer() {
+export function createCustomer(order) {
   return async (dispatch, getState) => {
     let mainUrl = getState().settings.mainUrl;
     let token = cookies.get("token");
@@ -49,7 +49,7 @@ export function createCustomer() {
     console.log('token 1', cookies.get("token"))
     let response = await axios.post(
       `${mainUrl}/api/stripe/customer`,
-      {},
+      order,
       {
         headers: {
           Authorization: `Bearer ${token}`,
