@@ -350,8 +350,8 @@ class Checkout extends Component {
   onClickStripeHandler = async () => {
     let stripe = await this.state.stripePromise;
 
-    let customer = await this.props.createCustomer();
     this.createOrder().then(async (response) => {
+      let customer = await this.props.createCustomer({order_id: response.data.id});
       let paymentIntent = await this.props.createPaymentIntent({
         customer_id: customer.data.id,
         order_id: response.data.id,
@@ -2209,8 +2209,8 @@ function mapDispatchToProps(dispatch) {
     cartClear: () => {
       return dispatch(cartClear());
     },
-    createCustomer: () => {
-      return dispatch(createCustomer());
+    createCustomer: (order) => {
+      return dispatch(createCustomer(order));
     },
     createPaypalOrder: (order_id) => {
       return dispatch(createPaypalOrder(order_id));
