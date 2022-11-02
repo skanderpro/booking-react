@@ -73,8 +73,8 @@ class Checkout extends Component {
       shippingCity: "",
       shippingPostCode: "",
       shippingAddressStatus: false,
-      password: "",
-      password_confirmation: "",
+      // password: "",
+      // password_confirmation: "",
       registerUser: false,
     },
     remoteCart: [],
@@ -141,12 +141,14 @@ class Checkout extends Component {
       });
     });
 
-      // this.currentUser && this.getStripePublicKey().then((response) => {
-      this.getStripePublicKey().then((response) => {
-      const stripePromise = loadStripe(response);
-      this.setState({
-        stripePromise: stripePromise,
-      });
+     console.log(this.props)
+      this.getStripePublicKey([...this.props.cartItems]).then((response) => {
+        
+        // response = 'pk_test_51KCS8mGethSGruZAXlHlNCCmi6c4l3ASFZlIUdqRbqABHQVBM5I9fhe1QdZ4U2LuGpkbxoopJkaqLxuio28swWIx00FTyEJzhe'
+        const stripePromise = loadStripe(response);
+        this.setState({
+          stripePromise: stripePromise,
+        });
     });
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -165,9 +167,9 @@ class Checkout extends Component {
     }
   }
 
-  getStripePublicKey = async () => {
+  getStripePublicKey = async (carts) => {
     try {
-      let response = await this.props.getStripePublicKey();
+      let response = await this.props.getStripePublicKey(carts);
       return response.data;
     } catch (e) {
       console.log(e);
@@ -264,12 +266,12 @@ class Checkout extends Component {
     if (this.state.formData.billingEmail === "") {
       errors.billingEmail.push("Billing email is required!");
     }
-    if (!this.state.formData.password.trim().length && !Object.keys(this.props.user).length) {
-      errors.password.push('Password is required!');
-    }
-    if (this.state.formData.password !== this.state.formData.password_confirmation && !Object.keys(this.props.user).length && this.state.formData.registerUser) {
-        errors.password.push('Passwords not match');
-    }
+    // if (!this.state.formData.password.trim().length && !Object.keys(this.props.user).length) {
+    //   errors.password.push('Password is required!');
+    // }
+    // if (this.state.formData.password !== this.state.formData.password_confirmation && !Object.keys(this.props.user).length && this.state.formData.registerUser) {
+    //     errors.password.push('Passwords not match');
+    // }
 
     if (!this.state.termsStatus) {
       errors.termsStatus.push("Terms status is required!");
@@ -394,6 +396,7 @@ class Checkout extends Component {
                         .then((response) => {
                           this.props.cartClear().then(() => {
                             this.props.getRemoteCart().then(() => {
+                              console.log('ok')
                               window.location.href = `/checkout-thank-you/stripe/${this.state.order.id}`;
                             });
                           });
@@ -421,7 +424,7 @@ class Checkout extends Component {
       style: "currency",
       currency: "GBP",
     });
-      console.log('user', this.currentUser);
+
     return (
       <MainLayout>
         <section className="checkout-section">
@@ -934,7 +937,7 @@ class Checkout extends Component {
                                         </span>
                                       </p>
 
-                                        {!this.currentUser ? (
+                                        {/* {!this.currentUser  ? (
                                             <div>
                                               <p className="form-row form-row-first validate-required">
                                                 <label htmlFor="password">
@@ -1005,7 +1008,7 @@ class Checkout extends Component {
                                                   </span>
                                               </p>}
                                             </div>
-                                            ) : null}
+                                            ) : null} */}
 
 
                                     </div>
@@ -2052,6 +2055,7 @@ class Checkout extends Component {
                                             type="checkbox"
                                             className="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox"
                                             name="terms"
+                                            checked={this.state.termsStatus}
                                             id="terms"
                                             onChange={(e) => this.setState({termsStatus: e.target.checked})}
                                           />
@@ -2227,8 +2231,8 @@ function mapDispatchToProps(dispatch) {
     fetchSettings: () => {
       return dispatch(fetchSettings());
     },
-    getStripePublicKey: () => {
-      return dispatch(getStripePublicKey());
+    getStripePublicKey: (carts) => {
+      return dispatch(getStripePublicKey(carts));
     },
     addPromocode: (promocode) => {
       NotificationManager.success("Promocode applied");
