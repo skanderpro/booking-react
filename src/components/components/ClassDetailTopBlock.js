@@ -69,8 +69,8 @@ function ClassDetailTopBlock(props) {
             <span className={"d-inline-block availability-container"}>
               <div className={"title"}>Availability</div>
               <div className={"numbers"}>
-                {props.classDetail.product.numbers_of_seats}/
-                {props.classDetail.product.buyed_numbers_of_seats}
+                {props.classDetail.product.numbers_of_seats} /
+                {props.classDetail.product.buyed_numbers_of_seats || '0'}
               </div>
             </span>
           </div>
