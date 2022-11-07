@@ -380,7 +380,7 @@ class Checkout extends Component {
   onClickStripeHandler = async () => {
     let stripe = await this.state.stripePromise;
     this.setState({
-      isLoader:false
+      isLoader:true
     },() => {
       this.createOrder().then(async (response) => {
         try{
@@ -2135,7 +2135,7 @@ class Checkout extends Component {
 
                                             if (!checkErrors(errors)) {
                                               this.setState({
-                                                isLoader:false
+                                                isLoader:true
                                               },
                                               () => {
                                                  this.createOrder().then(
