@@ -38,6 +38,8 @@ class Checkout extends Component {
     giftCardStatus: false,
     termsStatus: false,
     paymentMethod: "paypal",
+    stripeError:'',
+    stripeUse:false,
     shippingAddress: true,
     thankYouStatus: false,
     order: {},
@@ -93,6 +95,7 @@ class Checkout extends Component {
       shippingPostCode: [],
       termsStatus: [],
       password: [],
+      stripe:[]
     },
     discount: 0,
     settings: {
@@ -156,6 +159,9 @@ class Checkout extends Component {
       this.state.paymentMethod === "paypal" &&
       prevState.paymentMethod !== this.state.paymentMethod
     ) {
+      this.setState({
+        stripeUse:false
+      })
       //   this.initPaypal();
     }
 
@@ -163,6 +169,7 @@ class Checkout extends Component {
       this.state.paymentMethod === "stripe" &&
       prevState.paymentMethod !== this.state.paymentMethod
     ) {
+      
       this.initStripe();
     }
   }
@@ -243,6 +250,7 @@ class Checkout extends Component {
       shippingPostCode: [],
       termsStatus: [],
       password: [],
+      stripe:[]
     };
 
     if (this.state.formData.billingFirstName === "") {
@@ -275,6 +283,14 @@ class Checkout extends Component {
 
     if (!this.state.termsStatus) {
       errors.termsStatus.push("Terms status is required!");
+    }
+
+    if(this.state.paymentMethod === 'stripe' && this.state.stripeError !== ''){
+      errors.stripe.push(this.state.stripeError)
+    }
+
+    if(this.state.paymentMethod === 'stripe' && !this.state.stripeUse){
+      errors.stripe.push('Empty card')
     }
 
     if (this.state.formData.shippingAddressStatus) {
@@ -339,10 +355,22 @@ class Checkout extends Component {
       card.mount("#card-element");
       card.on("change", (event) => {
         var displayError = document.getElementById("card-errors");
+        console.log(event)
         if (event.error) {
           displayError.textContent = event.error.message;
+          this.setState({
+            stripeError:event.error.message,
+            stripeUse:true
+          })
+          displayError.style.display = 'block'
+
         } else {
           displayError.textContent = "";
+          displayError.style.display = 'none'
+          this.setState({
+            stripeError:'',
+            stripeUse:!event.empty
+          })
         }
       });
       this.setState({ card: card });
@@ -351,63 +379,78 @@ class Checkout extends Component {
 
   onClickStripeHandler = async () => {
     let stripe = await this.state.stripePromise;
-
-    this.createOrder().then(async (response) => {
-      let customer = await this.props.createCustomer({order_id: response.data.id});
-      let paymentIntent = await this.props.createPaymentIntent({
-        customer_id: customer.data.id,
-        order_id: response.data.id,
-      });
-      this.setState(
-        {
-          order: { ...response.data },
-        },
-        () => {
-            console.log('card', this.state.card);
-          stripe
-            .confirmCardPayment(paymentIntent.data.client_secret, {
-              payment_method: {
-                card: this.state.card,
-                billing_details: {
-                  name: `${this.state.formData.billingFirstName} ${this.state.formData.billingLastName}`,
-                },
-              },
-              setup_future_usage: "off_session",
-            })
-            .then((result) => {
-              if (result.error) {
-                // Show error to your customer
-                console.log(result.error.message);
-              } else {
-                if (result.paymentIntent.status === "succeeded") {
-                  this.props
-                    .createPayment({
-                      type: "stripe",
-                      payment_system_id: result.paymentIntent.id,
-                      successfulness: 1,
-                      amount: this.getTotalPrice(),
-                    })
-                    .then((response) => {
+    this.setState({
+      isLoader:true
+    },() => {
+      this.createOrder().then(async (response) => {
+        try{
+          let customer = await this.props.createCustomer({order_id: response.data.id});
+          let paymentIntent = await this.props.createPaymentIntent({
+            customer_id: customer.data.id,
+            order_id: response.data.id,
+          })
+          
+          ;
+          this.setState(
+            {
+              order: { ...response.data },
+            },
+            () => {
+                console.log('card', this.state.card);
+              stripe
+                .confirmCardPayment(paymentIntent.data.client_secret, {
+                  payment_method: {
+                    card: this.state.card,
+                    billing_details: {
+                      name: `${this.state.formData.billingFirstName} ${this.state.formData.billingLastName}`,
+                    },
+                  },
+                  setup_future_usage: "off_session",
+                })
+                .then((result) => {
+                  if (result.error) {
+                    // Show error to your customer
+                    // console.log(result.error.message);
+                  } else {
+                    if (result.paymentIntent.status === "succeeded") {
                       this.props
-                        .setPaymentToOrder({
-                          transaction_id: response.data.id,
-                          order_id: this.state.order.id,
+                        .createPayment({
+                          type: "stripe",
+                          payment_system_id: result.paymentIntent.id,
+                          successfulness: 1,
+                          amount: this.getTotalPrice(),
                         })
                         .then((response) => {
-                          this.props.cartClear().then(() => {
-                            this.props.getRemoteCart().then(() => {
-                              console.log('ok')
-                              window.location.href = `/checkout-thank-you/stripe/${this.state.order.id}`;
+                          this.props
+                            .setPaymentToOrder({
+                              transaction_id: response.data.id,
+                              order_id: this.state.order.id,
+                            })
+                            .then((response) => {
+                              this.props.cartClear().then(() => {
+                                this.props.getRemoteCart().then(() => {
+                                  // console.log('ok')
+                                  window.location.href = `/checkout-thank-you/stripe/${this.state.order.id}`;
+                                });
+                              });
                             });
-                          });
                         });
-                    });
-                }
-              }
-            });
+                    }
+                  }
+                });
+            }
+          );          
         }
-      );
-    });
+        catch(e){
+          this.setState({isLoader:false})
+        }
+
+    })
+      .catch(response => {
+        this.setState({isLoader:false})
+      });
+    })
+    
   };
 
   getRemoteCartPrice = (cart) => {
@@ -424,7 +467,7 @@ class Checkout extends Component {
       style: "currency",
       currency: "GBP",
     });
-
+  
     return (
       <MainLayout>
         <section className="checkout-section">
@@ -516,7 +559,6 @@ class Checkout extends Component {
                                           }
                                         })
                                         .catch((errors) => {
-                                          console.log(errors);
                                           this.setState({
                                             couponErrors:
                                               errors.response.data.errors,
@@ -1691,6 +1733,7 @@ class Checkout extends Component {
                                             <div
                                               id="card-errors"
                                               role="alert"
+                                              style={{display:'none'}}
                                             ></div>
                                           </div>
                                         </div>
@@ -2091,27 +2134,44 @@ class Checkout extends Component {
                                             let errors = this.validForm();
 
                                             if (!checkErrors(errors)) {
-                                              this.createOrder().then(
-                                                (response) => {
-                                                  this.setState(
-                                                    {
-                                                      order: {
-                                                        ...response.data,
+                                              this.setState({
+                                                isLoader:true
+                                              },
+                                              () => {
+                                                 this.createOrder().then(
+                                                  (response) => {
+                                                    this.setState(
+                                                      {
+                                                        order: {
+                                                          ...response.data,
+                                                        },
                                                       },
-                                                    },
-                                                    () => {
-                                                      this.props
-                                                        .createPaypalOrder(
-                                                          this.state.order.id
-                                                        )
-                                                        .then((response) => {
-                                                          window.location.href =
-                                                            response.data.links.approve;
-                                                        });
-                                                    }
-                                                  );
-                                                }
-                                              );
+                                                      () => {
+                                                        this.props
+                                                          .createPaypalOrder(
+                                                            this.state.order.id
+                                                          )
+                                                          .then((response) => {
+                                                            window.location.href =
+                                                              response.data.links.approve;
+                                                          })
+                                                          .catch(response => {
+                                                            this.setState({
+                                                              isLoader:false
+                                                            })
+                                                          });
+                                                      }
+                                                    )
+                                                
+                                                  }
+                                                 )    
+                                                 .catch(response => {
+                                                    this.setState({
+                                                      isLoader:false
+                                                    })
+                                                  });
+                                              })
+                                             
                                               this.setState({
                                                 errors: { ...errors },
                                               });
@@ -2119,6 +2179,7 @@ class Checkout extends Component {
                                             } else {
                                               this.setState({
                                                 errors: { ...errors },
+                                                isLoader:false
                                               });
                                             }
                                           }}
@@ -2134,7 +2195,6 @@ class Checkout extends Component {
                                           id="stripe_payment"
                                           onClick={() => {
                                             let errors = this.validForm();
-                                            console.log(errors);
                                             if (!checkErrors(errors)) {
                                               this.onClickStripeHandler();
                                               this.setState({
@@ -2144,6 +2204,7 @@ class Checkout extends Component {
                                             } else {
                                               this.setState({
                                                 errors: { ...errors },
+                                                isLoader:false
                                               });
                                             }
                                           }}

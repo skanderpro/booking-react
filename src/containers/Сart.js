@@ -598,6 +598,7 @@ class Cart extends Component {
                             </table>
 
                             <div className="wc-proceed-to-checkout">
+{/*                               
                               <div>
                                 <div
                                   id="wc-stripe-payment-request-button"
@@ -619,7 +620,7 @@ class Cart extends Component {
                                 style={{ margin: "22px 0" }}
                               >
                                 — OR —
-                              </p>
+                              </p> */}
 
                               <NavLink
                                 to={makeUrl(
