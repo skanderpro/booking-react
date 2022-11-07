@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import Cookies from "universal-cookie";
 import { withRouter } from "react-router-dom";
 import { addLocalCart, addRemoteCart } from "../../redux/actions/cartActions";
+import {NotificationManager} from "react-notifications";
 const cookies = new Cookies();
 
 function VouchersList(props) {
@@ -55,6 +56,11 @@ function VouchersList(props) {
                           } else {
                             props.addRemoteCart(voucher.id, false, "voucher");
                           }
+
+                          NotificationManager.success("Added to cart");
+                          setTimeout(() => {
+                            window.location.href = '/cart'
+                          },2000)
                         }}
                       >
                         Add to Cart
