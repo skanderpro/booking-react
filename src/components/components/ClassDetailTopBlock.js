@@ -60,6 +60,9 @@ function ClassDetailTopBlock(props) {
                       props.classDetail.type
                     );
                   }
+                  setTimeout(() => {
+                    window.location.href = '/cart'
+                  },2000)
                 }}
               >
                 Book class

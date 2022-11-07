@@ -2209,3 +2209,10 @@ form.checkout h3{
     display: flex;
     width: 100%;
 }
+#card-errors{
+    background-color: #f00;
+    color: #fff;
+    padding: 8px;
+    margin-top: 10px;
+    font-size: 15px;
+}
