@@ -393,71 +393,71 @@ class Cart extends Component {
                                 ? this.cartItemsRender(this.props.cartItems)
                                 : this.cartItemsRender(this.state.remoteItems)}
 
-                              <tr>
+                              {!!Object.keys(this.props.user).length  ? <tr>
                                 <td colSpan="5" className="actions">
                                   <div className={"coupon-block"}>
                                     <div className="coupon">
                                       <input
-                                        type="text"
-                                        name="coupon_code"
-                                        className="input-text"
-                                        id="coupon_code"
-                                        value={this.state.coupon}
-                                        placeholder="Coupon code"
-                                        onChange={(e) => {
-                                          this.setState({
-                                            coupon: e.target.value,
-                                          });
-                                        }}
+                                          type="text"
+                                          name="coupon_code"
+                                          className="input-text"
+                                          id="coupon_code"
+                                          value={this.state.coupon}
+                                          placeholder="Coupon code"
+                                          onChange={(e) => {
+                                            this.setState({
+                                              coupon: e.target.value,
+                                            });
+                                          }}
                                       />
                                       <button
-                                        type="button"
-                                        className="button"
-                                        name="apply_coupon"
-                                        value="Apply coupon"
-                                        disabled={!token}
-                                        onClick={() => {
-                                          this.props
-                                            .confirmVoucher(this.state.coupon)
-                                            .then((response) => {
-                                              if (
-                                                response.data.code_type ===
-                                                "promocode"
-                                              ) {
-                                                this.props.addPromocode(
-                                                  this.state.coupon
-                                                );
-                                                this.setState({
-                                                  promocode: response.data,
-                                                  promocodeDiscount: { ...response.data }
+                                          type="button"
+                                          className="button"
+                                          name="apply_coupon"
+                                          value="Apply coupon"
+                                          disabled={!token}
+                                          onClick={() => {
+                                            this.props
+                                                .confirmVoucher(this.state.coupon)
+                                                .then((response) => {
+                                                  if (
+                                                      response.data.code_type ===
+                                                      "promocode"
+                                                  ) {
+                                                    this.props.addPromocode(
+                                                        this.state.coupon
+                                                    );
+                                                    this.setState({
+                                                      promocode: response.data,
+                                                      promocodeDiscount: {...response.data}
+                                                    });
+                                                  } else if (response.data.code_type === 'voucher') {
+                                                    this.props.addVoucher(response.data)
+                                                  }
+                                                })
+                                                .catch((errors) => {
+                                                  console.log(errors);
+                                                  this.setState({
+                                                    couponErrors:
+                                                    errors.response.data.errors,
+                                                  });
                                                 });
-                                              } else if (response.data.code_type === 'voucher') {
-                                                this.props.addVoucher(response.data)
-                                              }
-                                            })
-                                            .catch((errors) => {
-                                              console.log(errors);
-                                              this.setState({
-                                                couponErrors:
-                                                  errors.response.data.errors,
-                                              });
-                                            });
-                                        }}
+                                          }}
                                       >
                                         Apply coupon
                                       </button>
                                     </div>
                                   </div>
                                   <div
-                                    className={"error"}
-                                    style={{ color: "#f00" }}
+                                      className={"error"}
+                                      style={{color: "#f00"}}
                                   >
                                     {this.state.couponErrors.length > 0
-                                      ? this.state.couponErrors
-                                      : null}
+                                        ? this.state.couponErrors
+                                        : null}
                                   </div>
                                 </td>
-                              </tr>
+                              </tr> : <tr><td colspan="5">Log in to use coupons</td></tr>}
                             </tbody>
                           </table>
                         </form>
@@ -485,90 +485,91 @@ class Cart extends Component {
                                   </td>
                                 </tr>
 
-                                <tr className="cart-subtotal giftup-cart-subtotal">
+                                {!!Object.keys(this.props.user).length  ? <tr
+                                    className="cart-subtotal giftup-cart-subtotal">
                                   <th className="giftup-cart-subtotal-th">
                                     Gift card
                                   </th>
                                   <td
-                                    className="giftup-cart-subtotal-td"
-                                    data-title={"Gift card"}
+                                      className="giftup-cart-subtotal-td"
+                                      data-title={"Gift card"}
                                   >
                                     {!this.state.giftCardStatus ? (
-                                      <a
-                                        href="#"
-                                        className="giftup-cart-subtotal-td-apply-gc d-inline-block"
-                                        onClick={(event) => {
-                                          event.preventDefault();
-                                          this.setState({
-                                            giftCardStatus: true,
-                                          });
-                                        }}
-                                      >
-                                        Apply gift card
-                                      </a>
+                                        <a
+                                            href="#"
+                                            className="giftup-cart-subtotal-td-apply-gc d-inline-block"
+                                            onClick={(event) => {
+                                              event.preventDefault();
+                                              this.setState({
+                                                giftCardStatus: true,
+                                              });
+                                            }}
+                                        >
+                                          Apply gift card
+                                        </a>
                                     ) : null}
                                     {this.state.giftCardStatus ? (
-                                      <div
-                                        id="giftup-apply-gc-form"
-                                        className="giftup-cart-subtotal-td-form"
-                                      >
-                                        <input
-                                          className="giftup-cart-subtotal-td-form-input"
-                                          type="text"
-                                          id="giftcard_code"
-                                          value={this.state.giftCard}
-                                          onChange={(event) => {
-                                            this.setState({
-                                              giftCard: event.target.value,
-                                            });
-                                          }}
-                                          placeholder="Gift card code"
-                                          onKeyPress="return giftup_code_keypress()"
-                                        />
-                                        <button
-                                          className="giftup-cart-subtotal-td-form-button"
-                                          type="button"
-                                          name="giftup_giftcard_button"
-                                          value="Apply gift card"
-                                          onClick={() => {
-                                            this.props
-                                              .confirmVoucher(
-                                                this.state.giftCard
-                                              )
-                                              .then((response) => {
-                                                if (
-                                                  response.data.code_type ===
-                                                  "promocode"
-                                                ) {
-                                                  this.props.addPromocode(
-                                                    this.state.giftCard
-                                                  );
-                                                  this.setState({
-                                                    promocode: response.data,
-                                                    promocodeDiscount: { ...response.data }
-                                                  });
-                                                } else if (response.data.code_type === 'voucher') {
-                                                  this.props.addVoucher(response.data)
-                                                }
-                                              })
-                                              .catch((errors) => {
-                                                console.log(errors);
-                                                this.setState({
-                                                  giftErrors:
-                                                    errors.response.data.errors || "",
-                                                });
-                                              });
-                                          }}
+                                        <div
+                                            id="giftup-apply-gc-form"
+                                            className="giftup-cart-subtotal-td-form"
                                         >
-                                          Apply
-                                        </button>
-                                      </div>
+                                          <input
+                                              className="giftup-cart-subtotal-td-form-input"
+                                              type="text"
+                                              id="giftcard_code"
+                                              value={this.state.giftCard}
+                                              onChange={(event) => {
+                                                this.setState({
+                                                  giftCard: event.target.value,
+                                                });
+                                              }}
+                                              placeholder="Gift card code"
+                                              onKeyPress="return giftup_code_keypress()"
+                                          />
+                                          <button
+                                              className="giftup-cart-subtotal-td-form-button"
+                                              type="button"
+                                              name="giftup_giftcard_button"
+                                              value="Apply gift card"
+                                              onClick={() => {
+                                                this.props
+                                                    .confirmVoucher(
+                                                        this.state.giftCard
+                                                    )
+                                                    .then((response) => {
+                                                      if (
+                                                          response.data.code_type ===
+                                                          "promocode"
+                                                      ) {
+                                                        this.props.addPromocode(
+                                                            this.state.giftCard
+                                                        );
+                                                        this.setState({
+                                                          promocode: response.data,
+                                                          promocodeDiscount: {...response.data}
+                                                        });
+                                                      } else if (response.data.code_type === 'voucher') {
+                                                        this.props.addVoucher(response.data)
+                                                      }
+                                                    })
+                                                    .catch((errors) => {
+                                                      console.log(errors);
+                                                      this.setState({
+                                                        giftErrors:
+                                                            errors.response.data.errors || "",
+                                                      });
+                                                    });
+                                              }}
+                                          >
+                                            Apply
+                                          </button>
+                                        </div>
                                     ) : null}
                                     {this.state.giftErrors.length > 0 ? (
-                                      <div>{this.state.giftErrors}</div>
+                                        <div>{this.state.giftErrors}</div>
                                     ) : null}
                                   </td>
-                                </tr>
+                                </tr> : <tr><td colspan="2">Log in to use gift cards</td></tr>}
 
                                 <tr className="order-total">
                                   <th>Total</th>
