@@ -397,7 +397,7 @@ class Checkout extends Component {
               order: { ...response.data },
             },
             () => {
-                console.log('card', this.state.card);
+    
               stripe
                 .confirmCardPayment(paymentIntent.data.client_secret, {
                   payment_method: {
@@ -410,8 +410,11 @@ class Checkout extends Component {
                 })
                 .then((result) => {
                   if (result.error) {
-                    // Show error to your customer
-                    // console.log(result.error.message);
+                    this.setState({
+                      isLoader:false
+                    })
+                    console.log(result.error)
+                    NotificationManager.error(result.error.message)
                   } else {
                     if (result.paymentIntent.status === "succeeded") {
                       this.props
@@ -438,7 +441,9 @@ class Checkout extends Component {
                         });
                     }
                   }
-                });
+                })                
+        
+
             }
           );          
         }
