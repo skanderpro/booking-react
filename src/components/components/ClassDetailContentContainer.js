@@ -34,6 +34,8 @@ function ClassDetailContentContainer(props) {
       .then((response) => {
         setLessons([...response.data]);
       });
+
+    console.log('ptopd', props);
   }, []);
 
   let dates = props.classDetail.product.dates;
