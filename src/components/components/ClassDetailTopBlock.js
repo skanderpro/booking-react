@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import Cookies from "universal-cookie";
 import { withRouter } from "react-router-dom";
+import {SET_INVITE} from "../../redux/actions/actionTypes";
 const cookies = new Cookies();
 
 function ClassDetailTopBlock(props) {
@@ -60,6 +61,9 @@ function ClassDetailTopBlock(props) {
                       props.classDetail.type
                     );
                   }
+                  if (props.match.params.invite) {
+                    props.setInviteCode(props.match.params.invite);
+                  }
                   setTimeout(() => {
                     window.location.href = '/cart'
                   },2000)
@@ -82,9 +86,24 @@ function ClassDetailTopBlock(props) {
     </div>
   );
 }
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setInviteCode(invite) {
+      console.log('invite', invite);
+      dispatch({
+        type: SET_INVITE,
+        payload: {
+          invite
+        }
+      })
+    }
+  }
+}
+
 function mapStateToProps(state) {
   return {
     settings: state.settings,
   };
 }
-export default connect(mapStateToProps)(withRouter(ClassDetailTopBlock));
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ClassDetailTopBlock));

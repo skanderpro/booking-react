@@ -119,7 +119,8 @@ class Checkout extends Component {
         },
       });
     });
-    if (!!this.props.match.params.invite === true) {
+    console.log('match',this.props.match);
+    if (!!this.props.match.params.invite) {
       this.props
         .userDiscount(this.props.match.params.invite)
         .then((response) => {

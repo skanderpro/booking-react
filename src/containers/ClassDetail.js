@@ -58,11 +58,13 @@ class ClassDetail extends Component {
   };
 
   addToCart = (classItem) => {
+    console.log('uyuyuyuyuyuyyuu')
     this.props.addLocalCart(classItem);
     this.addCartNotification();
   };
 
   addRemoteCart = (lesson_id, is_set, type) => {
+    console.log('hhhhhhhhhhhh')
     return this.props
       .addRemoteCart(lesson_id, is_set, type)
       .then((response) => {
