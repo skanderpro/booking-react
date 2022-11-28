@@ -1160,7 +1160,7 @@ ul li {
 	border-radius: 12px;
 	position: relative;
 	background-size: cover;
-	background-position-y: center;
+	background-position: center center;
 }
 
 .class-detail-container .image-block .class-level {
@@ -2512,7 +2512,11 @@ form.checkout h3 {
 		width: 100%;
 	}
 }
-
+@media (max-width:425px) {
+	.class-detail-container .image-block{
+		height: 270px;
+	}
+}
 
 .verify-container {
 	margin-bottom: 200px;
