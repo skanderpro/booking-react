@@ -1,7 +1,8 @@
 import {
     LOGIN_SUCCESS,
     SET_USER_PROFILE,
-    UPDATE_USER_PROFILE
+    UPDATE_USER_PROFILE,
+    LOGOUT_USER,
 } from './../actions/actionTypes';
 
 const initializeState = {
@@ -29,6 +30,12 @@ export default function userReducer(state = initializeState, action) {
                     ...state.user,
                     ...action.data.user,
                 }
+            }
+        case LOGOUT_USER:
+            return {
+                ...state,
+                user: {},
+                token: ''
             }
         default:
             return state;

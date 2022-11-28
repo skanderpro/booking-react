@@ -38,6 +38,8 @@ class Checkout extends Component {
     giftCardStatus: false,
     termsStatus: false,
     paymentMethod: "paypal",
+    stripeError:'',
+    stripeUse:false,
     shippingAddress: true,
     thankYouStatus: false,
     order: {},
@@ -73,8 +75,9 @@ class Checkout extends Component {
       shippingCity: "",
       shippingPostCode: "",
       shippingAddressStatus: false,
-        password: "",
-        password_confirmation: "",
+      // password: "",
+      // password_confirmation: "",
+      registerUser: false,
     },
     remoteCart: [],
     errors: {
@@ -91,6 +94,8 @@ class Checkout extends Component {
       shippingCity: [],
       shippingPostCode: [],
       termsStatus: [],
+      password: [],
+      stripe:[]
     },
     discount: 0,
     settings: {
@@ -101,6 +106,7 @@ class Checkout extends Component {
     stripePromise: null,
     promocodeDiscount: {},
   };
+  cardRef = React.createRef(null);
 
   componentDidMount() {
     if (this.state.paymentMethod === "paypal") {
@@ -113,7 +119,8 @@ class Checkout extends Component {
         },
       });
     });
-    if (!!this.props.match.params.invite === true) {
+    console.log('match',this.props.match);
+    if (!!this.props.match.params.invite) {
       this.props
         .userDiscount(this.props.match.params.invite)
         .then((response) => {
@@ -132,16 +139,20 @@ class Checkout extends Component {
     }
     this.props.getRemoteCart().then((response) => {
       this.setState({
-        remoteCart: [...response.data.items],
+        // remoteCart: [...new Set([...this.props.cartItems, ...response.data.items])],
+        remoteCart: Object.keys(this.props.user).length ? response.data.items : response.data.items,
         isLoader: false,
       });
     });
 
-      this.currentUser && this.getStripePublicKey().then((response) => {
-      const stripePromise = loadStripe(response);
-      this.setState({
-        stripePromise: stripePromise,
-      });
+     console.log(this.props)
+      this.getStripePublicKey([...this.props.cartItems]).then((response) => {
+        
+        // response = 'pk_test_51KCS8mGethSGruZAXlHlNCCmi6c4l3ASFZlIUdqRbqABHQVBM5I9fhe1QdZ4U2LuGpkbxoopJkaqLxuio28swWIx00FTyEJzhe'
+        const stripePromise = loadStripe(response);
+        this.setState({
+          stripePromise: stripePromise,
+        });
     });
   }
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -149,21 +160,24 @@ class Checkout extends Component {
       this.state.paymentMethod === "paypal" &&
       prevState.paymentMethod !== this.state.paymentMethod
     ) {
+      this.setState({
+        stripeUse:false
+      })
       //   this.initPaypal();
     }
 
     if (
       this.state.paymentMethod === "stripe" &&
-      prevState.paymentMethod !== this.state.paymentMethod &&
-      this.currentUser
+      prevState.paymentMethod !== this.state.paymentMethod
     ) {
+      
       this.initStripe();
     }
   }
 
-  getStripePublicKey = async () => {
+  getStripePublicKey = async (carts) => {
     try {
-      let response = await this.props.getStripePublicKey();
+      let response = await this.props.getStripePublicKey(carts);
       return response.data;
     } catch (e) {
       console.log(e);
@@ -210,7 +224,7 @@ class Checkout extends Component {
   getBonuses = () => {
     let bonuses = 0;
     if (this.state.is_bonuses) {
-      let user_bonuses = this.currentUser.bonuses;
+      let user_bonuses = Object.keys(this.currentUser).length ? this.currentUser.bonuses : 0;
       let subtotal = this.getSubTotalWithDiscount();
       if (user_bonuses > subtotal - 0.5) {
         bonuses = subtotal - 0.5;
@@ -237,6 +251,7 @@ class Checkout extends Component {
       shippingPostCode: [],
       termsStatus: [],
       password: [],
+      stripe:[]
     };
 
     if (this.state.formData.billingFirstName === "") {
@@ -260,12 +275,23 @@ class Checkout extends Component {
     if (this.state.formData.billingEmail === "") {
       errors.billingEmail.push("Billing email is required!");
     }
-    if (this.state.formData.password !== this.state.formData.password_confirmation) {
-        errors.password.push('Passwords not match');
-    }
+    // if (!this.state.formData.password.trim().length && !Object.keys(this.props.user).length) {
+    //   errors.password.push('Password is required!');
+    // }
+    // if (this.state.formData.password !== this.state.formData.password_confirmation && !Object.keys(this.props.user).length && this.state.formData.registerUser) {
+    //     errors.password.push('Passwords not match');
+    // }
 
     if (!this.state.termsStatus) {
       errors.termsStatus.push("Terms status is required!");
+    }
+
+    if(this.state.paymentMethod === 'stripe' && this.state.stripeError !== ''){
+      errors.stripe.push(this.state.stripeError)
+    }
+
+    if(this.state.paymentMethod === 'stripe' && !this.state.stripeUse){
+      errors.stripe.push('Empty card')
     }
 
     if (this.state.formData.shippingAddressStatus) {
@@ -289,14 +315,24 @@ class Checkout extends Component {
   };
 
   createOrder = async () => {
-    let response = await this.props.createOrder({
-      ...this.state.formData,
-      cart: [...this.state.remoteCart],
-      invite: this.props.match.params.invite,
-      is_bonuses: this.state.is_bonuses,
-    });
+    try {
+      let response = await this.props.createOrder({
+        ...this.state.formData,
+        cart: [...this.state.remoteCart],
+        invite: this.props.match.params.invite,
+        is_bonuses: this.state.is_bonuses,
+        register_user: this.state.registerUser,
+      });
 
-    return response;
+      return response;
+    } catch (e) {
+
+      if (e.response.status === 409) {
+        NotificationManager.error(e.response.data.error);
+      }
+
+      return e.response;
+    }
   };
 
   get currentUser() {
@@ -306,9 +342,9 @@ class Checkout extends Component {
   }
 
   initStripe = () => {
-      if (!this.currentUser) {
-          return;
-      }
+      // if (!this.currentUser) {
+      //     return;
+      // }
     this.state.stripePromise.then((stripe) => {
       let elements = stripe.elements();
       var style = {
@@ -320,10 +356,22 @@ class Checkout extends Component {
       card.mount("#card-element");
       card.on("change", (event) => {
         var displayError = document.getElementById("card-errors");
+        console.log(event)
         if (event.error) {
           displayError.textContent = event.error.message;
+          this.setState({
+            stripeError:event.error.message,
+            stripeUse:true
+          })
+          displayError.style.display = 'block'
+
         } else {
           displayError.textContent = "";
+          displayError.style.display = 'none'
+          this.setState({
+            stripeError:'',
+            stripeUse:!event.empty
+          })
         }
       });
       this.setState({ card: card });
@@ -332,61 +380,83 @@ class Checkout extends Component {
 
   onClickStripeHandler = async () => {
     let stripe = await this.state.stripePromise;
-
-    let customer = await this.props.createCustomer();
-    this.createOrder().then(async (response) => {
-      let paymentIntent = await this.props.createPaymentIntent({
-        customer_id: customer.data.id,
-        order_id: response.data.id,
-      });
-      this.setState(
-        {
-          order: { ...response.data },
-        },
-        () => {
-          stripe
-            .confirmCardPayment(paymentIntent.data.client_secret, {
-              payment_method: {
-                card: this.state.card,
-                billing_details: {
-                  name: `${this.state.formData.billingFirstName} ${this.state.formData.billingLastName}`,
-                },
-              },
-              setup_future_usage: "off_session",
-            })
-            .then((result) => {
-              if (result.error) {
-                // Show error to your customer
-                console.log(result.error.message);
-              } else {
-                if (result.paymentIntent.status === "succeeded") {
-                  this.props
-                    .createPayment({
-                      type: "stripe",
-                      payment_system_id: result.paymentIntent.id,
-                      successfulness: 1,
-                      amount: this.getTotalPrice(),
+    this.setState({
+      isLoader:true
+    },() => {
+      this.createOrder().then(async (response) => {
+        try{
+          let customer = await this.props.createCustomer({order_id: response.data.id});
+          let paymentIntent = await this.props.createPaymentIntent({
+            customer_id: customer.data.id,
+            order_id: response.data.id,
+          })
+          
+          ;
+          this.setState(
+            {
+              order: { ...response.data },
+            },
+            () => {
+    
+              stripe
+                .confirmCardPayment(paymentIntent.data.client_secret, {
+                  payment_method: {
+                    card: this.state.card,
+                    billing_details: {
+                      name: `${this.state.formData.billingFirstName} ${this.state.formData.billingLastName}`,
+                    },
+                  },
+                  setup_future_usage: "off_session",
+                })
+                .then((result) => {
+                  if (result.error) {
+                    this.setState({
+                      isLoader:false
                     })
-                    .then((response) => {
+                    console.log(result.error)
+                    NotificationManager.error(result.error.message)
+                  } else {
+                    if (result.paymentIntent.status === "succeeded") {
                       this.props
-                        .setPaymentToOrder({
-                          transaction_id: response.data.id,
-                          order_id: this.state.order.id,
+                        .createPayment({
+                          type: "stripe",
+                          payment_system_id: result.paymentIntent.id,
+                          successfulness: 1,
+                          amount: this.getTotalPrice(),
                         })
                         .then((response) => {
-                          this.props.cartClear().then(() => {
-                            this.props.getRemoteCart().then(() => {
-                              window.location.href = `/checkout-thank-you/stripe/${this.state.order.id}`;
+                          this.props
+                            .setPaymentToOrder({
+                              transaction_id: response.data.id,
+                              order_id: this.state.order.id,
+                            })
+                            .then((response) => {
+                              this.props.cartClear().then(() => {
+                                this.props.getRemoteCart().then(() => {
+                                  // console.log('ok')
+                                  window.location.href = `/checkout-thank-you/stripe/${this.state.order.id}`;
+                                });
+                              });
                             });
-                          });
                         });
-                    });
-                }
-              }
-            });
+                    }
+                  }
+                })                
+        
+
+            }
+          );          
         }
-      );
-    });
+        catch(e){
+          this.setState({isLoader:false})
+        }
+
+    })
+      .catch(response => {
+        this.setState({isLoader:false})
+      });
+    })
+    
   };
 
   getRemoteCartPrice = (cart) => {
@@ -403,7 +473,7 @@ class Checkout extends Component {
       style: "currency",
       currency: "GBP",
     });
-      console.log('user', this.currentUser);
+  
     return (
       <MainLayout>
         <section className="checkout-section">
@@ -425,23 +495,23 @@ class Checkout extends Component {
                           <div className="woocommerce">
                             <div className="woocommerce-notices-wrapper"></div>
 
-                            <div className="woocommerce-form-coupon-toggle">
+                            {!!Object.keys(this.props.user).length  ? <div className="woocommerce-form-coupon-toggle">
                               <div className="checkout-coupon-info">
                                 Have a coupon?{" "}
                                 <a
-                                  href="#"
-                                  className="showcoupon"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    this.setState({
-                                      couponInfo: !this.state.couponInfo,
-                                    });
-                                  }}
+                                    href="#"
+                                    className="showcoupon"
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      this.setState({
+                                        couponInfo: !this.state.couponInfo,
+                                      });
+                                    }}
                                 >
                                   Click here to enter your code
                                 </a>
                               </div>
-                            </div>
+                            </div> : <div>Log in to use coupons</div>}
 
                             {this.state.couponInfo ? (
                               <form
@@ -484,7 +554,7 @@ class Checkout extends Component {
                                             "promocode"
                                           ) {
                                             this.props.addPromocode(
-                                              this.state.coupon
+                                                this.state.couponData
                                             );
                                             this.setState({
                                               promocode: response.data,
@@ -495,7 +565,6 @@ class Checkout extends Component {
                                           }
                                         })
                                         .catch((errors) => {
-                                          console.log(errors);
                                           this.setState({
                                             couponErrors:
                                               errors.response.data.errors,
@@ -916,7 +985,7 @@ class Checkout extends Component {
                                         </span>
                                       </p>
 
-                                        {!this.currentUser ? (
+                                        {/* {!this.currentUser  ? (
                                             <div>
                                               <p className="form-row form-row-first validate-required">
                                                 <label htmlFor="password">
@@ -940,15 +1009,35 @@ class Checkout extends Component {
                                                     />
                                               </span>
                                               </p>
-                                              <p
+                                              <p className="form-row form-row-first ">
+                                                <label htmlFor="password">
+                                                  <input
+                                                      type="checkbox"
+                                                      onChange={(e) => {
+                                                        this.setState({
+                                                          formData: {
+                                                            ...this.state.formData,
+                                                            registerUser: e.target.checked,
+                                                          },
+                                                        });
+                                                      }}
+                                                      name="registerNewUser"
+                                                      checked={this.state.formData.registerUser}
+                                                  /> &nbsp;
+                                                  Register new user
+                                                </label>
+                                              </p>
+                                              {!!this.state.formData.registerUser && <p
                                                   className="form-row form-row-last validate-required"
                                                   id="billing_last_name_field"
                                                   data-priority="20"
                                               >
                                                 <label htmlFor="password">
-                                                  Repeat Password&nbsp;<span className="required">*</span>
+                                                  Repeat Password&nbsp;<span
+                                                    className="required">*</span>
                                                 </label>
-                                                <span className="woocommerce-input-wrapper">
+                                                <span
+                                                    className="woocommerce-input-wrapper">
                                                     <input
                                                         type="password"
                                                         className="input-text "
@@ -965,33 +1054,34 @@ class Checkout extends Component {
                                                         value={this.state.formData.password_confirmation}
                                                     />
                                                   </span>
-                                              </p>
+                                              </p>}
                                             </div>
-                                            ) : null}
+                                            ) : null} */}
 
 
                                     </div>
                                   </div>
 
-                                  <p id="woo-ml-subscribe">
-                                    <input
-                                      name="woo_ml_subscribe"
-                                      type="checkbox"
-                                      checked={
-                                        this.state.formData.deals_and_offers
-                                      }
-                                      onChange={(event) => {
-                                        this.setState({
-                                          formData: {
-                                            ...this.state.formData,
-                                            deals_and_offers:
-                                              !this.state.formData
-                                                .deals_and_offers,
-                                          },
-                                        });
-                                      }}
-                                    />
+                                  <p id="woo-ml-subscribe" >
+
                                     <label htmlFor="woo_ml_subscribe">
+                                      <input
+                                          name="woo_ml_subscribe"
+                                          type="checkbox"
+                                          checked={
+                                            this.state.formData.deals_and_offers
+                                          }
+                                          onChange={(event) => {
+                                            this.setState({
+                                              formData: {
+                                                ...this.state.formData,
+                                                deals_and_offers:
+                                                    !this.state.formData
+                                                        .deals_and_offers,
+                                              },
+                                            });
+                                          }}
+                                      /> &nbsp;
                                       Yes, I want to hear about deals and
                                       offers!
                                     </label>
@@ -1406,7 +1496,7 @@ class Checkout extends Component {
                                             key={`cart_item_${index}`}
                                           >
                                             <td className="product-name">
-                                              {cart.product.product.name}
+                                              {cart.product ? cart.product.product.name : cart.name}
                                             </td>
                                             <td className="product-total">
                                               <span className="woocommerce-Price-amount amount">
@@ -1436,99 +1526,100 @@ class Checkout extends Component {
                                       </td>
                                     </tr>
 
-                                    <tr className="cart-subtotal giftup-cart-subtotal">
+                                    {!!Object.keys(this.props.user).length ? <tr
+                                        className="cart-subtotal giftup-cart-subtotal">
                                       <th className="giftup-cart-subtotal-th">
                                         Gift card
                                       </th>
                                       <td
-                                        data-title="Gift card"
-                                        className="giftup-cart-subtotal-td"
+                                          data-title="Gift card"
+                                          className="giftup-cart-subtotal-td"
                                       >
                                         {!this.state.giftCardStatus ? (
-                                          <a
-                                            href="#"
-                                            className="giftup-cart-subtotal-td-apply-gc"
-                                            onClick={(e) => {
-                                              e.preventDefault();
-                                              this.setState({
-                                                giftCardStatus:
-                                                  !this.state.giftCardStatus,
-                                              });
-                                            }}
-                                          >
-                                            Apply gift card
-                                          </a>
+                                            <a
+                                                href="#"
+                                                className="giftup-cart-subtotal-td-apply-gc"
+                                                onClick={(e) => {
+                                                  e.preventDefault();
+                                                  this.setState({
+                                                    giftCardStatus:
+                                                        !this.state.giftCardStatus,
+                                                  });
+                                                }}
+                                            >
+                                              Apply gift card
+                                            </a>
                                         ) : null}
 
                                         {this.state.giftCardStatus ? (
-                                          <div
-                                            id="giftup-apply-gc-form"
-                                            className="giftup-cart-subtotal-td-form"
-                                            style={{
-                                              display: "grid",
-                                              gridTemplateColumns:
-                                                "minmax(110px, 1fr) fit-content(40px)",
-                                            }}
-                                          >
-                                            <input
-                                              className="giftup-cart-subtotal-td-form-input"
-                                              type="text"
-                                              id="giftcard_code"
-                                              value={this.state.giftCard}
-                                              onChange={(event) => {
-                                                this.setState({
-                                                  giftCard: event.target.value,
-                                                });
-                                              }}
-                                              placeholder="Gift card code"
-                                              onKeyPress="return giftup_code_keypress()"
-                                            />
-                                            <button
-                                              className="giftup-cart-subtotal-td-form-button"
-                                              type="button"
-                                              name="giftup_giftcard_button"
-                                              value="Apply gift card"
-                                              onClick={() => {
-                                                this.props
-                                                  .confirmVoucher(
-                                                    this.state.giftCard
-                                                  )
-                                                  .then((response) => {
-                                                    if (
-                                                      response.data
-                                                        .code_type ===
-                                                      "promocode"
-                                                    ) {
-                                                      this.props.addPromocode(
-                                                        this.state.giftCard
-                                                      );
-                                                      this.setState({
-                                                        promocode:
-                                                          response.data,
-                                                        promocodeDiscount: { ...response.data }
-                                                      });
-                                                    } else if (response.data.code_type === 'voucher') {
-                                                      this.props.addVoucher(response.data);
-                                                    }
-                                                  })
-                                                  .catch((errors) => {
-                                                    this.setState({
-                                                      giftErrors:
-                                                        errors.response.data
-                                                          .errors,
-                                                    });
-                                                  });
-                                              }}
+                                            <div
+                                                id="giftup-apply-gc-form"
+                                                className="giftup-cart-subtotal-td-form"
+                                                style={{
+                                                  display: "grid",
+                                                  gridTemplateColumns:
+                                                      "minmax(110px, 1fr) fit-content(40px)",
+                                                }}
                                             >
-                                              Apply
-                                            </button>
-                                          </div>
+                                              <input
+                                                  className="giftup-cart-subtotal-td-form-input"
+                                                  type="text"
+                                                  id="giftcard_code"
+                                                  value={this.state.giftCard}
+                                                  onChange={(event) => {
+                                                    this.setState({
+                                                      giftCard: event.target.value,
+                                                    });
+                                                  }}
+                                                  placeholder="Gift card code"
+                                                  onKeyPress="return giftup_code_keypress()"
+                                              />
+                                              <button
+                                                  className="giftup-cart-subtotal-td-form-button"
+                                                  type="button"
+                                                  name="giftup_giftcard_button"
+                                                  value="Apply gift card"
+                                                  onClick={() => {
+                                                    this.props
+                                                        .confirmVoucher(
+                                                            this.state.giftCard
+                                                        )
+                                                        .then((response) => {
+                                                          if (
+                                                              response.data
+                                                                  .code_type ===
+                                                              "promocode"
+                                                          ) {
+                                                            this.props.addPromocode(
+                                                                this.state.giftCard
+                                                            );
+                                                            this.setState({
+                                                              promocode:
+                                                              response.data,
+                                                              promocodeDiscount: {...response.data}
+                                                            });
+                                                          } else if (response.data.code_type === 'voucher') {
+                                                            this.props.addVoucher(response.data);
+                                                          }
+                                                        })
+                                                        .catch((errors) => {
+                                                          this.setState({
+                                                            giftErrors:
+                                                            errors.response.data
+                                                                .errors,
+                                                          });
+                                                        });
+                                                  }}
+                                              >
+                                                Apply
+                                              </button>
+                                            </div>
                                         ) : null}
                                         {this.state.giftErrors.length > 0 ? (
-                                          <div>{this.state.giftErrors}</div>
+                                            <div>{this.state.giftErrors}</div>
                                         ) : null}
                                       </td>
-                                    </tr>
+                                    </tr> : <tr><td colspan="2">Log in to use gift cards</td></tr>}
 
                                     <tr className="order-total">
                                       <th>Total</th>
@@ -1549,7 +1640,7 @@ class Checkout extends Component {
                                             <span className="woocommerce-Price-currencySymbol">
                                               £
                                             </span>
-                                            0.96
+                                            {Math.round((this.getTotalPrice()/100*20)*100)/100}
                                           </span>{" "}
                                           VAT)
                                         </small>
@@ -1645,10 +1736,11 @@ class Checkout extends Component {
                                               Pay with your credit card via
                                               Stripe.
                                             </p>
-                                            <div id="card-element"></div>
+                                            <div id="card-element" ref={this.cardRef}></div>
                                             <div
                                               id="card-errors"
                                               role="alert"
+                                              style={{display:'none'}}
                                             ></div>
                                           </div>
                                         </div>
@@ -2013,7 +2105,9 @@ class Checkout extends Component {
                                             type="checkbox"
                                             className="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox"
                                             name="terms"
+                                            checked={this.state.termsStatus}
                                             id="terms"
+                                            onChange={(e) => this.setState({termsStatus: e.target.checked})}
                                           />
                                           <span
                                             className="woocommerce-terms-and-conditions-checkbox-text"
@@ -2026,13 +2120,7 @@ class Checkout extends Component {
                                               href="https://www.sewconfident.co.uk/tscs/"
                                               className="woocommerce-terms-and-conditions-link"
                                               target="_blank"
-                                              onClick={(e) => {
-                                                e.preventDefault();
-                                                this.setState({
-                                                  termsStatus:
-                                                    !this.state.termsStatus,
-                                                });
-                                              }}
+
                                             >
                                               terms and conditions
                                             </a>
@@ -2053,27 +2141,44 @@ class Checkout extends Component {
                                             let errors = this.validForm();
 
                                             if (!checkErrors(errors)) {
-                                              this.createOrder().then(
-                                                (response) => {
-                                                  this.setState(
-                                                    {
-                                                      order: {
-                                                        ...response.data,
+                                              this.setState({
+                                                isLoader:true
+                                              },
+                                              () => {
+                                                 this.createOrder().then(
+                                                  (response) => {
+                                                    this.setState(
+                                                      {
+                                                        order: {
+                                                          ...response.data,
+                                                        },
                                                       },
-                                                    },
-                                                    () => {
-                                                      this.props
-                                                        .createPaypalOrder(
-                                                          this.state.order.id
-                                                        )
-                                                        .then((response) => {
-                                                          window.location.href =
-                                                            response.data.links.approve;
-                                                        });
-                                                    }
-                                                  );
-                                                }
-                                              );
+                                                      () => {
+                                                        this.props
+                                                          .createPaypalOrder(
+                                                            this.state.order.id
+                                                          )
+                                                          .then((response) => {
+                                                            window.location.href =
+                                                              response.data.links.approve;
+                                                          })
+                                                          .catch(response => {
+                                                            this.setState({
+                                                              isLoader:false
+                                                            })
+                                                          });
+                                                      }
+                                                    )
+                                                
+                                                  }
+                                                 )    
+                                                 .catch(response => {
+                                                    this.setState({
+                                                      isLoader:false
+                                                    })
+                                                  });
+                                              })
+                                             
                                               this.setState({
                                                 errors: { ...errors },
                                               });
@@ -2081,6 +2186,7 @@ class Checkout extends Component {
                                             } else {
                                               this.setState({
                                                 errors: { ...errors },
+                                                isLoader:false
                                               });
                                             }
                                           }}
@@ -2096,7 +2202,6 @@ class Checkout extends Component {
                                           id="stripe_payment"
                                           onClick={() => {
                                             let errors = this.validForm();
-                                            console.log(errors);
                                             if (!checkErrors(errors)) {
                                               this.onClickStripeHandler();
                                               this.setState({
@@ -2106,6 +2211,7 @@ class Checkout extends Component {
                                             } else {
                                               this.setState({
                                                 errors: { ...errors },
+                                                isLoader:false
                                               });
                                             }
                                           }}
@@ -2142,6 +2248,19 @@ function mapStateToProps(state) {
   return {
     user: state.user.user,
     promocode: state.cart.promocode,
+    cartItems: (state.cart.items || []).map(item => {
+      const setPrice = item.set ? parseFloat(item.sets.find(s => s.id === item.set).price) : 0;
+
+      return {
+        ...item,
+        product: {
+          product: {
+            name: item.name
+          }
+        },
+        price_set: parseFloat(item.price) + setPrice,
+      }
+    }),
   };
 }
 
@@ -2162,8 +2281,8 @@ function mapDispatchToProps(dispatch) {
     cartClear: () => {
       return dispatch(cartClear());
     },
-    createCustomer: () => {
-      return dispatch(createCustomer());
+    createCustomer: (order) => {
+      return dispatch(createCustomer(order));
     },
     createPaypalOrder: (order_id) => {
       return dispatch(createPaypalOrder(order_id));
@@ -2180,8 +2299,8 @@ function mapDispatchToProps(dispatch) {
     fetchSettings: () => {
       return dispatch(fetchSettings());
     },
-    getStripePublicKey: () => {
-      return dispatch(getStripePublicKey());
+    getStripePublicKey: (carts) => {
+      return dispatch(getStripePublicKey(carts));
     },
     addPromocode: (promocode) => {
       NotificationManager.success("Promocode applied");

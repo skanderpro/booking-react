@@ -145,7 +145,7 @@ class Home extends Component {
 					<ExploreVenues
 
 						searchClasses={(venue) => {
-							this.setState({ page: 1, isLoadMore: true }, () => {
+							this.setState({page: 1, isLoadMore: true}, () => {
 								this.searchClasses(
 									this.state.level,
 									this.state.search,

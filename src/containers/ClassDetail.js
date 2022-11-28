@@ -47,18 +47,24 @@ class ClassDetail extends Component {
   };
 
   calcClassDetailTopContainer = () => {
-    let height = document.getElementById("class-detail-top-block").offsetHeight;
+    const item =  document.getElementById("class-detail-top-block");
+    if (!item) {
+      return;
+    }
+    let height = item.offsetHeight;
     document.getElementById("class-detail-container").style.paddingTop = `${
       170 + 90 + (height - 410)
     }px`;
   };
 
   addToCart = (classItem) => {
+    console.log('uyuyuyuyuyuyyuu')
     this.props.addLocalCart(classItem);
     this.addCartNotification();
   };
 
   addRemoteCart = (lesson_id, is_set, type) => {
+    console.log('hhhhhhhhhhhh')
     return this.props
       .addRemoteCart(lesson_id, is_set, type)
       .then((response) => {

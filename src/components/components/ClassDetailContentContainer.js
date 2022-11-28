@@ -30,10 +30,12 @@ function ClassDetailContentContainer(props) {
   let [lessons, setLessons] = useState([]);
   useEffect(() => {
     props
-      .searchClasses("", "", props.classDetail.product.venue.name, 1, 3)
+      .searchClasses("", "", props.classDetail.product.venue.name, 1, 3, [props.classDetail.id])
       .then((response) => {
         setLessons([...response.data]);
       });
+
+    console.log('ptopd', props);
   }, []);
 
   let dates = props.classDetail.product.dates;
@@ -77,7 +79,7 @@ function ClassDetailContentContainer(props) {
                 return (
                   <NavLink
                     to={makeUrl(
-                      `/class-detail/${date.id}`,
+                      `/class-detail/${date.slug || date.id}`,
                       props.match.params.invite
                     )}
                     className={"dates-item d-block"}
@@ -171,10 +173,11 @@ function ClassDetailContentContainer(props) {
           </p>
           <div className={"classes-list row"}>
             {lessons.map((lesson, index) => {
+              console.log('lesson', lesson);
               return (
                 <NavLink
                   to={makeUrl(
-                    `/class-detail/${lesson.id}`,
+                    `/class-detail/${lesson.product.slug || lesson.id}`,
                     props.match.params.invite
                   )}
                   className={"classes-item col-lg-4"}
@@ -234,8 +237,8 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    searchClasses: (level, search, location, page, limit) => {
-      return dispatch(searchClasses(level, search, location, page, limit));
+    searchClasses: (level, search, location, page, limit, exclude) => {
+      return dispatch(searchClasses(level, search, location, page, limit, exclude));
     },
   };
 }

@@ -8,7 +8,11 @@ import ClassesList from "./ClassesList";
 const feather = require("feather-icons");
 
 function ClassesContainer(props) {
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (props.venues.length === 1) {
+      props.changeVenue(props.venues[0].name);
+    }
+  }, []);
 
   return (
     <div className={"classes-section"}>
@@ -41,8 +45,9 @@ function ClassesContainer(props) {
                 onChange={(event) => {
                   props.changeVenue(event.target.value);
                 }}
+                disabled={props.venues.length < 2}
               >
-                <option value={""}>Class Location</option>
+                {props.venues.length > 1 && <option value={""}>Class Location</option>}
                 {props.venues.map((venue, index) => {
                   return (
                     <option value={venue.name} key={`venue-select-${index}`}>

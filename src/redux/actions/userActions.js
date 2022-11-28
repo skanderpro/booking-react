@@ -1,6 +1,6 @@
 import axios from "axios";
 import {
-  LOGIN_SUCCESS,
+  LOGIN_SUCCESS, LOGOUT_USER,
   SET_USER_PROFILE,
   UPDATE_USER_PROFILE
 } from "./actionTypes";
@@ -56,6 +56,8 @@ export function logout() {
         },
       }
     );
+    dispatch(logoutUser());
+
     return response;
   };
 }
@@ -87,6 +89,22 @@ export function updateUserProfile(user) {
     data: {
       user,
     },
+  };
+}
+
+export function setToken(token) {
+  return {
+    type: LOGIN_SUCCESS,
+    data: {
+      token,
+    },
+  };
+}
+
+export function logoutUser() {
+  return {
+    type: LOGOUT_USER,
+    data: {},
   };
 }
 
