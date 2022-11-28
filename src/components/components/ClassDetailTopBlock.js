@@ -62,8 +62,8 @@ function ClassDetailTopBlock(props) {
               >
                 Book class
               </button>
-            ) : null}
-
+            ) : (<span className="sold-out static">Sold out</span>)}
+				
             <span className={"d-inline-block availability-container"}>
               <div className={"title"}>Availability</div>
               <div className={"numbers"}>
@@ -72,6 +72,9 @@ function ClassDetailTopBlock(props) {
               </div>
             </span>
           </div>
+			<div className="price-class">
+				£ <span>50</span>
+			</div>
         </div>
       </div>
     </div>
