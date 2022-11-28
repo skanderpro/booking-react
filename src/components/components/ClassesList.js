@@ -76,28 +76,33 @@ function ClassesList(props) {
 						<span className="sold-out">Sold out</span>
 					 </div>
                 <div className={"text-container"}>
-                  <span className={"btn btn-pink class-level d-inline-block"}>
-                    {classItem.product.level}
-                  </span>
-                  <div className={"meta-block row"}>
-                    <div className={"col-6 date-container"}>
-                      <span className={"icon"}>
-                        <i className="far fa-calendar-alt"></i>
-                      </span>
-                      <span className={"text"}>
-                        {classItem.product.lesson_date}
-                      </span>
-                    </div>
-                    <div className={"col-6 location-container"}>
-                      <span className={"icon"}>
-                        <i className="fas fa-map-marker-alt"></i>
-                      </span>
-                      <span className={"text"}>
-                        {classItem.product.venue.name}
-                      </span>
-                    </div>
+                  
+                  <div className={"meta-block "}>
+							<span className={"btn btn-pink class-level d-inline-block"}>
+							{classItem.product.level}
+							</span>
+							<div className="row">
+								<div className={"col-6 date-container"}>
+								<span className={"icon"}>
+									<i className="far fa-calendar-alt"></i>
+								</span>
+								<span className={"text"}>
+									{classItem.product.lesson_date}
+								</span>
+							</div>
+							<div className={"col-6 location-container"}>
+								<span className={"icon"}>
+									<i className="fas fa-map-marker-alt"></i>
+								</span>
+								<span className={"text"}>
+									{classItem.product.venue.name}
+								</span>
+							</div>
+							</div>
+                   
                   </div>
                   <div className={"class-title"}>{classItem.product.name}</div>
+						<div className="class-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy</div>
                 </div>
               </div>
             </NavLink>
