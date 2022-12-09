@@ -10,6 +10,7 @@ import {
 } from "./../redux/actions/classesAction";
 import { fetchAllVenues } from "./../redux/actions/venueActions";
 import VouchersList from "../components/components/VouchersList";
+import Calendar from "../components/components/Calendar";
 import Loader from "../components/components/Loader";
 
 class Home extends Component {
@@ -141,6 +142,7 @@ class Home extends Component {
 						isLoadMore={this.state.isLoadMore}
 						nextPage={this.nextPage}
 					/>
+					<Calendar />
 					<VouchersList />
 					<ExploreVenues
 
