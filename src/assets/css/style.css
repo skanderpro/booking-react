@@ -503,10 +503,84 @@ ul li {
 	align-items: center;
 }
 
-.classes-list.list .classes-item .text-container .meta-block .row {
-	
+.fc .fc-scrollgrid-section a {
+	color: #212529;
 }
 
+.fc-col-header-cell {
+	background-color: #4160ff;
+	border: none !important;
+}
+
+.fc-scrollgrid-sync-inner {
+	padding: 15px 0px;
+}
+
+.fc .fc-col-header-cell-cushion {
+	color: #fff !important;
+	font-weight: 500;
+}
+.fc .fc-col-header-cell-cushion:hover{
+	text-decoration: none;
+}
+.fc-col-header {
+	border-top-left-radius: 8px;
+	border-top-right-radius: 8px;
+	overflow: hidden;
+}
+.fc-theme-standard .fc-scrollgrid{
+	border: none;
+	font-family: 'Poppins', sans-serif !important;
+}
+.fc .fc-scrollgrid-section-liquid > td{
+	border: none;
+}
+.fc .fc-scrollgrid table {
+	border-left-style: unset;
+	border-right-style: unset;
+	border-bottom-style: unset;
+}
+.fc .fc-scrollgrid-section > *{
+	border: none;
+}
+.fc .fc-daygrid-day.fc-day-today{
+	background-color: #eef3ff !important;
+}
+.fc .fc-daygrid-day-number{
+	font-weight: 500;
+}
+.fc .fc-daygrid-day-number:hover{
+	text-decoration: none;
+	color: #212529;
+}
+.fc .fc-button-group button+button{
+	margin-left: 5px !important;
+}
+.fc-direction-ltr .fc-button-group > .fc-button:not(:last-child){
+	border-top-right-radius: 8px;
+   border-bottom-right-radius:8px;
+}
+.fc-direction-ltr .fc-button-group > .fc-button:not(:first-child){
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+}
+.fc .fc-button{
+	border-radius: 8px;
+	background-color: #4160ff !important;
+	border: 1px solid #4160ff !important;
+	font-family: 'Poppins', sans-serif !important;
+	padding: 12px 20px;
+}
+.fc .fc-toolbar-title{
+	font-family: 'Poppins', sans-serif !important;
+	font-weight: 700;
+}
+.fc .fc-button-group > .fc-button{
+	padding: 12px;
+}
+.fc-direction-ltr .fc-toolbar > * > :not(:first-child){
+	margin-left: 20px;
+}
 @media (max-width:1510px) {
 	.navbar {
 		flex-wrap: wrap;
@@ -2525,12 +2599,14 @@ form.checkout h3 {
 
 @media (max-width:500px) {
 
-	.classes-list .classes-item .text-container{
+	.classes-list .classes-item .text-container {
 		padding: 30px 25px 25px 25px;
 	}
-	.classes-list.list .classes-item .text-container .meta-block .row{
+
+	.classes-list.list .classes-item .text-container .meta-block .row {
 		margin-top: 10px;
 	}
+
 	.classes-list.list .classes-item .text-container .meta-block {
 		align-items: flex-start;
 		flex-direction: column;
