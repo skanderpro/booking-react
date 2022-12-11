@@ -508,7 +508,7 @@ ul li {
 }
 
 .fc-col-header-cell {
-	background-color: #4160ff;
+	background-color: #FF7ED1;
 	border: none !important;
 }
 
@@ -544,7 +544,7 @@ ul li {
 	border: none;
 }
 .fc .fc-daygrid-day.fc-day-today{
-	background-color: #eef3ff !important;
+	background-color: #f9b0df45 !important;
 }
 .fc .fc-daygrid-day-number{
 	font-weight: 500;
@@ -566,10 +566,25 @@ ul li {
 }
 .fc .fc-button{
 	border-radius: 8px;
-	background-color: #4160ff !important;
-	border: 1px solid #4160ff !important;
+	background-color: #FF7ED1 !important;
+	border: 1px solid #FF7ED1 !important;
 	font-family: 'Poppins', sans-serif !important;
 	padding: 12px 20px;
+}
+.fc .fc-button:hover{
+	opacity: .8;
+}
+.fc .fc-button:focus{
+	box-shadow: none;
+}
+.fc .fc-button:active{
+	box-shadow: none;
+}
+.fc .fc-button-primary:not(:disabled):active:focus, .fc .fc-button-primary:not(:disabled).fc-button-active:focus{
+	box-shadow: none;
+}
+.fc .fc-button:disabled:hover{
+	opacity: 0.65;
 }
 .fc .fc-toolbar-title{
 	font-family: 'Poppins', sans-serif !important;
