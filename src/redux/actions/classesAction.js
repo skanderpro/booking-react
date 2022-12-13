@@ -21,10 +21,13 @@ export function searchClasses(
   location = "",
   page = 1,
   limit = 3,
-  exclude = []
+  exclude = [],
+  type = ''
 ) {
   return async (dispatch, getState) => {
     let mainUrl = getState().settings.mainUrl;
+
+    console.log('tes type', type)
     let response = await axios.get(`${mainUrl}/api/products/search`, {
       params: {
         level: level,
@@ -32,7 +35,7 @@ export function searchClasses(
         venue_id: location,
         page: page,
         limit: limit,
-        type: "class",
+        type,
         exclude,
       },
     });

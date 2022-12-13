@@ -38,25 +38,42 @@ function ClassesContainer(props) {
               <span
                 className={"icon icon-location"}
                 dangerouslySetInnerHTML={{
-                  __html: feather.icons["map-pin"].toSvg(),
+                  __html: feather.icons["layers"].toSvg(),
                 }}
               />
               <select
                 onChange={(event) => {
-                  props.changeVenue(event.target.value);
+                  props.changeType(event.target.value);
                 }}
-                disabled={props.venues.length < 2}
               >
-                {props.venues.length > 1 && <option value={""}>Class Location</option>}
-                {props.venues.map((venue, index) => {
-                  return (
-                    <option value={venue.name} key={`venue-select-${index}`}>
-                      {venue.name}
-                    </option>
-                  );
-                })}
+                <option value="" selected>Type</option>
+                <option value="class">Class</option>
+                <option value="course">Course</option>
               </select>
             </div>
+            {/*<div className={"col-lg-3 location-container"}>*/}
+            {/*  <span*/}
+            {/*    className={"icon icon-location"}*/}
+            {/*    dangerouslySetInnerHTML={{*/}
+            {/*      __html: feather.icons["map-pin"].toSvg(),*/}
+            {/*    }}*/}
+            {/*  />*/}
+            {/*  <select*/}
+            {/*    onChange={(event) => {*/}
+            {/*      props.changeVenue(event.target.value);*/}
+            {/*    }}*/}
+            {/*    disabled={props.venues.length < 2}*/}
+            {/*  >*/}
+            {/*    {props.venues.length > 1 && <option value={""}>Class Location</option>}*/}
+            {/*    {props.venues.map((venue, index) => {*/}
+            {/*      return (*/}
+            {/*        <option value={venue.name} key={`venue-select-${index}`}>*/}
+            {/*          {venue.name}*/}
+            {/*        </option>*/}
+            {/*      );*/}
+            {/*    })}*/}
+            {/*  </select>*/}
+            {/*</div>*/}
             <div className={"col-lg-3 skill-container"}>
               <span
                 className={"icon icon-skill"}
