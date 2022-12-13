@@ -1,9 +1,9 @@
 import { INIT_SETTINGS } from "../actions/actionTypes";
 
 const initializeState = {
-  // mainUrl: "https://crm.sewconfident.co.uk",
+  mainUrl: "https://crm.sewconfident.co.uk",
   // mainUrl: "http://booking",
-  mainUrl: "http://127.0.0.1:8000",
+  // mainUrl: "http://127.0.0.1:8000",
 
 };
 
