@@ -7,15 +7,15 @@ import { searchClasses } from "../../redux/actions/classesAction";
 import { NavLink, withRouter, Link } from "react-router-dom";
 import {
   FacebookShareButton,
-  LinkedinShareButton,
   TwitterShareButton,
-  ViberShareButton,
   FacebookIcon,
   TwitterIcon,
-  LinkedinIcon,
-  ViberIcon,
   WhatsappShareButton,
   WhatsappIcon,
+  EmailShareButton,
+  EmailIcon,
+  LinkedinIcon,
+  LinkedinShareButton
 } from "react-share";
 import Cookies from "universal-cookie";
 
@@ -112,20 +112,20 @@ function ClassDetailContentContainer(props) {
                 </TwitterShareButton>
               </li>
               <li>
-                <LinkedinShareButton title={social_title} url={social_link}>
-                  <LinkedinIcon size={social_size} />
-                </LinkedinShareButton>
-              </li>
-              <li>
-                <ViberShareButton title={social_title} url={social_link}>
-                  <ViberIcon size={social_size} />
-                </ViberShareButton>
+                <EmailShareButton title={social_title} url={social_link}>
+                  <EmailIcon size={social_size} />
+                </EmailShareButton>
               </li>
               <li>
                 <WhatsappShareButton title={social_title} url={social_link}>
                   <WhatsappIcon size={social_link} />
                 </WhatsappShareButton>
               </li>
+                <li>
+                  <LinkedinShareButton title={social_title} url={social_link}>
+                    <LinkedinIcon size={social_link} />
+                  </LinkedinShareButton>
+                </li>
             </ul>
           </div>
 
@@ -237,8 +237,8 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
   return {
-    searchClasses: (level, search, location, page, limit, exclude) => {
-      return dispatch(searchClasses(level, search, location, page, limit, exclude));
+    searchClasses: (level, search, location, page, limit, exclude, type) => {
+      return dispatch(searchClasses(level, search, location, page, limit, exclude, type));
     },
   };
 }

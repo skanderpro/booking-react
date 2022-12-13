@@ -18,6 +18,7 @@ class Home extends Component {
 		classes: [],
 		search: "",
 		venue: "",
+		type: "",
 		level: "",
 		venues: [],
 		levels: [
@@ -40,7 +41,8 @@ class Home extends Component {
 				this.state.search,
 				this.state.venue,
 				this.state.page,
-				this.state.limit
+				this.state.limit,
+				this.state.type
 			)
 			.then((response) => {
 				this.setState({
@@ -56,9 +58,9 @@ class Home extends Component {
 		});
 	}
 
-	searchClasses = (level, search = "", venue = "", page = 1, limit = 3) => {
+	searchClasses = (level, search = "", venue = "", page = 1, limit = 3, type = '') => {
 		this.props
-			.searchClasses(level, search, venue, page, limit)
+			.searchClasses(level, search, venue, page, limit, type)
 			.then((response) => {
 				this.setState({
 					classes: [...response.data],
@@ -73,6 +75,10 @@ class Home extends Component {
 
 	changeVenue = (venue) => {
 		this.setState({ venue: venue });
+	};
+
+	changeType = (type) => {
+		this.setState({ type });
 	};
 
 	changeSearch = (search) => {
@@ -91,7 +97,8 @@ class Home extends Component {
 						this.state.search,
 						this.state.venue,
 						this.state.page,
-						this.state.limit
+						this.state.limit,
+						this.state.type
 					)
 					.then((response) => {
 						let classes = [...this.state.classes];
@@ -132,17 +139,19 @@ class Home extends Component {
 									this.state.search,
 									this.state.venue,
 									this.state.page,
-									this.state.limit
+									this.state.limit,
+									this.state.type
 								);
 							});
 						}}
 						changeLevel={this.changeLevel}
 						changeVenue={this.changeVenue}
 						changeSearch={this.changeSearch}
+						changeType={this.changeType}
 						isLoadMore={this.state.isLoadMore}
 						nextPage={this.nextPage}
 					/>
-					<Calendar />
+					<Calendar  items={this.state.classes} />
 					<VouchersList />
 					<ExploreVenues
 
@@ -153,7 +162,8 @@ class Home extends Component {
 									this.state.search,
 									venue,
 									this.state.page,
-									this.state.limit
+									this.state.limit,
+									this.state.type
 								);
 							});
 						}}
@@ -172,8 +182,8 @@ function mapDispatchToProps(dispatch) {
 		fetchAllClasses: () => {
 			return dispatch(fetchAllClasses());
 		},
-		searchClasses: (level, search, venue, page, limit) => {
-			return dispatch(searchClasses(level, search, venue, page, limit));
+		searchClasses: (level, search, venue, page, limit, type) => {
+			return dispatch(searchClasses(level, search, venue, page, limit, [], type));
 		},
 		fetchAllVenues: () => {
 			return dispatch(fetchAllVenues());
