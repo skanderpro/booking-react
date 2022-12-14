@@ -508,7 +508,7 @@ ul li {
 }
 
 .fc-col-header-cell {
-	background-color: #4160ff;
+	background-color: #FF7ED1;
 	border: none !important;
 }
 
@@ -520,67 +520,160 @@ ul li {
 	color: #fff !important;
 	font-weight: 500;
 }
-.fc .fc-col-header-cell-cushion:hover{
+
+.fc .fc-col-header-cell-cushion:hover {
 	text-decoration: none;
 }
+
 .fc-col-header {
 	border-top-left-radius: 8px;
 	border-top-right-radius: 8px;
 	overflow: hidden;
 }
-.fc-theme-standard .fc-scrollgrid{
+
+.fc-theme-standard .fc-scrollgrid {
 	border: none;
 	font-family: 'Poppins', sans-serif !important;
 }
-.fc .fc-scrollgrid-section-liquid > td{
+
+.fc .fc-scrollgrid-section-liquid>td {
 	border: none;
 }
+
 .fc .fc-scrollgrid table {
 	border-left-style: unset;
 	border-right-style: unset;
 	border-bottom-style: unset;
 }
-.fc .fc-scrollgrid-section > *{
+
+.fc .fc-scrollgrid-section>* {
 	border: none;
 }
-.fc .fc-daygrid-day.fc-day-today{
-	background-color: #eef3ff !important;
+
+.fc .fc-daygrid-day.fc-day-today {
+	background-color: #f9b0df45 !important;
 }
-.fc .fc-daygrid-day-number{
+
+.fc .fc-daygrid-day-number {
 	font-weight: 500;
 }
-.fc .fc-daygrid-day-number:hover{
+
+.fc .fc-daygrid-day-number:hover {
 	text-decoration: none;
 	color: #212529;
 }
-.fc .fc-button-group button+button{
+
+.fc .fc-button-group button+button {
 	margin-left: 5px !important;
 }
-.fc-direction-ltr .fc-button-group > .fc-button:not(:last-child){
+
+.fc-direction-ltr .fc-button-group>.fc-button:not(:last-child) {
 	border-top-right-radius: 8px;
-   border-bottom-right-radius:8px;
+	border-bottom-right-radius: 8px;
 }
-.fc-direction-ltr .fc-button-group > .fc-button:not(:first-child){
+
+.fc-direction-ltr .fc-button-group>.fc-button:not(:first-child) {
 	border-top-left-radius: 8px;
 	border-bottom-left-radius: 8px;
 }
-.fc .fc-button{
+
+.fc .fc-button {
 	border-radius: 8px;
-	background-color: #4160ff !important;
-	border: 1px solid #4160ff !important;
+	background-color: #FF7ED1 !important;
+	border: 1px solid #FF7ED1 !important;
 	font-family: 'Poppins', sans-serif !important;
 	padding: 12px 20px;
 }
-.fc .fc-toolbar-title{
+
+.fc .fc-button:hover {
+	opacity: .8;
+}
+
+.fc .fc-button:focus {
+	box-shadow: none;
+}
+
+.fc .fc-button:active {
+	box-shadow: none;
+}
+
+.fc .fc-button-primary:not(:disabled):active:focus,
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus {
+	box-shadow: none;
+}
+
+.fc .fc-button:disabled:hover {
+	opacity: 0.65;
+}
+
+.fc .fc-toolbar-title {
 	font-family: 'Poppins', sans-serif !important;
 	font-weight: 700;
 }
-.fc .fc-button-group > .fc-button{
+
+.fc .fc-button-group>.fc-button {
 	padding: 12px;
 }
-.fc-direction-ltr .fc-toolbar > * > :not(:first-child){
+
+.fc-direction-ltr .fc-toolbar>*> :not(:first-child) {
 	margin-left: 20px;
 }
+
+.calendar-class {
+	width: 100%;
+	background-color: #ff7ed1;
+	padding: 5px;
+	border-radius: 8px;
+	color: #fff;
+}
+
+.calendar-class-img {
+	width: 100%;
+	border-radius: 8px;
+	max-width: 50px;
+	height: 50px;
+	overflow: hidden;
+}
+
+.calendar-class-img img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.fc .fc-daygrid-event {
+	margin: 8px !important;
+}
+
+.calendar-class-title {
+	white-space: normal;
+	font-size: 14px;
+	line-height: 16px;
+	margin-bottom: 5px;
+
+}
+
+.calendar-class-box {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.calendar-class-date {
+	margin: auto;
+}
+
+.calendar-class-price {
+	background-color: #fff;
+	color: #ff7ed1;
+	border-radius: 5px;
+	padding: 3px;
+	line-height: 13px;
+	font-size: 13px;
+	margin-top: 3px;
+	font-weight: 500;
+}
+
 @media (max-width:1510px) {
 	.navbar {
 		flex-wrap: wrap;
