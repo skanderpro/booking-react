@@ -8,7 +8,11 @@ function CheckoutThankYou(props) {
   return (
     <div className="thank-you">
       <div style={{ marginBottom: 20 }}>
-        Thank you. Your order has been received.{" "}
+        <p>
+          Thank you. Your order has been received.
+          <br/>
+          Please check your spam folder, in some cases emails with lesson details may be sent there.
+        </p>
       </div>
       <table className={"shop_table"}>
         <tr>

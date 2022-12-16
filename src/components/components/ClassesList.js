@@ -79,7 +79,9 @@ function ClassesList(props) {
                     })`,
                   }}
                 >
-						<span className="sold-out">Sold out</span>
+                    {(classItem.product.numbers_of_seats >
+                    classItem.product.buyed_numbers_of_seats) ? ''
+                     : <span className="sold-out">Sold out</span>}
 					 </div>
                 <div className={"text-container"}>
                   
