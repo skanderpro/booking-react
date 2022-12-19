@@ -151,7 +151,6 @@ class Home extends Component {
 						isLoadMore={this.state.isLoadMore}
 						nextPage={this.nextPage}
 					/>
-					<Calendar  items={this.state.classes} />
 					<VouchersList />
 					<ExploreVenues
 
