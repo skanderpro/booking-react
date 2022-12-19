@@ -90,7 +90,7 @@ function ClassesList(props) {
 							{classItem.product.level}
 							</span>
 							<span className={"btn btn-light class-level d-inline-block class-price"}>
-							£50
+							£{classItem.product.price}
 							</span>
 							<div className="row">
 								<div className={"col-6 date-container"}>
@@ -113,7 +113,9 @@ function ClassesList(props) {
                    
                   </div>
                   <div className={"class-title"}>{classItem.product.name}</div>
-						<div className="class-text">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy</div>
+						<div className="class-text">
+                            {(classItem.product.class_details || '').replace(/(<([^>]+)>)/gi, "").substr(0, 150)}
+                        </div>
                 </div>
               </div>
             </NavLink>
