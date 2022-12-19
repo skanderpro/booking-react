@@ -60,14 +60,12 @@ function Calendar(props) {
     return (
         <div className={"classes-section"}>
             <div className={"classes-container"}>
-                <h2 className="portfolio-navs-header">Calendar Class</h2>
                 <FullCalendar
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"
                     eventContent={renderEventContent}
                     events={events}
                 />
-
             </div>
         </div>
     );
