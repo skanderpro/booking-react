@@ -1181,6 +1181,9 @@ ul li {
 	text-transform: uppercase;
 	top: -18px;
 }
+.classes-list .classes-item .text-container .class-level.class-price{
+	right: 40px;
+}
 
 .classes-list .classes-item .text-container .meta-block {
 	font-family: 'Archivo';
@@ -2691,7 +2694,9 @@ form.checkout h3 {
 }
 
 @media (max-width:500px) {
-
+	.classes-list .classes-item .text-container .class-level.class-price{
+		margin-top: 10px;
+	}
 	.classes-list .classes-item .text-container {
 		padding: 30px 25px 25px 25px;
 	}
