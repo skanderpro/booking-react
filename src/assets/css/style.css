@@ -2903,3 +2903,8 @@ form.checkout h3 {
 	margin-top: 10px;
 	font-size: 15px;
 }
+
+a.fc-daygrid-event.fc-event,
+a.fc-daygrid-event.fc-event a {
+	text-decoration: none;
+}
