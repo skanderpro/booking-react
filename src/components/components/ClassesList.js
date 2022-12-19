@@ -89,6 +89,9 @@ function ClassesList(props) {
 							<span className={"btn btn-pink class-level d-inline-block"}>
 							{classItem.product.level}
 							</span>
+							<span className={"btn btn-light class-level d-inline-block class-price"}>
+							£50
+							</span>
 							<div className="row">
 								<div className={"col-6 date-container"}>
 								<span className={"icon"}>
