@@ -627,7 +627,11 @@ ul li {
 	background-color: #ff7ed1;
 	padding: 5px;
 	border-radius: 8px;
-	color: #fff;
+	color: #fff !important;
+	transition: all .3s ease;
+}
+.calendar-class:hover {
+	background-color: #ff7ed1cf;
 }
 
 .calendar-class-img {
@@ -676,7 +680,12 @@ ul li {
 	margin-top: 3px;
 	font-weight: 500;
 }
-
+.fc-daygrid-dot-event:hover, .fc-daygrid-dot-event.fc-event-mirror{
+	background: transparent;
+}
+.fc .fc-toolbar.fc-header-toolbar{
+	flex-wrap: wrap;
+}
 @media (max-width:1510px) {
 	.navbar {
 		flex-wrap: wrap;
@@ -1088,9 +1097,7 @@ ul li {
 }
 
 @media (max-width:992px) {
-	.classes-section .classes-container {
-		padding-top: 250px;
-	}
+	
 
 	.classes-section .classes-container .button-container button {
 		width: 100%;
@@ -1658,6 +1665,13 @@ ul li {
 }
 
 @media (max-width:1024px) {
+	.calendar-class-box{
+		flex-direction: column-reverse;
+		align-items: flex-start;
+	}
+	.calendar-class-img{
+		margin-bottom: 10px;
+	}
 	.mail-container .row .form-block .input-group .input-group-append {
 		width: auto;
 	}

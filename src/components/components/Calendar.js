@@ -36,8 +36,8 @@ function Calendar(props) {
         const linkParam = eventInfo.event.extendedProps.product.slug || eventInfo.event.extendedProps.product.id;
 
         return (
-            <NavLink className="calendar-class"
-                     to={`/class-detail/${linkParam}`}>
+            <a className="calendar-class"
+                     href={`/class-detail/${linkParam}`}>
                 <div
                     className="calendar-class-title">{eventInfo.event.title}</div>
                 <div className="calendar-class-box">
@@ -53,21 +53,19 @@ function Calendar(props) {
                              alt={eventInfo.event.title}/>
                     </div>
                 </div>
-            </NavLink>
+            </a>
         )
     }
 
     return (
-        <div className={"classes-section"}>
-            <div className={"classes-container"}>
+        
                 <FullCalendar
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"
                     eventContent={renderEventContent}
                     events={events}
                 />
-            </div>
-        </div>
+           
     );
 }
 
