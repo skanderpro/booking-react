@@ -19,9 +19,9 @@ import {
   createPaypalOrder,
 } from "../redux/actions/paymentActions";
 import {
-  addPromocode,
+  addPromocode, addVoucherData,
   clearPromocodes,
-  confirmVoucher,
+  confirmVoucher, getPromocodeData,
 } from "./../redux/actions/voucherActions";
 import {updateUserProfile, userDiscount} from "./../redux/actions/userActions";
 import { Elements, CardElement } from "@stripe/react-stripe-js";
@@ -130,9 +130,7 @@ class Checkout extends Component {
         });
     }
     if (this.props.promocode !== "") {
-      this.props.confirmVoucher(this.props.promocode).then((response) => {
-        this.setState({ promocodeDiscount: { ...response.data } });
-      });
+      this.requestPromoCode(this.props.promocode);
     }
     if (this.state.paymentMethod === "stripe" && this.currentUser) {
       this.initStripe();
@@ -173,6 +171,50 @@ class Checkout extends Component {
       
       this.initStripe();
     }
+  }
+
+  requestPromoCode = (code) => {
+    const promise = this.currentUser
+        ? this.props.confirmVoucher(code)
+        : this.props.getPromocodeData(code);
+
+
+    return promise.then((response) => {
+          if (
+              response.data.code_type ===
+              "promocode"
+          ) {
+            this.props.addPromocode(
+                this.state.coupon
+            );
+            this.setState({
+              promocode: response.data,
+              promocodeDiscount: {...response.data}
+            });
+          } else if (response.data.code_type === 'voucher') {
+            this.props.addVoucher(response.data)
+          }
+        });
+  }
+
+  applyCouponClickHandler = () => {
+    this.requestPromoCode(this.state.coupon).catch((errors) => {
+      console.log(errors);
+      this.setState({
+        couponErrors:
+        errors.response.data.errors,
+      });
+    });
+  }
+
+  applyGiftCardClickHandler = () => {
+    this.requestPromoCode(this.state.giftCard).catch((errors) => {
+      console.log(errors);
+      this.setState({
+        giftErrors:
+            errors.response.data.errors || "",
+      });
+    });
   }
 
   getStripePublicKey = async (carts) => {
@@ -224,7 +266,7 @@ class Checkout extends Component {
   getBonuses = () => {
     let bonuses = 0;
     if (this.state.is_bonuses) {
-      let user_bonuses = Object.keys(this.currentUser).length ? this.currentUser.bonuses : 0;
+      let user_bonuses = this.currentUser && Object.keys(this.currentUser).length ? this.currentUser.bonuses : this.props.voucherSum;
       let subtotal = this.getSubTotalWithDiscount();
       if (user_bonuses > subtotal - 0.5) {
         bonuses = subtotal - 0.5;
@@ -322,6 +364,7 @@ class Checkout extends Component {
         invite: this.props.match.params.invite,
         is_bonuses: this.state.is_bonuses,
         register_user: this.state.registerUser,
+        voucher: this.state.coupon.length ? this.state.coupon : this.state.giftCard
       });
 
       return response;
@@ -495,7 +538,7 @@ class Checkout extends Component {
                           <div className="woocommerce">
                             <div className="woocommerce-notices-wrapper"></div>
 
-                            {!!Object.keys(this.props.user).length  ? <div className="woocommerce-form-coupon-toggle">
+                            <div className="woocommerce-form-coupon-toggle">
                               <div className="checkout-coupon-info">
                                 Have a coupon?{" "}
                                 <a
@@ -511,7 +554,7 @@ class Checkout extends Component {
                                   Click here to enter your code
                                 </a>
                               </div>
-                            </div> : <div>Log in to use coupons</div>}
+                            </div>
 
                             {this.state.couponInfo ? (
                               <form
@@ -545,32 +588,7 @@ class Checkout extends Component {
                                     className="button"
                                     name="apply_coupon"
                                     value="Apply coupon"
-                                    onClick={() => {
-                                      this.props
-                                        .confirmVoucher(this.state.couponData)
-                                        .then((response) => {
-                                          if (
-                                            response.data.code_type ===
-                                            "promocode"
-                                          ) {
-                                            this.props.addPromocode(
-                                                this.state.couponData
-                                            );
-                                            this.setState({
-                                              promocode: response.data,
-                                              promocodeDiscount: { ...response.data }
-                                            });
-                                          } else if (response.data.code_type === 'voucher') {
-                                            this.props.addVoucher(response.data);
-                                          }
-                                        })
-                                        .catch((errors) => {
-                                          this.setState({
-                                            couponErrors:
-                                              errors.response.data.errors,
-                                          });
-                                        });
-                                    }}
+                                    onClick={this.applyCouponClickHandler}
                                   >
                                     Apply coupon
                                   </button>
@@ -1526,8 +1544,7 @@ class Checkout extends Component {
                                       </td>
                                     </tr>
 
-                                    {!!Object.keys(this.props.user).length ? <tr
-                                        className="cart-subtotal giftup-cart-subtotal">
+                                    <tr className="cart-subtotal giftup-cart-subtotal">
                                       <th className="giftup-cart-subtotal-th">
                                         Gift card
                                       </th>
@@ -1572,44 +1589,13 @@ class Checkout extends Component {
                                                     });
                                                   }}
                                                   placeholder="Gift card code"
-                                                  onKeyPress="return giftup_code_keypress()"
                                               />
                                               <button
                                                   className="giftup-cart-subtotal-td-form-button"
                                                   type="button"
                                                   name="giftup_giftcard_button"
                                                   value="Apply gift card"
-                                                  onClick={() => {
-                                                    this.props
-                                                        .confirmVoucher(
-                                                            this.state.giftCard
-                                                        )
-                                                        .then((response) => {
-                                                          if (
-                                                              response.data
-                                                                  .code_type ===
-                                                              "promocode"
-                                                          ) {
-                                                            this.props.addPromocode(
-                                                                this.state.giftCard
-                                                            );
-                                                            this.setState({
-                                                              promocode:
-                                                              response.data,
-                                                              promocodeDiscount: {...response.data}
-                                                            });
-                                                          } else if (response.data.code_type === 'voucher') {
-                                                            this.props.addVoucher(response.data);
-                                                          }
-                                                        })
-                                                        .catch((errors) => {
-                                                          this.setState({
-                                                            giftErrors:
-                                                            errors.response.data
-                                                                .errors,
-                                                          });
-                                                        });
-                                                  }}
+                                                  onClick={this.applyGiftCardClickHandler}
                                               >
                                                 Apply
                                               </button>
@@ -1619,7 +1605,7 @@ class Checkout extends Component {
                                             <div>{this.state.giftErrors}</div>
                                         ) : null}
                                       </td>
-                                    </tr> : <tr><td colspan="2">Log in to use gift cards</td></tr>}
+                                    </tr>
 
                                     <tr className="order-total">
                                       <th>Total</th>
@@ -1747,33 +1733,32 @@ class Checkout extends Component {
                                       ) : null}
                                     </li>
                                   </ul>
-                                    {!!this.currentUser && <>
-                                        <h3 className={"mt-5"}>Bonuses</h3>
-                                        <div className={"place-order bonuses mt-0"}>
-                                            <h4>
-                                                {formatter.format(
-                                                    this.currentUser.bonuses
-                                                )}
-                                            </h4>
-                                            <div>
-                                                <label htmlFor={"is_bonuses"}>
-                                                    <input
-                                                        id={"is_bonuses"}
-                                                        type={"checkbox"}
-                                                        className={"mr-2"}
-                                                        onChange={() => {
-                                                            this.setState({
-                                                                is_bonuses:
-                                                                    !this.state.is_bonuses,
-                                                            });
-                                                        }}
-                                                        checked={this.state.is_bonuses}
-                                                    />
-                                                    <span>Use bonuses</span>
-                                                </label>
-                                            </div>
+
+                                    <h3 className={"mt-5"}>Bonuses</h3>
+                                    <div className={"place-order bonuses mt-0"}>
+                                        <h4>
+                                            {formatter.format(
+                                                this.currentUser ? this.currentUser.bonuses : parseFloat(this.props.voucherSum)
+                                            )}
+                                        </h4>
+                                        <div>
+                                            <label htmlFor={"is_bonuses"}>
+                                                <input
+                                                    id={"is_bonuses"}
+                                                    type={"checkbox"}
+                                                    className={"mr-2"}
+                                                    onChange={() => {
+                                                        this.setState({
+                                                            is_bonuses:
+                                                                !this.state.is_bonuses,
+                                                        });
+                                                    }}
+                                                    checked={this.state.is_bonuses}
+                                                />
+                                                <span>Use bonuses</span>
+                                            </label>
                                         </div>
-                                    </>}
+                                    </div>
 
                                     <div className=" place-order mt-5">
                                     <div className="woocommerce-terms-and-conditions-wrapper">
@@ -2247,6 +2232,7 @@ class Checkout extends Component {
 function mapStateToProps(state) {
   return {
     user: state.user.user,
+    voucherSum: state.cart.voucherData ? state.cart.voucherData.bonuses : 0,
     promocode: state.cart.promocode,
     cartItems: (state.cart.items || []).map(item => {
       const setPrice = item.set ? parseFloat(item.sets.find(s => s.id === item.set).price) : 0;
@@ -2311,9 +2297,11 @@ function mapDispatchToProps(dispatch) {
     },
     addVoucher(voucher) {
       NotificationManager.success("Voucher applied");
-      dispatch(updateUserProfile({
-        bonuses: voucher.bonuses,
-      }))
+      dispatch(addVoucherData(voucher));
+
+    },
+    getPromocodeData(code) {
+      return dispatch(getPromocodeData(code));
     }
   };
 }
