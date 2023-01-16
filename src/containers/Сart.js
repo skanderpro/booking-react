@@ -352,19 +352,19 @@ class Cart extends Component {
   };
 
   requestPromoCode = (code) => {
-    const promise = this.props.user
+    const promise = this.props.user && Object.keys(this.props.user).length
         ? this.props.confirmVoucher(code)
         : this.props.getPromocodeData(code);
 
 
     return promise.then((response) => {
+          this.props.addPromocode(
+              code
+          );
           if (
               response.data.code_type ===
               "promocode"
           ) {
-            this.props.addPromocode(
-                this.state.coupon
-            );
             this.setState({
               promocode: response.data,
               promocodeDiscount: {...response.data}
@@ -469,7 +469,7 @@ class Cart extends Component {
                                       className={"error"}
                                       style={{color: "#f00"}}
                                   >
-                                    {this.state.couponErrors.length > 0
+                                    {this.state.couponErrors && this.state.couponErrors.length > 0
                                         ? this.state.couponErrors
                                         : null}
                                   </div>

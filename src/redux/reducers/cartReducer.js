@@ -30,7 +30,11 @@ export default function cartReducer(state = initializeState, action) {
         voucherData: action.payload.voucher,
       };
     case CLEAR_PROMOCODE:
-      return { ...state, promocode: "" };
+      return {
+        ...state,
+        promocode: "",
+        voucherData: null,
+      };
     case SET_INVITE:
       return {...state, invite: action.payload.invite};
     default:
