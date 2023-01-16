@@ -180,13 +180,13 @@ class Checkout extends Component {
 
 
     return promise.then((response) => {
+          this.props.addPromocode(
+              code
+          );
           if (
               response.data.code_type ===
               "promocode"
           ) {
-            this.props.addPromocode(
-                this.state.coupon
-            );
             this.setState({
               promocode: response.data,
               promocodeDiscount: {...response.data}
@@ -198,7 +198,7 @@ class Checkout extends Component {
   }
 
   applyCouponClickHandler = () => {
-    this.requestPromoCode(this.state.coupon).catch((errors) => {
+    this.requestPromoCode(this.state.couponData).catch((errors) => {
       console.log(errors);
       this.setState({
         couponErrors:
