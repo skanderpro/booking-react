@@ -16,3 +16,4 @@ export const CLEAR_LOCAL_CART = "CLEAR_LOCAL_CART";
 export const ADD_PROMOCODE = "ADD_PROMOCODE";
 export const CLEAR_PROMOCODE = "CLEAR_PROMOCODE";
 export const SET_INVITE = "SET_INVITE";
+export const ADD_VOUCHER = "ADD_VOUCHER";

@@ -2,13 +2,14 @@ import {
   ADD_LOCAL_CART,
   GET_REMOTE_CART,
   ADD_PROMOCODE,
-  CLEAR_PROMOCODE, SET_INVITE,
+  CLEAR_PROMOCODE, SET_INVITE, ADD_VOUCHER,
 } from "./../actions/actionTypes";
 
 const initializeState = {
   items: [],
   promocode: "",
   invite: null,
+  voucherData: null,
 };
 export default function cartReducer(state = initializeState, action) {
   switch (action.type) {
@@ -23,8 +24,17 @@ export default function cartReducer(state = initializeState, action) {
         ...state,
         promocode: action.data.promocode,
       };
+    case ADD_VOUCHER:
+      return {
+        ...state,
+        voucherData: action.payload.voucher,
+      };
     case CLEAR_PROMOCODE:
-      return { ...state, promocode: "" };
+      return {
+        ...state,
+        promocode: "",
+        voucherData: null,
+      };
     case SET_INVITE:
       return {...state, invite: action.payload.invite};
     default:
