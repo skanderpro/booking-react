@@ -2,7 +2,8 @@ import React, { useMemo } from "react";
 import FullCalendar from '@fullcalendar/react'
 import { NavLink, withRouter } from "react-router-dom";
 import dayGridPlugin from '@fullcalendar/daygrid'
-
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
 import { makeUrl } from "../../redux/actions/functions";
 import { connect } from "react-redux";
 
@@ -61,7 +62,7 @@ function Calendar(props) {
 	return (
 
 		<FullCalendar
-			plugins={[dayGridPlugin]}
+			plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 			initialView="dayGridMonth"
 			eventContent={renderEventContent}
 			events={events}
