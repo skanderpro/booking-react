@@ -61,6 +61,7 @@ function Calendar(props) {
         <div className={"classes-section"}>
             <div className={"classes-container"}>
                 <FullCalendar
+                    firstDay={1}
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"
                     eventContent={renderEventContent}
