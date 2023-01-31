@@ -23,10 +23,7 @@ class Home extends Component {
 		venues: [],
 		levels: [
 			"Beginner",
-			"Enthusiast",
 			"Experienced",
-			"Advanced",
-			"Professional",
 		],
 		page: 1,
 		limit: 6,

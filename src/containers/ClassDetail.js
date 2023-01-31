@@ -9,6 +9,7 @@ import { addLocalCart, addRemoteCart } from "./../redux/actions/cartActions";
 import { connect } from "react-redux";
 import Loader from "../components/components/Loader";
 import { NotificationManager } from "react-notifications";
+import {TestimonialsCarousel} from "../components/components/TestimonialCarousel";
 
 class ClassDetail extends Component {
   state = {
@@ -77,6 +78,8 @@ class ClassDetail extends Component {
   };
 
   render() {
+    console.log('class', this.state.classItem);
+
     return (
       <MainLayout>
         <DetailClassTopBanner />
@@ -93,6 +96,7 @@ class ClassDetail extends Component {
                 addRemoteCart={this.addRemoteCart}
               />
               <ClassDetailContentContainer classDetail={this.state.classItem} />
+              <TestimonialsCarousel type={this.state.classItem.type} id={this.state.classItem.id} />
             </React.Fragment>
           ) : null}
         </div>
