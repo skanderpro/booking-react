@@ -21,6 +21,8 @@ import {
 import Loader from "../components/components/Loader";
 import { fetchSettings } from "./../redux/actions/settingActions";
 import { NotificationManager } from "react-notifications";
+import {requestBannersForPlace} from "../redux/actions/bannerActions";
+import {Banner} from "../components/components/Banner";
 
 const cookies = new Cookies();
 
@@ -43,6 +45,7 @@ class Cart extends Component {
 	};
 
 	componentDidMount() {
+		this.props.requestBanners();
 		if (!!this.props.match.params.invite === true) {
 			this.props
 				.userDiscount(this.props.match.params.invite)
@@ -402,6 +405,8 @@ class Cart extends Component {
 		});
 		let token = cookies.get("token");
 
+		console.log('banners', this.props.banners)
+
 		return (
 			<MainLayout>
 				<section className="cart-section">
@@ -480,7 +485,13 @@ class Cart extends Component {
 												</form>
 
 												<div className="cart-collaterals row">
-													<div className={"col-lg-6"}></div>
+													<div className={"col-lg-6"}>
+														{!!this.props.banners.length && this.props.banners.map(banner => {
+															return (
+																<Banner key={`banner-${banner.id}`} banner={banner} />
+															);
+														})}
+													</div>
 													<div className="cart_totals col-lg-6">
 														<h2>Cart totals</h2>
 
@@ -649,10 +660,14 @@ function mapStateToProps(state) {
 		settings: state.settings,
 		user: state.user.user,
 		promocode: state.cart.promocode,
+		banners: state.banner.banners.cart || [],
 	};
 }
 function mapDispatchToProps(dispatch) {
 	return {
+		requestBanners: () => {
+			dispatch(requestBannersForPlace('cart'));
+		},
 		removeLocalCart: (id) => {
 			return dispatch(removeLocalCart(id));
 		},

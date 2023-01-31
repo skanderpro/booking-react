@@ -54,13 +54,6 @@ class Checkout extends Component {
 		formData: {
 			billingFirstName: "",
 			billingLastName: "",
-			billingCompany: "",
-			billingCountry: "United Kingdom (UK)",
-			billingState: "",
-			billingStreet: "",
-			billingApartment: "",
-			billingCity: "",
-			billingPostCode: "",
 			billingPhone: "",
 			billingEmail: "",
 			orderNotes: "",
@@ -281,9 +274,6 @@ class Checkout extends Component {
 		let errors = {
 			billingFirstName: [],
 			billingLastName: [],
-			billingStreet: [],
-			billingCity: [],
-			billingPostCode: [],
 			billingPhone: [],
 			billingEmail: [],
 			shippingFirstName: [],
@@ -301,15 +291,6 @@ class Checkout extends Component {
 		}
 		if (this.state.formData.billingLastName === "") {
 			errors.billingLastName.push("Billing last name is required!");
-		}
-		if (this.state.formData.billingStreet === "") {
-			errors.billingStreet.push("Billing street is required!");
-		}
-		if (this.state.formData.billingCity === "") {
-			errors.billingCity.push("Billing city is required!");
-		}
-		if (this.state.formData.billingPostCode === "") {
-			errors.billingPostCode.push("Billing postcode is required!");
 		}
 		if (this.state.formData.billingPhone === "") {
 			errors.billingPhone.push("Billing phone is required!");
@@ -697,228 +678,6 @@ class Checkout extends Component {
 																								formData: {
 																									...this.state.formData,
 																									billingLastName:
-																										event.target.value,
-																								},
-																							});
-																						}}
-																					/>
-																				</span>
-																			</p>
-																			<p
-																				className="form-row form-row-wide"
-																				id="billing_company_field"
-																				data-priority="30"
-																			>
-																				<label
-																					htmlFor="billing_company"
-																					className=""
-																				>
-																					Company name&nbsp;
-																					<span className="optional">
-																						(optional)
-																					</span>
-																				</label>
-																				<span className="woocommerce-input-wrapper">
-																					<input
-																						type="text"
-																						className="input-text "
-																						name="billing_company"
-																						placeholder=""
-																						value={
-																							this.state.formData.billingCompany
-																						}
-																						onChange={(event) => {
-																							this.setState({
-																								formData: {
-																									...this.state.formData,
-																									billingCompany:
-																										event.target.value,
-																								},
-																							});
-																						}}
-																					/>
-																				</span>
-																			</p>
-																			<p className="form-row form-row-wide address-field update_totals_on_change validate-required">
-																				<label
-																					htmlFor="billing_country"
-																					className=""
-																				>
-																					Country / Region&nbsp;
-																					<abbr
-																						className="required"
-																						title="required"
-																					>
-																						*
-																					</abbr>
-																				</label>
-																				<span className="woocommerce-input-wrapper">
-																					<strong>
-																						{this.state.formData.billingCountry}
-																					</strong>
-																				</span>
-																			</p>
-																			<p className="form-row address-field validate-required form-row-wide">
-																				<label
-																					htmlFor="billing_address_1"
-																					className=""
-																				>
-																					Street address&nbsp;
-																					<abbr
-																						className="required"
-																						title="required"
-																					>
-																						*
-																					</abbr>
-																				</label>
-																				<span className="woocommerce-input-wrapper">
-																					<input
-																						type="text"
-																						className="input-text "
-																						name="billing_address_1"
-																						id="billing_address_1"
-																						placeholder="House number and street name"
-																						value={
-																							this.state.formData.billingStreet
-																						}
-																						onChange={(event) => {
-																							this.setState({
-																								formData: {
-																									...this.state.formData,
-																									billingStreet:
-																										event.target.value,
-																								},
-																							});
-																						}}
-																					/>
-																				</span>
-																			</p>
-																			<p className="form-row address-field form-row-wide">
-																				<label
-																					htmlFor="billing_address_2"
-																					className="screen-reader-text"
-																				>
-																					Apartment, suite, unit, etc.
-																					(optional)&nbsp;
-																					<span className="optional">
-																						(optional)
-																					</span>
-																				</label>
-																				<span className="woocommerce-input-wrapper">
-																					<input
-																						type="text"
-																						className="input-text "
-																						name="billing_address_2"
-																						id="billing_address_2"
-																						placeholder="Apartment, suite, unit, etc. (optional)"
-																						value={
-																							this.state.formData
-																								.billingApartment
-																						}
-																						onChange={(event) => {
-																							this.setState({
-																								formData: {
-																									...this.state.formData,
-																									billingApartment:
-																										event.target.value,
-																								},
-																							});
-																						}}
-																					/>
-																				</span>
-																			</p>
-																			<p className="form-row address-field validate-required form-row-wide">
-																				<label
-																					htmlFor="billing_city"
-																					className=""
-																				>
-																					Town / City&nbsp;
-																					<abbr
-																						className="required"
-																						title="required"
-																					>
-																						*
-																					</abbr>
-																				</label>
-																				<span className="woocommerce-input-wrapper">
-																					<input
-																						type="text"
-																						className="input-text "
-																						name="billing_city"
-																						placeholder=""
-																						value={
-																							this.state.formData.billingCity
-																						}
-																						onChange={(event) => {
-																							this.setState({
-																								formData: {
-																									...this.state.formData,
-																									billingCity:
-																										event.target.value,
-																								},
-																							});
-																						}}
-																					/>
-																				</span>
-																			</p>
-																			<p className="form-row address-field validate-state form-row-wide">
-																				<label
-																					htmlFor="billing_state"
-																					className=""
-																				>
-																					County&nbsp;
-																					<span className="optional">
-																						(optional)
-																					</span>
-																				</label>
-																				<span className="woocommerce-input-wrapper">
-																					<input
-																						type="text"
-																						className="input-text "
-																						value={
-																							this.state.formData.billingState
-																						}
-																						onChange={(event) => {
-																							this.setState({
-																								formData: {
-																									...this.state.formData,
-																									billingState:
-																										event.target.value,
-																								},
-																							});
-																						}}
-																						placeholder=""
-																						name="billing_state"
-																					/>
-																				</span>
-																			</p>
-																			<p className="form-row address-field validate-required validate-postcode form-row-wide">
-																				<label
-																					htmlFor="billing_postcode"
-																					className=""
-																				>
-																					Postcode&nbsp;
-																					<abbr
-																						className="required"
-																						title="required"
-																					>
-																						*
-																					</abbr>
-																				</label>
-																				<span className="woocommerce-input-wrapper">
-																					<input
-																						type="text"
-																						className="input-text "
-																						name="billing_postcode"
-																						value={
-																							this.state.formData
-																								.billingPostCode
-																						}
-																						onChange={(event) => {
-																							this.setState({
-																								formData: {
-																									...this.state.formData,
-																									billingPostCode:
 																										event.target.value,
 																								},
 																							});
