@@ -753,6 +753,60 @@ ul li {
 	background-color: var(--off-white);
 }
 
+.banner{
+	width: 100%;
+	display: flex;
+    flex-direction: column;
+}
+.banner:hover{
+	text-decoration: none;
+}
+.banner h5{
+	font-size: 25px;
+    font-weight: 600;
+	font-family: var(--museo-sans-sans-serif);
+	color: #212529;
+	text-decoration: none;
+}
+.banner p{
+	margin-top: 5px;
+	font-size: 15px;
+}
+
+.explore-swiper .explore-item-container{
+	position: relative;
+	padding: 50px;
+    border-radius: 12px;
+    overflow: hidden;
+	min-height: 320px;
+}
+.explore-swiper .explore-item-image{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+    background-position: center;
+	background-repeat: no-repeat;
+    z-index: -1;
+}
+.explore-swiper .explore-item-text{
+	color: var(--white);
+}
+.explore-swiper .explore-item-text p{
+	color: var(--white);
+	font-weight: 300;
+}
+.explore-swiper .explore-item-text .explore-item-text-text{
+	max-width: 500px;
+}
+.explore-swiper{
+	margin-bottom: 40px;
+}
+.explore-swiper .explore-item:hover .explore-item-container {
+    background-color: transparent !important;
+}
 @media (max-width:1510px) {
 	.navbar {
 		flex-wrap: wrap;
@@ -2642,6 +2696,9 @@ form.checkout h3 {
 }
 
 @media (max-width: 767px) {
+	.explore-swiper .explore-item-container{
+		padding: 20px;
+	}
 	.calendar-class-title {
 		overflow: hidden;
 		text-overflow: ellipsis;
