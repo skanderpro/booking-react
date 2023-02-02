@@ -30,7 +30,7 @@ export function TestimonialsCarousel(props) {
   };
 
   return (
-    <div >
+    <div className="explore-swiper">
         <h2 >Testimonials</h2>
         <div >
           <Slider {...settings}>
@@ -46,7 +46,7 @@ export function TestimonialsCarousel(props) {
                       ></div>
                       <div className={"explore-item-text"}>
                         <h3>{testimonial.author}</h3>
-                        <p>{testimonial.text}</p>
+                        <p className="explore-item-text-text">{testimonial.text}</p>
                         <p>{testimonial.date}</p>
                       </div>
                     </div>
