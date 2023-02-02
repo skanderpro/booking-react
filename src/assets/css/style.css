@@ -785,6 +785,7 @@ ul li {
   height: 59%;
   z-index: 1;
 }
+
 .banner img {
   position: absolute;
   left: 0;
@@ -815,24 +816,30 @@ ul li {
 
 .explore-swiper .explore-item-container {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   padding: 50px;
   border-radius: 12px;
   overflow: hidden;
   min-height: 320px;
+  background-color: var(--pink);
 }
 .explore-swiper .explore-item-image {
-  position: absolute;
-  left: 0;
-  top: 0;
+  max-width: 320px;
   width: 100%;
+  height: 320px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.explore-swiper .explore-item-image img{
+  width:  100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: -1;
+  object-fit: cover;
 }
 .explore-swiper .explore-item-text {
   color: var(--white);
+  margin-left: 100px;
 }
 .explore-swiper .explore-item-text p {
   color: var(--white);
@@ -845,8 +852,10 @@ ul li {
   margin-bottom: 40px;
 }
 .explore-swiper .explore-item:hover .explore-item-container {
-  background-color: transparent !important;
+  background-color: var(--soft-pink) !important;
 }
+.slick-slide > div {margin-left:20px;}
+.slick-list {margin-left:-20px;}
 @media (max-width: 1510px) {
   .navbar {
     flex-wrap: wrap;
@@ -1989,6 +1998,13 @@ ul li {
 }
 
 @media (max-width: 1024px) {
+  .explore-swiper .explore-item-image{
+    max-width: 150px;
+    height: 150px;
+  }
+  .explore-swiper .explore-item-text{
+    margin-left: 50px;
+  }
   .calendar-class-title {
     font-size: 12px;
     line-height: 14px;
@@ -2881,8 +2897,14 @@ form.checkout h3 {
 }
 
 @media (max-width: 767px) {
+  .explore-swiper .explore-item-text{
+    margin-left: 0px;
+    margin-top: 25px;
+    width: 100%;
+  }
   .explore-swiper .explore-item-container {
     padding: 20px;
+    flex-direction: column;
   }
   .calendar-class-title {
     overflow: hidden;

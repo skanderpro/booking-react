@@ -25,8 +25,10 @@ export function TestimonialsCarousel(props) {
     dots: true,
     infinite: true,
     speed: 500,
+    arrows: false,
     slidesToShow: 1,
-    slidesToScroll: 1
+    slidesToScroll: 1,
+    
   };
 
   return (
@@ -40,10 +42,11 @@ export function TestimonialsCarousel(props) {
                     <div className={"explore-item-container"}>
                       <div
                           className={"explore-item-image"}
-                          style={{
-                            backgroundImage: `url(${mainUrl}/storage/${testimonial.image})`,
-                          }}
-                      ></div>
+                          
+                      >
+
+                        <img src={`${mainUrl}/storage/${testimonial.image}`}/>
+                      </div>
                       <div className={"explore-item-text"}>
                         <h3>{testimonial.author}</h3>
                         <p className="explore-item-text-text">{testimonial.text}</p>
