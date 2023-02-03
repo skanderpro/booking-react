@@ -1,14 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import Cookies from "universal-cookie";
 import { withRouter } from "react-router-dom";
-import {SET_INVITE} from "../../redux/actions/actionTypes";
+import { SET_INVITE } from "../../redux/actions/actionTypes";
 const cookies = new Cookies();
 
 function ClassDetailTopBlock(props) {
   // useEffect(() => {});
 
   // console.log('props.classDetail', props.classDetail);
+
+  const [showTopBtn, setShowTopBtn] = useState(false);
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 1000) {
+        setShowTopBtn(true);
+      } else {
+        setShowTopBtn(false);
+      }
+    });
+  }, []);
 
   return (
     <div className={"class-detail-top-block "} id={"class-detail-top-block"}>
@@ -65,24 +76,62 @@ function ClassDetailTopBlock(props) {
                     props.setInviteCode(props.match.params.invite);
                   }
                   setTimeout(() => {
-                    window.location.href = '/cart'
-                  },2000)
+                    window.location.href = "/cart";
+                  }, 2000);
                 }}
               >
                 Book class
               </button>
-            ) : (<span className="sold-out static">Sold out</span>)}
-				
+            ) : (
+              <span className="sold-out static">Sold out</span>
+            )}
+
             <span className={"d-inline-block availability-container"}>
               <div className={"title"}>Availability</div>
               <div className={"numbers"}>
-                {(props.classDetail.product.numbers_of_seats - props.classDetail.product.buyed_numbers_of_seats)  || '0'}
+                {props.classDetail.product.numbers_of_seats -
+                  props.classDetail.product.buyed_numbers_of_seats || "0"}
               </div>
             </span>
           </div>
-			<div className="price-class">
-				£ <span>{props.classDetail.product.price}</span>
-			</div>
+          {showTopBtn && (
+            <div className={"control-block sticky"}>
+              {props.classDetail.product.numbers_of_seats >
+              props.classDetail.product.buyed_numbers_of_seats ? (
+                <div className="control-block-inner">
+                  <button
+                    className={"btn btn-dark-bordered btn-large"}
+                    onClick={() => {
+                      let token = cookies.get("token");
+                      if (!token) {
+                        props.addToCart(props.classDetail);
+                      } else {
+                        props.addRemoteCart(
+                          props.classDetail.id,
+                          0,
+                          props.classDetail.type
+                        );
+                      }
+                      if (props.match.params.invite) {
+                        props.setInviteCode(props.match.params.invite);
+                      }
+                      setTimeout(() => {
+                        window.location.href = "/cart";
+                      }, 2000);
+                    }}
+                  >
+                    Book class
+                  </button>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          )}
+
+          <div className="price-class">
+            £ <span>{props.classDetail.product.price}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -92,15 +141,15 @@ function ClassDetailTopBlock(props) {
 function mapDispatchToProps(dispatch) {
   return {
     setInviteCode(invite) {
-      console.log('invite', invite);
+      console.log("invite", invite);
       dispatch({
         type: SET_INVITE,
         payload: {
-          invite
-        }
-      })
-    }
-  }
+          invite,
+        },
+      });
+    },
+  };
 }
 
 function mapStateToProps(state) {
@@ -108,4 +157,7 @@ function mapStateToProps(state) {
     settings: state.settings,
   };
 }
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(ClassDetailTopBlock));
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(ClassDetailTopBlock));
