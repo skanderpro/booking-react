@@ -111,6 +111,7 @@ class Home extends Component {
 
 	render() {
 		return (
+			<>
 			<MainLayout>
 				<div className={"home-page"}>
 					<HomeBanner
@@ -167,6 +168,9 @@ class Home extends Component {
 				</div>
 				<Loader status={this.state.isLoader} />
 			</MainLayout>
+
+			
+			</>
 		);
 	}
 }
