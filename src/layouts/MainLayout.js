@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
-import { connect } from "react-redux";
+import {connect, useDispatch, useSelector} from "react-redux";
 import Cookies from "universal-cookie";
 import {
   checkProfile,
@@ -11,9 +11,36 @@ import {
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+import {NotificationManager} from "react-notifications";
+import {addToWaitList, setShowWaitingListMpodal} from "../redux/actions/promoters";
 const cookies = new Cookies();
 
 function WaitingListPopup(props) {
+  console.log('popup', props);
+
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+
+  const formSubmitHandler = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    await props.storeWaitlistItem({
+      'full_name': fullName,
+        'email':email,
+        'phone': phone,
+        'type': props.classDetail.type,
+        'product_id': props.classDetail.product.id,
+    });
+  };
+
+  const addClickHandler = e => {
+    props.onHide();
+
+    formSubmitHandler(e);
+  };
+
   return (
     <Modal
       {...props}
@@ -28,13 +55,15 @@ function WaitingListPopup(props) {
       </Modal.Header>
       <Modal.Body>
         <p>All seats are now full, but you can join the waiting list</p>
-        <Form>
+        <Form onSubmit={formSubmitHandler}>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Label>Full Name</Form.Label>
             <Form.Control
               type="text"
               placeholder="First name Surname"
               autoFocus
+              value={fullName}
+              onChange={e => setFullName(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput2">
@@ -42,12 +71,16 @@ function WaitingListPopup(props) {
             <Form.Control
               type="email"
               placeholder="name@example.com"
-              autoFocus
+              value={email}
+              onChange={e => setEmail(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput3">
             <Form.Label>Phone</Form.Label>
-            <Form.Control type="email" placeholder="+447xxx818325" autoFocus />
+            <Form.Control
+                type="email"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}/>
           </Form.Group>
         </Form>
       </Modal.Body>
@@ -55,7 +88,7 @@ function WaitingListPopup(props) {
         <Button
           className="btn-pink btn btn-primary"
           variant="primary"
-          onClick={props.onHide}
+          onClick={addClickHandler}
         >
           Add to List
         </Button>
@@ -65,7 +98,9 @@ function WaitingListPopup(props) {
 }
 function MainLayout(props) {
   let token = cookies.get("token");
-  const [modalShow, setModalShow] = React.useState(false);
+  const dispatch = useDispatch();
+  const showModal = useSelector((state) =>state.cart.showWaitlistModal);
+  const [modalShow, setModalShow] = React.useState(true);
   useEffect(() => {
     if (!!token) {
       props
@@ -88,16 +123,24 @@ function MainLayout(props) {
         <Footer />
       </div>
 
-      <WaitingListPopup show={modalShow} onHide={() => setModalShow(false)} />
+      <WaitingListPopup show={showModal} storeWaitlistItem={props.storeWaitlistItem} onHide={() => dispatch(setShowWaitingListMpodal(false))} classDetail={props.classDetail} />
     </React.Fragment>
   );
 }
 
 function mapStateToProps(state) {
+  console.log('state', state);
   return {};
 }
 function mapDispatchToProps(dispatch) {
   return {
+    storeWaitlistItem: (data) => {
+      dispatch(addToWaitList({
+        ...data
+      }));
+
+      return NotificationManager.success('Adding you to waitlist was succedeed');
+    },
     setUserProfile: (user) => {
       return dispatch(setUserProfile(user));
     },

@@ -81,7 +81,7 @@ class ClassDetail extends Component {
     console.log('class', this.state.classItem);
 
     return (
-      <MainLayout>
+      <MainLayout classDetail={this.state.classItem}>
         <DetailClassTopBanner />
         <div
           className={"class-detail-container"}
