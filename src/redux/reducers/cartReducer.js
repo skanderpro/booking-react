@@ -2,7 +2,7 @@ import {
   ADD_LOCAL_CART,
   GET_REMOTE_CART,
   ADD_PROMOCODE,
-  CLEAR_PROMOCODE, SET_INVITE, ADD_VOUCHER,
+  CLEAR_PROMOCODE, SET_INVITE, ADD_VOUCHER, SET_SHOW_WAITLIST_MODEAL,
 } from "./../actions/actionTypes";
 
 const initializeState = {
@@ -10,11 +10,16 @@ const initializeState = {
   promocode: "",
   invite: null,
   voucherData: null,
+  showWaitlistModal: false,
 };
 export default function cartReducer(state = initializeState, action) {
   switch (action.type) {
+    case SET_SHOW_WAITLIST_MODEAL:
+      return {
+        ...state,
+        showWaitlistModal: action.payload.showWaitlistModal
+      };
     case ADD_LOCAL_CART:
-      console.log(action);
       return {
         ...state,
         items: [...action.data.items],
